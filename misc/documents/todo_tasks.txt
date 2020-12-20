@@ -1,0 +1,177 @@
+=========
+REMEMBER!
+=========
+Each time you change the logic / update NPM package version, do the following steps:
+a. Perform a backup before any change has been made, by running on termine 'npm run backup' or manually to the backups directory.
+b. After the change, check that everything works OK.
+c. Keep the maintenance - Every change you do - Make sure to update in this document if needed.
+d. Keep the backup update - Every change you do - Update in iOmega (each couple of days do backup there).
+=================================
+
+ToDo tasks:
+===========
+
+Complete / Canceled tasks:
+==========================
+-Add the account name to the confirmation message. *
+-Add to the log console the account username + ******** of the password length. *
+-Add to the log directory name the username of the Udemy account. *
+-Bring back the account.json. *
+-Upload to GitHub. *
+-Go all over the project and change many to single, also in the comments (services => service | LOGS => LOG). *
+-Remove all unused files, functions, and variables. *
+-Rewrite INSTRUCTIONS.md + README.md. *
+-Rewrite error numbers. *
+-Remove all comments. *
+-Remove all debugger. *
+-Make sure all comments ends with . *
+-Fix all spell mistakes in all TXT files. *
+-Format all files. *
+-Test a few sessions from different days (terminal | browser). *
+-Fix bug with price: Total Price Purchase: ₪5468.599999999999. Fix to 2 numbers after dot. *
+-Add private course: https://www.udemy.com/course/html-the-complete-html-practice-test-linkedin-assessment/?couponCode=CODINGINTERVIEW *
+-Add option to fetch only courses with specific key (check the key in the udemyURL lowercase). *
+-Add the logic of 'totalPriceNumber'. *
+-Change all console.log to logUtils.log. *
+-Convert all the "exit" methods in all the services to be called only from the purchase.logic.js file, *
+where it will be a graceful exit with closing all the services. *
+-Change the console message of confirmation: 'OK to run? (y = yes)' + refactor function logic. *
+-Test a few sessions from different days - Canceled. *
+-Add confirmation step. *
+-Re-plan the console status structure. *
+-Fix the log courses status logic + write comments in other projects about it. *
+-Do the console status. *
+============================ *
+-Add status console line with the following structure: *
+===[SETTINGS] Method: GET COURSES/PURCHASE COURSES | Query Date: 2020/12/06 | Specific Page Number: ## | Is Key Words Filter: false=== *
+===[GENERAL] Time: 00.05:16:58 [-] | Total Price Purchase: ₪5,450 | Course: 2/348 (48%) | Status: GET COURSES/VALIDATE/PAUSE/NO URLS/LOGIN/ADD CART/CHECKOUT/SUCCESS=== *
+===[PROCESS1] Purchase: ✅ 0 | Fail: ❌ 0 | Filter: 0 | Missing Field: 0 | Unexpected Field: 0 | Duplicate: 0=== *
+===[PROCESS2] Get Error: 0 | Empty URL: 0 | Not Exists: 0 | Limit Access: 0 | Suggestions List: 0 | Already Purchase: 0=== *
+===[PROCESS3] Course Price Not Free: 0 | Enroll Not Exists: 0 | Checkout Price Not Exists: 0=== *
+===[PROCESS4] Checkout Price Not Free: 0 | Purchase Error: 0=== *
+===[DATA1] Creation: 12/12/2020 18:02:00 | Id: 33444 | Post Id: 4323 | Status: CREATE/INVALID/ERROR/NOT_EXISTS/VALIDATE/CART/PURCHASE_FAIL/PURCHASE *
+===[DATA2] Publish Date: 13/12/2020 | Page Number: 3 | Index Page Number: 4=== *
+===[DATA3] Is Free: false | Price Display: ₪450.00 | Coupon Key: A1C8F6566F1EA8D253AC | Type: SINGLE/COURSES LIST=== *
+===[ERRORS] Get Error In A Row: 0 | Purchase Error In A Row: 0=== *
+===[NAME] Learn How to Setup Online Exports Business Instantly (cut it to maximum characters)=== *
+===[COURSE URL] https://idownloadcoupon.com/2020/12/17/amazon-aws-sysops-administrator-associate-certificate-tests/ (cut it to maximum characters)=== *
+===[UDEMY URL] https://www.udemy.com/course/learn-python-coding-from-basic-beginning-to-master/?couponCode=DECEMBER-BONANZA (cut it to maximum characters)=== *
+===[RESULT] Time: 12/12/2020 18:02:00 | Result: The course has been purchased successfully. (cut it to maximum characters)=== *
+-Add to the log and the console the total price number. *
+============================ *
+-Insert the courses logic into the purchase courses. *
+-Between each course perchase wait 5 seconds. *
+-Fix bug with maximum pages equal to 1. *
+-Add the full logic and test full a session (loop on all the courses that are in the status of CREATE) - Canceled. *
+-Test another full a session (loop on all the courses that are in the status of CREATE) - Canceled. *
+-Insert all parameters to settings.js. *
+-Convert all check of (x && x.length > 0) to isExists. *
+-Add try catch on login and logout and in case of exception exit grafcully and close browser. *
+-Add try catch on each course purchase, and if exception throwed, add error object to details and change to 'ERROR' status, *
+And redirect back to udemyBaseURL and wait 5 seconds. *
+-Add error in a row logic. *
+-Add logic for error in a row (5 from settings.js) to exit the program. *
+-Log the purchased courses - Log the entire object. *
+-Fix the free courses bug. *
+-Add logic for test session. Loop on specific URLS and try to purchase them. *
+-Add specific page on specific date logic. *
+-Add the c:/puppeteer directory to the validation paths, - Canceled. *
+ and delete all the content in the end of the process, in each exit process. - Canceled. *
+-Add limit to purchase courses. *
+-Separate the existing function to a single purchase course function. *
+-Test array of 2 courses. *
+-Test array of 5 courses - Canceled. *
+-Loop for the next courses - Canceled. *
+-Handle maximum login requests. *
+-Do logic of single course purchase, include all logics and cases. *
+-Start to loop on the URLs. Delay of random 3-4 between processes. *
+-For each page, wait 5 seconds (settings.js) (until the 'Add to cart' button will become clickable). *
+-Check that the button with the class 'udlite-heading-md add-to-cart', contains the value 'Add to cart'. *
+-If it contains the value 'Go to cart' or 'Go to course' or not 'Add to cart', continue to the next course. *
+-Look for element 'data-purpose="course-price-text"'. Inside it look for '<span>Free</span>'. *
+-If exists, continue. *
+-Go to the element 'data-purpose="course-old-price-text"', search for span with the value of '₪'. *
+ This is the price. Get it, separate it to a numeric, not just text. *
+-Not a mandatory step. If not found continue anyway. *
+-Click on the button that contains the class 'udlite-heading-md add-to-cart' - Canceled. *
+-If not, continue to the next course - Canceled. *
+-Wait for element with the id of "cart-success-title" to be exists in the DOM - Canceled. *
+-Continue to the next course - Canceled. *
+-Each X courses, go to the cart and purchase - Canceled. *
+-Go to https://www.udemy.com/cart/checkout, and wait for 5 seconds (settings.js) - Canceled. *
+-Change in logic: Each course will be enroll immediately. *
+-Search for the element with 'data-purpose="total-price"' and make sure the span inside it contains '₪0.00'. *
+-If it's not the case, continue to the next course. *
+-Search the first element of class 'ellipsis btn btn-lg btn-primary btn-block' and click it. *
+-Wait to be redirected to a page contains 'https://www.udemy.com/cart/success/'. *
+-After successful cart purchase, do a logout process - Canceled. *
+-Build all the logic of running the project after downloaded from GitHub. *
+-Create a dummy account on udemy. *
+-Fill the json file with the dummy account. *
+-Build the logic to take the account from external json file. *
+-Build example json file on the misc directory. *
+-With puppeter.js go to https://www.udemy.com/join/login-popup/. *
+-Like the UdemyData with all elements, do the same (add to existing CoursesData object). *
+-Login with given credentials from external account.json file. *
+('id_email' element, 'id_password' password element), and click on 'submit-id-submit' button. *
+-Wait for redirect to Udemy main page, and validate login if 'data-purpose="header-login"' no longer exists. *
+-Do the logout process. *
+-Make sure to add in settings.js parameter of user-agent. If it's empty, take a random one - Canceled. *
+-With puppeter.js go to https://idownloadcoupon.com/. *
+-Scan the URL by the current date. For example, https://idownloadcoupon.com/2020/12/06/. *
+-If no URLs ('Page not found'), exit the program. *
+-Loop on each course item: the id starts with 'post-' for example, 'post-18943'. *
+-For each item, get the element 'grid-tit' (it's h2), and get the URL, and the publish date (class="fa fa-clock-o" element, example: 8 Dec , 2020). *
+-Get also the title of the course. *
+-Get the URL and store it in the object. *
+-Add variable on settings.js of the date to take the courses + Variable of dynamic date. If empty, take the today date. *
+-Get of each URL - Detect of the page is 'courses list' page or a single course page *
+ (if https://www.udemy.com URLs found - it's a 'courses list' page. If not, and 'deeplink' href found, it's a single course page). *
+-If it's a single course page - Get all href, and search for the one that starts with 'https://click.linksynergy.com/deeplink'. *
+-If neither of them found, continue to the next page. *
+-Extract the Udemy URL from the href, include the coupon code. *
+-The structure of the URL should look like this: 'https://www.udemy.com/course/learn-how-to-setup-online-exports-business-instantly/?couponCode=A1C8F6566F1EA8D253AC' *
+-If it's a URL from 'courses list' page, just copy the URL, and extract the coupon from it (take also the title - 'course_title' element). *
+-After finish get the URLs from the current page, go to the next page by: https://idownloadcoupon.com/2020/12/06/page/2/ *
+-When you get to 'Page not found', the get part is over. *
+-Finalize step: Loop on all courses and: *
+-If no udemyURL found - Mark status as MISSING_URL. *
+-If the udemyURL is invalid - Mark status as INVALID. *
+-Do a comperation step, to make sure no duplicate course will be inserted. *
+-Replace all 'sleep' in here to 'await page.waitForTimeout()' - Canceled. *
+-Log the entire object - Post id (if exists), course name, page URL, Udemy URL, course coupon. *
+-Add all log flags + logic in code. *
+-Add method flags + logic in code (add logic that if get courses not active the purchase courses will not work and exit). *
+-Change all places from 'pageURL' to 'courseURL'. *
+-Add validation of free course with coupon. *
+-For this method, log all courses that not in CREATED status to seperated file. *
+-Add log publish date to the log file names. *
+-Test this step on random dates (10 dates in the past 10 days). *
+FULL MESSAGE: *
+============ *
+Time: 15:05:43 | Id: 334 | Creation Date Time: 12/08/2020 15:04:34 | Page Number: 2 | Publis Date: 2020/12/08 *
+Name: Time Management for Professionals *
+Type: COURSES LIST | Is Free: false | Coupon Key: BD1F9BF485081A1F438B | Status: CREATE *
+Page URL: https://idownloadcoupon.com/2020/12/08/free-udemy-courses-list-9-18-2020/ *
+Udemy URL: https://www.udemy.com/course/time-management-for-professionals/?couponCode=BD1F9BF485081A1F438B *
+============ *
+-Remove all jsdom from the project, and use: *
+ const result = await page.evaluate(() => { *
+    return document.querySelectorAll('.footer-tags a').length *
+  }) - Canceled. *
+-The main goal of the application is to add Udemy free courses, based on coupons, automatically to specific account. *
+-The application will be seperated to 2 main parts: *
+1. Get courses URLs with coupons. *
+2. Go to Udemy and one after one, insert the courses to cart, and purchase them. *
+-The second part contains several parts: *
+1. Login to the system. *
+2. Purchase X courses (settings.js number). *
+3. Each X courses go and purchase, and continue to the next courses. *
+-Add folders structure. *
+-Add project general structure. *
+-Add backup logic. *
+-Validate that https://idownloadcoupon.com/ is online. *
+-Validate that https://www.udemy.com/ is online. *
+-Object - Course: *
+-Id, Price, Name, Type (single/coursesList), Page URL, Udemy URL, Coupon Key, Status. *
+-(remove the [100% OFF] in the start if exists) *

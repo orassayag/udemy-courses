@@ -1,0 +1,78 @@
+const textUtils = require('./text.utils');
+const validationUtils = require('./validation.utils');
+
+class TimeUtils {
+
+    constructor() {
+        this.shortMonths = {
+            'jan': '01', 'feb': '02', 'mar': '03', 'apr': '04', 'may': '05', 'jun': '06',
+            'jul': '07', 'aug': '08', 'sep': '09', 'oct': '10', 'nov': '11', 'dec': '12'
+        };
+    }
+
+    getFullTime() {
+        const date = new Date();
+        return `${textUtils.addLeadingZero(date.getHours())}:${textUtils.addLeadingZero(date.getMinutes())}:${textUtils.addLeadingZero(date.getSeconds())}`;
+    }
+
+    getDateNoSpaces() {
+        const date = new Date();
+        return [textUtils.addLeadingZero(date.getDate()), (textUtils.addLeadingZero(date.getMonth() + 1)), date.getFullYear()].join('');
+    }
+
+    getDateNoSpacesFromString(date) {
+        return date.split('/').join('');
+    }
+
+    getFullDateNoSpaces() {
+        const date = new Date();
+        return `${[date.getFullYear(), (textUtils.addLeadingZero(date.getMonth() + 1)), textUtils.addLeadingZero(date.getDate())].join('')}_${[textUtils.addLeadingZero(date.getHours()), textUtils.addLeadingZero(date.getMinutes()), textUtils.addLeadingZero(date.getSeconds())].join('')}`;
+    }
+
+    getCommasDate() {
+        const date = new Date();
+        return `${[date.getFullYear(), (textUtils.addLeadingZero(date.getMonth() + 1)), textUtils.addLeadingZero(date.getDate())].join('/')}`;
+    }
+
+    // Format yyyy-mm-dd. Example: 8 Dec , 2020.
+    getDateFromString(date) {
+        if (!date) {
+            return date;
+        }
+        const split = date.split(' ');
+        return `${split[3]}/${textUtils.addLeadingZero(this.shortMonths[textUtils.toLowerCase(split[1])])}/${textUtils.addLeadingZero(split[0])}`;
+    }
+
+    getFullDateTemplate(date) {
+        if (!date) {
+            date = new Date();
+        }
+        return `${[textUtils.addLeadingZero(date.getDate()), (textUtils.addLeadingZero(date.getMonth() + 1)), date.getFullYear()].join('/')} ${[textUtils.addLeadingZero(date.getHours()), textUtils.addLeadingZero(date.getMinutes()), textUtils.addLeadingZero(date.getSeconds())].join(':')}`;
+    }
+
+    getDifferenceTimeBetweenDates(data) {
+        const { startDateTime, endDateTime } = data;
+        if (!validationUtils.isValidDate(startDateTime) || !validationUtils.isValidDate(endDateTime)) {
+            return null;
+        }
+        // Get the total time.
+        const totalTime = textUtils.getPositiveNumber(endDateTime - startDateTime);
+        // Get total seconds between the times.
+        let delta = totalTime / 1000;
+        // Calculate (and subtract) whole days.
+        const days = textUtils.getFloorPositiveNumber(delta / 86400);
+        delta -= days * 86400;
+        // Calculate (and subtract) whole hours.
+        const hours = textUtils.getFloorPositiveNumber((delta / 3600) % 24);
+        delta -= hours * 3600;
+        // Calculate (and subtract) whole minutes.
+        const minutes = textUtils.getFloorPositiveNumber((delta / 60) % 60);
+        delta -= minutes * 60;
+        // What's left is seconds.
+        // In theory the modulus is not required.
+        const seconds = textUtils.getFloorPositiveNumber(delta % 60);
+        return `${days}.${hours}:${minutes}:${seconds}`;
+    }
+}
+
+module.exports = new TimeUtils();
