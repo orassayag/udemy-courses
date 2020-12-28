@@ -143,7 +143,7 @@ class TextUtils {
         if (!validationUtils.isValidNumber(number)) {
             return '';
         }
-        return (Math.round(number * 100) / 100).toFixed(2);
+        return this.getNumberWithCommas(parseFloat(Math.round(number * 100) / 100).toFixed(2));
     }
 
     getAsteriskCharactersString(charactersCount) {

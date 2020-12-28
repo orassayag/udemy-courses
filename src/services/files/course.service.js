@@ -8,25 +8,28 @@ class CourseService {
     constructor() {
         this.coursesData = new CoursesData();
         this.lastCourseId = 1;
+        this.logCourse = null;
     }
 
-    initiate() {
+    initiate(logCourse) {
         if (validationUtils.isExists(applicationService.applicationData.keyWordsFilterList)) {
             for (let i = 0; i < applicationService.applicationData.keyWordsFilterList.length; i++) {
                 applicationService.applicationData.keyWordsFilterList[i] = textUtils.toLowerCaseTrim(applicationService.applicationData.keyWordsFilterList[i]);
             }
         }
+        this.logCourse = logCourse;
     }
 
-    createCourse(course) {
+    async createCourse(course) {
         course.id = this.lastCourseId;
         course = new CourseData(course);
         this.coursesData.coursesList.push(course);
         this.lastCourseId++;
         this.coursesData.course = course;
+        await this.logCourse(course);
     }
 
-    updateSingleCourseData(data) {
+    async updateSingleCourseData(data) {
         const { course, courseIndex, udemyURL, udemyURLCompare, couponKey } = data;
         course.udemyURL = udemyURL;
         course.udemyURLCompare = udemyURLCompare;
@@ -34,17 +37,19 @@ class CourseService {
         course.isFree = !validationUtils.isExists(couponKey);
         this.coursesData.coursesList[courseIndex] = course;
         this.coursesData.course = course;
+        await this.logCourse(course);
     }
 
-    updateCoursesListCourseData(data) {
+    async updateCoursesListCourseData(data) {
         let { course, courseIndex } = data;
         course.isFree = false;
         course.type = CourseType.COURSES_LIST;
         this.coursesData.coursesList[courseIndex] = course;
         this.coursesData.course = course;
+        await this.logCourse(course);
     }
 
-    updateCourseStatus(data) {
+    async updateCourseStatus(data) {
         const { course, status, details } = data;
         const originalStatus = course.status;
         course.status = status;
@@ -55,10 +60,20 @@ class CourseService {
         }
         this.coursesData.updateCount(true, status, 1);
         this.coursesData.course = course;
+        await this.logCourse(course);
         return course;
     }
 
-    finalizeGetCourses() {
+    updateCoursePrices(course, originalPrices) {
+        if (originalPrices) {
+            course.priceNumber = originalPrices.priceNumber;
+            course.priceDisplay = originalPrices.priceDisplay;
+            this.coursesData.totalPriceNumber += originalPrices.priceNumber;
+        }
+        return course;
+    }
+
+    async finalizeCreateUpdateCourses() {
         // Validate any courses exists to purchase.
         if (this.coursesData.coursesList.length <= 0) {
             return Status.NO_COURSES_EXISTS;
@@ -68,7 +83,7 @@ class CourseService {
             // Validate all fields.
             let scanFieldsResult = this.validate(course);
             if (scanFieldsResult) {
-                this.coursesData.coursesList[i] = this.updateCourseStatus({
+                this.coursesData.coursesList[i] = await this.updateCourseStatus({
                     course: course,
                     status: scanFieldsResult.status,
                     details: scanFieldsResult.details
@@ -76,7 +91,7 @@ class CourseService {
             }
             if (validationUtils.isExists(applicationService.applicationData.keyWordsFilterList)) {
                 if (this.filter(course)) {
-                    this.coursesData.coursesList[i] = this.updateCourseStatus({
+                    this.coursesData.coursesList[i] = await this.updateCourseStatus({
                         course: course,
                         status: CourseStatus.FILTER,
                         details: 'The course has been filtered since no entered key words has been found match to the course name.'

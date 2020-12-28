@@ -1,9 +1,10 @@
 const settings = require('../settings/settings');
 const { accountService, applicationService, confirmationService, countLimitService, courseService,
-    createCoursesService, logService, pathService, puppeteerService, purchaseCoursesService,
-    validationService } = require('../services');
+    createCourseService, logService, pathService, puppeteerService, purchaseCourseService,
+    updateCourseService, validationService } = require('../services');
 const { Color, Method, Mode, Status } = require('../core/enums');
 const { logUtils, systemUtils } = require('../utils');
+const globalUtils = require('../utils/files/global.utils');
 
 class PurchaseLogic {
 
@@ -29,13 +30,13 @@ class PurchaseLogic {
         pathService.initiate(settings);
         puppeteerService.initiate();
         await logService.initiate(settings);
-        courseService.initiate();
+        courseService.initiate(logService.logCourse.bind(logService));
     }
 
     async validateGeneralSettings() {
         logUtils.logMagentaStatus('VALIDATE GENERAL SETTINGS');
         // Validate methods.
-        if (!applicationService.applicationData.isGetCoursesMethodActive) {
+        if (!applicationService.applicationData.isCreateCoursesMethodActive) {
             this.exit(Status.INVALID_METHOD, Color.RED);
         }
         // Validate internet connection works.
@@ -45,34 +46,44 @@ class PurchaseLogic {
     async startSession(urls) {
         // Initiate.
         if (applicationService.applicationData.mode === Mode.SESSION) {
-            createCoursesService.createSessionCourses(urls);
-            const purchaseCoursesResult = await purchaseCoursesService.purchaseCourses();
+            createCourseService.createSessionCourses(urls);
+            const purchaseCoursesResult = await purchaseCourseService.purchaseCourses();
             if (purchaseCoursesResult) {
-                this.exit(purchaseCoursesResult, Color.RED);
+                await this.exit(purchaseCoursesResult, Color.RED);
             }
-            this.exit(Status.FINISH, Color.GREEN);
+            await this.exit(Status.FINISH, Color.GREEN);
         }
         else {
             applicationService.applicationData.startDateTime = new Date();
-            if (!applicationService.applicationData.isLogMode) {
-                logService.startLogProgress();
-            }
-            if (applicationService.applicationData.isGetCoursesMethodActive) {
-                applicationService.applicationData.method = Method.GET_COURSES;
-                const createCoursesResult = await createCoursesService.createCourses();
+            logService.startLogProgress();
+            if (applicationService.applicationData.isCreateCoursesMethodActive) {
+                this.setApplicationMethod(Method.CREATE_COURSES);
+                const createCoursesResult = await createCourseService.createCourses();
                 if (createCoursesResult) {
-                    this.exit(createCoursesResult, Color.RED);
+                    await this.exit(createCoursesResult, Color.RED);
+                }
+            }
+            if (applicationService.applicationData.isUpdateCoursesMethodActive) {
+                this.setApplicationMethod(Method.UPDATE_COURSES);
+                const updateCoursesResult = await updateCourseService.updateCourses();
+                if (updateCoursesResult) {
+                    await this.exit(updateCoursesResult, Color.RED);
                 }
             }
             if (applicationService.applicationData.isPurchaseCoursesMethodActive) {
-                applicationService.applicationData.method = Method.PURCHASE_COURSES;
-                const purchaseCoursesResult = await purchaseCoursesService.purchaseCourses();
+                this.setApplicationMethod(Method.PURCHASE_COURSES);
+                const purchaseCoursesResult = await purchaseCourseService.purchaseCourses();
                 if (purchaseCoursesResult) {
-                    this.exit(purchaseCoursesResult, Color.RED);
+                    await this.exit(purchaseCoursesResult, Color.RED);
                 }
             }
         }
-        this.exit(Status.FINISH, Color.GREEN);
+        await this.exit(Status.FINISH, Color.GREEN);
+    }
+
+    setApplicationMethod(method) {
+        applicationService.applicationData.method = method;
+        courseService.coursesData.courseIndex = 0;
     }
 
     // Let the user confirm all the IMPORTANT settings before the process start.
@@ -82,9 +93,12 @@ class PurchaseLogic {
         }
     }
 
-    exit(status, color) {
+    async exit(status, color) {
         if (applicationService.applicationData) {
             applicationService.applicationData.status = status;
+            if (countLimitService.countLimitData) {
+                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutExitApplication);
+            }
             logService.close();
         }
         systemUtils.exit(status, color);

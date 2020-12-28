@@ -1,5 +1,5 @@
 const { fileUtils, logUtils, pathUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
-const { CourseStatusLog, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
+const { CourseStatusLog, CourseStatus, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
 const { LogData } = require('../../core/models');
 const accountService = require('./account.service');
 const applicationService = require('./application.service');
@@ -17,8 +17,10 @@ class LogService {
 		// ===PATH=== //
 		this.baseSessionPath = null;
 		this.sessionDirectoryPath = null;
-		this.getCoursesValidPath = null;
-		this.getCoursesInvalidPath = null;
+		this.createCoursesValidPath = null;
+		this.createCoursesInvalidPath = null;
+		this.updateCoursesValidPath = null;
+		this.updateCoursesInvalidPath = null;
 		this.purchaseCoursesValidPath = null;
 		this.purchaseCoursesInvalidPath = null;
 		this.i = 0;
@@ -32,7 +34,8 @@ class LogService {
 		this.logData = new LogData(settings);
 		// Check if any logs active.
 		this.isLogs = applicationService.applicationData.mode === Mode.STANDARD &&
-			(this.logData.isLogGetCoursesValid || this.logData.isLogGetCoursesInvalid ||
+			(this.logData.isLogCreateCoursesValid || this.logData.isLogCreateCoursesInvalid ||
+				this.logData.isLogUpdateCoursesValid || this.logData.isLogUpdateCoursesInvalid ||
 				this.logData.isLogPurchaseCoursesValid || this.logData.isLogPurchaseCoursesInvalid);
 		await this.initiateDirectories();
 	}
@@ -44,11 +47,17 @@ class LogService {
 		// ===PATH=== //
 		this.baseSessionPath = pathService.pathData.distPath;
 		await this.createSessionDirectory();
-		if (this.logData.isLogGetCoursesValid) {
-			this.getCoursesValidPath = this.createFilePath(`get_courses_valid_${Placeholder.DATE}`);
+		if (this.logData.isLogCreateCoursesValid) {
+			this.createCoursesValidPath = this.createFilePath(`create_courses_valid_${Placeholder.DATE}`);
 		}
-		if (this.logData.isLogGetCoursesInvalid) {
-			this.getCoursesInvalidPath = this.createFilePath(`get_courses_invalid_${Placeholder.DATE}`);
+		if (this.logData.isLogCreateCoursesInvalid) {
+			this.createCoursesInvalidPath = this.createFilePath(`create_courses_invalid_${Placeholder.DATE}`);
+		}
+		if (this.logData.isLogUpdateCoursesValid) {
+			this.updateCoursesValidPath = this.createFilePath(`update_courses_valid_${Placeholder.DATE}`);
+		}
+		if (this.logData.isLogUpdateCoursesInvalid) {
+			this.updateCoursesInvalidPath = this.createFilePath(`update_courses_invalid_${Placeholder.DATE}`);
 		}
 		if (this.logData.isLogPurchaseCoursesValid) {
 			this.purchaseCoursesValidPath = this.createFilePath(`purchase_courses_valid_${Placeholder.DATE}`);
@@ -81,18 +90,25 @@ class LogService {
 		});
 	}
 
-	async logCourse(data) {
+	async logCourse(course) {
 		if (!this.isLogs) {
 			return;
 		}
-		const { course, isValid } = data;
 		let path = null;
+		let isValid = null;
 		switch (applicationService.applicationData.method) {
-			case Method.GET_COURSES:
-				path = isValid ? (this.logData.isLogGetCoursesValid ? this.getCoursesValidPath : null) :
-					(this.logData.isLogGetCoursesInvalid ? this.getCoursesInvalidPath : null);
+			case Method.CREATE_COURSES:
+				isValid = course.status = CourseStatus.CREATE;
+				path = isValid ? (this.logData.isLogCreateCoursesValid ? this.createCoursesValidPath : null) :
+					(this.logData.isLogCreateCoursesInvalid ? this.createCoursesInvalidPath : null);
+				break;
+			case Method.UPDATE_COURSES:
+				isValid = course.status = CourseStatus.CREATE;
+				path = isValid ? (this.logData.isLogUpdateCoursesValid ? this.updateCoursesValidPath : null) :
+					(this.logData.isLogUpdateCoursesInvalid ? this.updateCoursesInvalidPath : null);
 				break;
 			case Method.PURCHASE_COURSES:
+				isValid = course.status = CourseStatus.PURCHASE;
 				path = isValid ? (this.logData.isLogPurchaseCoursesValid ? this.purchaseCoursesValidPath : null) :
 					(this.logData.isLogPurchaseCoursesInvalid ? this.purchaseCoursesInvalidPath : null);
 				break;
@@ -165,21 +181,29 @@ class LogService {
 		}, countLimitService.countLimitData.millisecondsIntervalCount);
 	}
 
+	getCurrentIndex(isPurchase) {
+		const totalCount = isPurchase ? courseService.coursesData.coursesList.length : courseService.coursesData.totalCreateCoursesCount;
+		const coursePosition = textUtils.getNumberOfNumber({ number1: courseService.coursesData.courseIndex, number2: totalCount });
+		const coursePercentage = textUtils.calculatePercentageDisplay({ partialValue: courseService.coursesData.courseIndex, totalValue: totalCount });
+		return `${coursePosition} (${coursePercentage})`;
+	}
+
 	logProgress() {
 		const specificPageNumber = applicationService.applicationData.specificCoursesPageNumber ?
 			applicationService.applicationData.specificCoursesPageNumber : this.emptyValue;
 		const isKeyWordsFilter = validationUtils.isExists(applicationService.applicationData.keyWordsFilterList);
 		const time = `${applicationService.applicationData.time} [${this.frames[this.i = ++this.i % this.frames.length]}]`;
-		const totalPricePurchased = `₪${textUtils.getNumberWithCommas(textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalPriceNumber))}`;
+		const totalPricePurchased = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalPriceNumber)}`;
 		let courseIndex = this.emptyValue;
 		switch (applicationService.applicationData.method) {
-			case Method.GET_COURSES:
+			case Method.CREATE_COURSES:
 				courseIndex = courseService.coursesData.coursesList.length;
 				break;
+			case Method.UPDATE_COURSES:
+				courseIndex = this.getCurrentIndex(false);
+				break;
 			case Method.PURCHASE_COURSES:
-				const coursePosition = textUtils.getNumberOfNumber({ number1: courseService.coursesData.courseIndex, number2: courseService.coursesData.coursesList.length });
-				const coursePercentage = textUtils.calculatePercentageDisplay({ partialValue: courseService.coursesData.courseIndex, totalValue: courseService.coursesData.coursesList.length });
-				courseIndex = `${coursePosition} (${coursePercentage})`;
+				courseIndex = this.getCurrentIndex(true);
 				break;
 		}
 		const purchaseCount = `${StatusIcon.V}  ${textUtils.getNumberWithCommas(courseService.coursesData.purchaseCount)}`;
@@ -238,6 +262,7 @@ class LogService {
 			Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE,
 			Color.BLUE],
 			keysLists: [{
+				'Environment': applicationService.applicationData.environment,
 				'Method': applicationService.applicationData.method,
 				'Query Date': applicationService.applicationData.coursesDate,
 				'Specific Page Number': specificPageNumber,
@@ -246,6 +271,7 @@ class LogService {
 				'Time': time,
 				'Total Price Purchase': totalPricePurchased,
 				'Course': courseIndex,
+				'Courses Count': courseService.coursesData.coursesList.length,
 				'Status': applicationService.applicationData.status
 			}, {
 				'Email': accountService.accountData.email,
@@ -258,7 +284,7 @@ class LogService {
 				'Unexpected Field': courseService.coursesData.unexpectedFieldCount,
 				'Duplicate': courseService.coursesData.duplicateCount
 			}, {
-				'Get Error': courseService.coursesData.getErrorCount,
+				'Create Update Error': courseService.coursesData.createUpdateErrorCount,
 				'Empty URL': courseService.coursesData.emptyURLCount,
 				'Not Exists': courseService.coursesData.notExistsCount,
 				'Limit Access': courseService.coursesData.limitAccessCount,
@@ -287,7 +313,7 @@ class LogService {
 				'Coupon Key': couponKey,
 				'Type': type
 			}, {
-				'Get Error In A Row': domService.getErrorsInARowCount,
+				'Create Update Error In A Row': domService.createUpdateErrorsInARowCount,
 				'Purchase Error In A Row': puppeteerService.purchaseErrorInARowCount
 			}, {
 				'#': name
@@ -296,12 +322,12 @@ class LogService {
 			}, {
 				'#': udemyURL
 			}, {
-				'Time:': resultDateTime,
+				'Time': resultDateTime,
 				'Result': resultDetails
 			}],
 			colorsLists: [
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
+				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
+				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW],
 				[Color.GREEN, Color.RED, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
 				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
@@ -314,6 +340,7 @@ class LogService {
 				[], [], [],
 				[Color.CYAN, Color.CYAN]
 			],
+			nonNumericKeys: { 'Id': 'Id', 'Post Id': 'Post Id' },
 			statusColor: Color.CYAN
 		});
 	}
@@ -329,9 +356,10 @@ class LogService {
 	}
 
 	createConfirmSettingsTemplate(settings) {
-		const parameters = ['COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT', 'COURSES_DATE',
-			'SPECIFIC_COURSES_PAGE_NUMBER', 'KEY_WORDS_FILTER_LIST', 'IS_GET_COURSES_METHOD_ACTIVE',
-			'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_GET_COURSES_VALID', 'IS_LOG_GET_COURSES_INVALID',
+		const parameters = ['IS_PRODUCTION_ENVIRONMENT', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
+			'COURSES_DATE', 'SPECIFIC_COURSES_PAGE_NUMBER', 'KEY_WORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
+			'IS_UPDATE_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_CREATE_COURSES_VALID',
+			'IS_LOG_CREATE_COURSES_INVALID', 'IS_LOG_UPDATE_COURSES_VALID', 'IS_LOG_UPDATE_COURSES_INVALID',
 			'IS_LOG_PURCHASE_COURSES_VALID', 'IS_LOG_PURCHASE_COURSES_INVALID', 'MAXIMUM_COURSES_PURCHASE_COUNT',
 			'MAXIMUM_PAGES_NUMBER'];
 		let settingsText = this.createLineTemplate('EMAIL', accountService.accountData.email);

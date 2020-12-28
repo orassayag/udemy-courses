@@ -9,7 +9,7 @@ const { CourseStatus } = require('../../core/enums');
 class DomService {
 
     constructor() {
-        this.getErrorsInARowCount = 0;
+        this.createUpdateErrorsInARowCount = 0;
         // ===DOM=== //
         this.href = 'a';
         // ===COURSE=== //
@@ -37,7 +37,7 @@ class DomService {
         this.purchaseSuccessDOM = '.alert-success';
     }
 
-    async getSingleCourses(data) {
+    async createSingleCourses(data) {
         let coursesCount = 0;
         try {
             const { mainContent, pageNumber, indexPageNumber } = data;
@@ -47,7 +47,7 @@ class DomService {
                 const course = courses[i];
                 const url = course.getElementsByClassName(this.singleCourseTitleDOM)[0]?.childNodes[0];
                 const date = timeUtils.getDateFromString(course.getElementsByClassName(this.singleCourseDateDOM)[0]?.childNodes[2]?.data?.trim());
-                courseService.createCourse({
+                await courseService.createCourse({
                     postId: parseInt(course.id.split('-')[1]),
                     pageNumber: pageNumber,
                     indexPageNumber: indexPageNumber,
@@ -79,7 +79,7 @@ class DomService {
         }
     }
 
-    async getCourseFullData(data) {
+    async createCourseFullData(data) {
         const { course, courseIndex, courseContent } = data;
         const coursesLists = [];
         try {
@@ -96,8 +96,8 @@ class DomService {
                     break;
                 }
                 if (url.indexOf(applicationService.applicationData.singleCourseInit) > -1) {
-                    const result = courseUtils.getCourseSingleData(url);
-                    courseService.updateSingleCourseData({
+                    const result = courseUtils.createCourseSingleData(url);
+                    await courseService.updateSingleCourseData({
                         course: course,
                         courseIndex: courseIndex,
                         udemyURL: result.udemyURL,
@@ -109,19 +109,19 @@ class DomService {
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesUpdate);
             }
             if (validationUtils.isExists(coursesLists)) {
-                this.getCoursesList(coursesLists);
+                this.createCoursesList(coursesLists);
             }
             return this.validateErrorInARow(false);
         }
         catch (error) {
-            courseService.coursesData.coursesList[courseIndex] = this.setCourseError(error, course);
+            courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
             if (this.validateErrorInARow(true)) {
                 return true;
             }
         }
     }
 
-    async getCoursesListWithNames(data) {
+    async createCoursesListWithNames(data) {
         const { course, courseIndex, date, coursesDOMList } = data;
         try {
             for (let i = 0; i < coursesDOMList.length; i++) {
@@ -132,9 +132,10 @@ class DomService {
                     continue;
                 }
                 const couponKey = courseUtils.getCourseCoupon(udemyURL);
-                courseService.createCourse({
+                await courseService.createCourse({
                     postId: null,
                     pageNumber: course.pageNumber,
+                    indexPageNumber: course.indexPageNumber,
                     isFree: !validationUtils.isExists(couponKey),
                     courseURL: course.courseURL,
                     udemyURL: udemyURL,
@@ -145,18 +146,20 @@ class DomService {
                     isSingleCourse: false
                 });
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
-                return this.validateErrorInARow(false);
+                if (this.validateErrorInARow(false)) {
+                    return true;
+                }
             }
         }
         catch (error) {
-            courseService.coursesData.coursesList[courseIndex] = this.setCourseError(error, course);
+            courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
             if (this.validateErrorInARow(true)) {
                 return true;
             }
         }
     }
 
-    async getCoursesListWithoutNames(data) {
+    async createCoursesListWithoutNames(data) {
         const { course, courseIndex, date, courseURLsList } = data;
         try {
             for (let i = 0; i < courseURLsList.length; i++) {
@@ -165,9 +168,10 @@ class DomService {
                     continue;
                 }
                 const couponKey = courseUtils.getCourseCoupon(udemyURL);
-                courseService.createCourse({
+                await courseService.createCourse({
                     postId: null,
                     pageNumber: course.pageNumber,
+                    indexPageNumber: course.indexPageNumber,
                     isFree: !validationUtils.isExists(couponKey),
                     courseURL: course.courseURL,
                     udemyURL: udemyURL,
@@ -178,18 +182,20 @@ class DomService {
                     isSingleCourse: false
                 });
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
-                return this.validateErrorInARow(false);
+                if (this.validateErrorInARow(false)) {
+                    return true;
+                }
             }
         }
         catch (error) {
-            courseService.coursesData.coursesList[courseIndex] = this.setCourseError(error, course);
+            courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
             if (this.validateErrorInARow(true)) {
                 return true;
             }
         }
     }
 
-    async getCoursesList(coursesLists) {
+    async createCoursesList(coursesLists) {
         let isErrorInARow = false;
         for (let i = 0; i < coursesLists.length; i++) {
             const { course, courseIndex, dom } = coursesLists[i];
@@ -197,19 +203,18 @@ class DomService {
                 const date = timeUtils.getDateFromString(dom.window.document.getElementsByClassName(this.singleCourseDateDOM)[0]?.childNodes[2]?.data?.trim());
                 const coursesDOMList = dom.window.document.getElementsByClassName(this.coursesListContainerDOM);
                 if (validationUtils.isExists(coursesDOMList)) {
-                    if (await this.getCoursesListWithNames({
+                    if (await this.createCoursesListWithNames({
                         course: course,
                         courseIndex: courseIndex,
                         date: date,
                         coursesDOMList: coursesDOMList
-                    }));
-                    {
+                    })) {
                         isErrorInARow = true;
                         break;
                     }
                 }
                 else {
-                    if (await this.getCoursesListWithoutNames({
+                    if (await this.createCoursesListWithoutNames({
                         course: course,
                         courseIndex: courseIndex,
                         date: date,
@@ -219,14 +224,14 @@ class DomService {
                         break;
                     }
                 }
-                courseService.updateCoursesListCourseData({
+                await courseService.updateCoursesListCourseData({
                     course: course,
                     courseIndex: courseIndex
                 });
                 return isErrorInARow ? isErrorInARow : this.validateErrorInARow(false);
             }
             catch (error) {
-                courseService.coursesData.coursesList[courseIndex] = this.setCourseError(error, course);
+                courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
                 if (this.validateErrorInARow(true)) {
                     return true;
                 }
@@ -236,19 +241,19 @@ class DomService {
 
     validateErrorInARow(isError) {
         if (isError) {
-            this.getErrorsInARowCount++;
-            return this.getErrorsInARowCount >= countLimitService.countLimitData.maximumGetErrorInARowCount;
+            this.createUpdateErrorsInARowCount++;
+            return this.createUpdateErrorsInARowCount >= countLimitService.countLimitData.maximumCreateUpdateErrorInARowCount;
         }
         else {
-            this.getErrorsInARowCount = 0;
+            this.createUpdateErrorsInARowCount = 0;
         }
         return false;
     }
 
-    setCourseError(error, course) {
-        return courseService.updateCourseStatus({
-            course: course, status: CourseStatus.GET_ERROR,
-            details: `Unexpected error occurred durning the get process. More details: ${systemUtils.getErrorDetails(error)}`
+    async setCourseError(error, course) {
+        return await courseService.updateCourseStatus({
+            course: course, status: CourseStatus.CREATE_UPDATE_ERROR,
+            details: `Unexpected error occurred durning the create update process. More details: ${systemUtils.getErrorDetails(error)}`
         });
     }
 

@@ -9,7 +9,7 @@ const settings = {
     // Determine if the init of the link to the single course on Udemy.
     SINGLE_COURSE_INIT: 'https://click.linksynergy.com/deeplink?',
     // Determine the date of the courses page. Default is the current date.
-    // If not, use yyyy/mm/dd format. Example: 2020/12/13
+    // If not, use 'yyyy/mm/dd' format. Example: '2020/12/13'.
     COURSES_DATE: timeUtils.getCommasDate(),
     // Determine the specific courses page (in the pagination) to crawl. If null,
     // will scan all the courses pages until reached the maximum number (MAXIMUM_PAGES_NUMBER).
@@ -19,19 +19,27 @@ const settings = {
     KEY_WORDS_FILTER_LIST: [],
 
     // ===FLAG=== //
-    // Determine if to perform the get courses method.
-    IS_GET_COURSES_METHOD_ACTIVE: true,
+    // Determine if to load Udemy account of development or production.
+    IS_PRODUCTION_ENVIRONMENT: true,
+    // Determine if to perform the create courses method.
+    IS_CREATE_COURSES_METHOD_ACTIVE: true,
+    // Determine if to perform the update courses method.
+    IS_UPDATE_COURSES_METHOD_ACTIVE: true,
     // Determine if to perform the purchase courses method.
-    IS_PURCHASE_COURSES_METHOD_ACTIVE: false,
+    IS_PURCHASE_COURSES_METHOD_ACTIVE: true,
 
     // ===LOG=== //
-    // Determine if to log the get courses valid courses (get courses method).
-    IS_LOG_GET_COURSES_VALID: true,
-    // Determine if to log the get courses invalid courses (get courses method).
-    IS_LOG_GET_COURSES_INVALID: true,
-    // Determine if to log the purchase courses valid courses (purchase courses method).
+    // Determine if to log the create valid courses (create courses method).
+    IS_LOG_CREATE_COURSES_VALID: true,
+    // Determine if to log the create invalid courses (create courses method).
+    IS_LOG_CREATE_COURSES_INVALID: true,
+    // Determine if to log the update valid courses (update courses method).
+    IS_LOG_UPDATE_COURSES_VALID: true,
+    // Determine if to log the update invalid courses (update courses method).
+    IS_LOG_UPDATE_COURSES_INVALID: true,
+    // Determine if to log the purchase valid courses (purchase courses method).
     IS_LOG_PURCHASE_COURSES_VALID: true,
-    // Determine if to log the purchase courses invalid courses (purchase courses method).
+    // Determine if to log the purchase invalid courses (purchase courses method).
     IS_LOG_PURCHASE_COURSES_INVALID: true,
 
     // ===COUNT & LIMIT=== //
@@ -64,15 +72,17 @@ const settings = {
     MILLISECONDS_TIMEOUT_BETWEEN_COURSES_PURCHASE: 5000,
     // Determine the milliseconds count timeout to wait after any Udemy page to load.
     MILLISECONDS_TIMEOUT_UDEMY_PAGE_LOAD: 5000,
-    // Determine the number of get process error in a row, which after exceeded this count the program will exit.
-    MAXIMUM_GET_ERROR_IN_A_ROW_COUNT: 5,
+    // Determine the number of create and update processes error in a row, which after exceeded this count the program will exit.
+    MAXIMUM_CREATE_UPDATE_ERROR_IN_A_ROW_COUNT: 5,
     // Determine the number of purchase process error in a row, which after exceeded this count the program will exit.
     MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT: 5,
+    // Determine the milliseconds count timeout to wait before exit the application.
+    MILLISECONDS_TIMEOUT_EXIT_APPLICATION: 1000,
 
     // ===ROOT PATH=== //
     // Determine the application name used for some of the calculated paths.
     APPLICATION_NAME: 'udemy-courses',
-    // Determine the path for the outer application, where other directories located, such as backups, sources, etc..
+    // Determine the path for the outer application, where other directories located, such as backups, sources, etc...
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\').
     OUTER_APPLICATION_PATH: pathUtils.getJoinPath({
         targetPath: __dirname,
@@ -87,7 +97,7 @@ const settings = {
     // Determine the path of the JSON file from which the Udemy account will be fetched. Must be a JSON file.
     ACCOUNT_FILE_PATH: pathUtils.getJoinPath({
         targetPath: __dirname,
-        targetName: '../../../../../../Accounts/Udemy/account.json'
+        targetName: '../../../../../../Accounts/Udemy/'
     }),
 
     // ===DYNAMIC PATH=== //

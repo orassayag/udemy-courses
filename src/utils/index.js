@@ -1,3 +1,4 @@
+const applicationUtils = require('./files/application.utils');
 const colorUtils = require('./files/color.utils');
 const courseUtils = require('./files/course.utils');
 const crawlUtils = require('./files/crawl.utils');
@@ -11,6 +12,7 @@ const timeUtils = require('./files/time.utils');
 const validationUtils = require('./files/validation.utils');
 
 module.exports = {
-    colorUtils, courseUtils, crawlUtils, fileUtils, logUtils, pathUtils,
-    regexUtils, systemUtils, textUtils, timeUtils, validationUtils
+    applicationUtils, colorUtils, courseUtils, crawlUtils, fileUtils,
+    logUtils, pathUtils, regexUtils, systemUtils, textUtils, timeUtils,
+    validationUtils
 };

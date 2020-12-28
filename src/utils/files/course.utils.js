@@ -4,7 +4,7 @@ class CourseUtils {
 
     constructor() { }
 
-    getCourseSingleData(url) {
+    createCourseSingleData(url) {
         url = unescape(url);
         url = url.split('murl=')[1];
         return {

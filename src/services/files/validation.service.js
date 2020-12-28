@@ -18,7 +18,7 @@ class ValidationService {
             isConnected = await isReachable(url);
         } catch (error) { isConnected = false; }
         if (!isConnected) {
-            throw new Error(`${url} is not available (1000021)`);
+            throw new Error(`${url} is not available (1000022)`);
         }
     }
 }

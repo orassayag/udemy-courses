@@ -7,7 +7,7 @@ const CourseStatus = enumUtils.createEnum([
     ['MISSING_FIELD', 'missingField'],
     ['UNEXPECTED_FIELD', 'unexpectedField'],
     ['DUPLICATE', 'duplicate'],
-    ['GET_ERROR', 'getError'],
+    ['CREATE_UPDATE_ERROR', 'createUpdateError'],
     ['EMPTY_URL', 'emptyURL'],
     ['NOT_EXISTS', 'notExists'],
     ['LIMIT_ACCESS', 'limitAccess'],

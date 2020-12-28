@@ -6,7 +6,9 @@ const { ScriptType } = require('../../core/enums/files/system.enum');
 
 class InitiateService {
 
-	constructor() { }
+	constructor() {
+		this.scriptType = null;
+	}
 
 	initiate(scriptType) {
 		this.scriptType = scriptType;
@@ -20,6 +22,15 @@ class InitiateService {
 		this.validateDirectories();
 		// Validate that certain directories exists, and if not, create them.
 		this.createDirectories();
+	}
+
+	validateScriptType() {
+		if (!validationUtils.isValidEnum({
+			enum: ScriptType,
+			value: this.scriptType
+		})) {
+			throw new Error('Invalid or no ScriptType parameter was found (1000014)');
+		}
 	}
 
 	setup() {
@@ -43,7 +54,7 @@ class InitiateService {
 	validateSettings() {
 		// Validate the settings object existence.
 		if (!settings) {
-			throw new Error('Invalid or no settings object was found (1000014)');
+			throw new Error('Invalid or no settings object was found (1000015)');
 		}
 		this.validatePositiveNumbers();
 		this.validateStrings();
@@ -73,14 +84,14 @@ class InitiateService {
 			'MILLISECONDS_INTERVAL_COUNT', 'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_CREATE', 'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_MAIN_PAGES',
 			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_UPDATE', 'MAXIMUM_COURSE_NAME_CHARACTERS_DISPLAY_COUNT', 'MAXIMUM_URL_CHARACTERS_DISPLAY_COUNT',
 			'MAXIMUM_RESULT_CHARACTERS_DISPLAY_COUNT', 'MILLISECONDS_TIMEOUT_UDEMY_ACTIONS', 'MAXIMUM_UDEMY_LOGIN_ATTEMPTS_COUNT',
-			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_PURCHASE', 'MILLISECONDS_TIMEOUT_UDEMY_PAGE_LOAD', 'MAXIMUM_GET_ERROR_IN_A_ROW_COUNT',
-			'MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT',
+			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_PURCHASE', 'MILLISECONDS_TIMEOUT_UDEMY_PAGE_LOAD', 'MAXIMUM_CREATE_UPDATE_ERROR_IN_A_ROW_COUNT',
+			'MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION',
 			// ===BACKUP=== //
 			'MILLISECONDS_DELAY_VERIFY_BACKUP_COUNT', 'BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT'
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isPositiveNumber(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a number but received: ${value} (1000015)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a number but received: ${value} (1000016)`);
 			}
 		});
 	}
@@ -99,7 +110,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isExists(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a string but received: ${value} (1000016)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a string but received: ${value} (1000017)`);
 			}
 		});
 	}
@@ -107,14 +118,15 @@ class InitiateService {
 	validateBooleans() {
 		[
 			// ===FLAG=== //
-			'IS_GET_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE',
+			'IS_PRODUCTION_ENVIRONMENT', 'IS_CREATE_COURSES_METHOD_ACTIVE', 'IS_UPDATE_COURSES_METHOD_ACTIVE',
+			'IS_PURCHASE_COURSES_METHOD_ACTIVE',
 			// ===LOG=== //
-			'IS_LOG_GET_COURSES_VALID', 'IS_LOG_GET_COURSES_INVALID', 'IS_LOG_PURCHASE_COURSES_VALID',
-			'IS_LOG_PURCHASE_COURSES_INVALID'
+			'IS_LOG_CREATE_COURSES_VALID', 'IS_LOG_CREATE_COURSES_INVALID', 'IS_LOG_UPDATE_COURSES_VALID',
+			'IS_LOG_UPDATE_COURSES_INVALID', 'IS_LOG_PURCHASE_COURSES_VALID', 'IS_LOG_PURCHASE_COURSES_INVALID'
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidBoolean(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a boolean but received: ${value} (1000017)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a boolean but received: ${value} (1000018)`);
 			}
 		});
 	}
@@ -128,7 +140,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidArray(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a array but received: ${value} (1000018)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a array but received: ${value} (1000019)`);
 			}
 		});
 	}
@@ -140,12 +152,12 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidURL(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a URL but received: ${value} (1000019)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a URL but received: ${value} (1000020)`);
 			}
 		});
 		const { COURSES_DATE } = settings;
 		if (!validationUtils.isValidDateFormat(COURSES_DATE)) {
-			throw new Error(`Invalid or no COURSES_DATE parameter was found: Excpected a Date (mm-dd-yyyy) but received: ${COURSES_DATE} (1000020)`);
+			throw new Error(`Invalid or no COURSES_DATE parameter was found: Excpected a Date (mm-dd-yyyy) but received: ${COURSES_DATE} (1000021)`);
 		}
 	}
 

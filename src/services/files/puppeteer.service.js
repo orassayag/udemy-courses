@@ -7,7 +7,7 @@ const countLimitService = require('./countLimit.service');
 const domService = require('./dom.service');
 const { courseUtils, crawlUtils, logUtils, systemUtils, validationUtils } = require('../../utils');
 const globalUtils = require('../../utils/files/global.utils');
-const { CourseStatus, Mode, Status } = require('../../core/enums');
+const { Color, CourseStatus, Mode, Status } = require('../../core/enums');
 
 class PuppeteerService {
 
@@ -16,6 +16,7 @@ class PuppeteerService {
         this.timeout = null;
         this.pageOptions = null;
         this.waitForFunction = null;
+        this.isPlannedClose = null;
     }
 
     initiate() {
@@ -30,6 +31,7 @@ class PuppeteerService {
 
     async initiateCrawl(isDisableAsserts) {
         // Set the browser.
+        this.isPlannedClose = false;
         const browser = await puppeteerExtra.launch({
             headless: false,
             args: [
@@ -42,9 +44,12 @@ class PuppeteerService {
         const pid = browser.process().pid;
         browser.on('disconnected', () => {
             systemUtils.killProcess(pid);
+            if (!this.isPlannedClose) {
+                systemUtils.exit(Status.BROWSER_CLOSE, Color.RED, 0);
+            }
         });
         process.on('SIGINT', () => {
-            this.close(browser);
+            this.close(browser, true);
         });
         // Set the page and close the first empty tab.
         const page = await browser.newPage();
@@ -78,14 +83,14 @@ class PuppeteerService {
         try {
             // Go to the courses from single URLs.
             for (let i = 0; i < countLimitService.countLimitData.maximumPagesNumber; i++) {
-                applicationService.applicationData.status = Status.GET_COURSES;
+                applicationService.applicationData.status = Status.CREATE_COURSES;
                 const pageNumber = isSpecificPage ? applicationService.applicationData.specificCoursesPageNumber : i + 1;
                 const url = `${applicationService.applicationData.coursesBaseURL}/${applicationService.applicationData.coursesDate}/page/${pageNumber}/`;
                 await page.goto(url, this.pageOptions);
                 await page.waitForFunction(this.waitForFunction, { timeout: this.timeout });
                 const mainContent = await page.content();
-                // Get all the courses from the main page with pagination.
-                const coursesResult = await domService.getSingleCourses({
+                // Create all the courses from the main page with pagination.
+                const coursesResult = await domService.createSingleCourses({
                     mainContent: mainContent,
                     pageNumber: pageNumber,
                     indexPageNumber: i
@@ -97,6 +102,7 @@ class PuppeteerService {
                 if (!coursesResult.coursesCount) {
                     break;
                 }
+                courseService.coursesData.totalCreateCoursesCount += coursesResult.coursesCount;
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesMainPages);
                 applicationService.applicationData.status = Status.PAUSE;
                 if (isSpecificPage) {
@@ -107,7 +113,7 @@ class PuppeteerService {
         catch (error) {
             logUtils.log(error);
         }
-        await this.close(browser);
+        await this.close(browser, true);
         return isErrorInARow;
     }
 
@@ -118,11 +124,13 @@ class PuppeteerService {
             // Loop on the course URL to get the course full data.
             const originalCoursesCount = courseService.coursesData.coursesList.length;
             for (let i = 0; i < originalCoursesCount; i++) {
+                applicationService.applicationData.status = Status.UPDATE_COURSES;
+                courseService.coursesData.courseIndex = i + 1;
                 const course = courseService.coursesData.coursesList[i];
                 await page.goto(course.courseURL, this.pageOptions);
                 await page.waitForFunction(this.waitForFunction, { timeout: this.timeout });
                 const postContent = await page.content();
-                isErrorInARow = await domService.getCourseFullData({
+                isErrorInARow = await domService.createCourseFullData({
                     course: course,
                     courseIndex: i,
                     courseContent: postContent
@@ -135,7 +143,7 @@ class PuppeteerService {
         catch (error) {
             logUtils.log(error);
         }
-        await this.close(browser);
+        await this.close(browser, true);
         return isErrorInARow;
     }
 
@@ -165,7 +173,7 @@ class PuppeteerService {
             let isPasswordRequiredOnly = false;
             for (let i = 0; i < countLimitService.countLimitData.maximumUdemyLoginAttemptsCount; i++) {
                 // If no match for the email or password inputs, the page usually go to
-                // "Provie you are human" or "Your browser too old" pages. Change the user agent
+                // "Prove you are human" or "Your browser too old" pages. Change the user agent
                 // and reload the page should solve this issue.
                 if (!await page.$(domService.loginEmailDOM) && !await page.$(domService.loginPasswordDOM)) {
                     await page.goto(applicationService.applicationData.udemyLoginURL, this.pageOptions);
@@ -186,7 +194,7 @@ class PuppeteerService {
             }
             // If pages didn't loaded after number of attempts to reload, exit the program.
             if (!pageLoaded) {
-                await this.close(browser);
+                await this.close(browser, true);
                 return { exitReason: Status.LOGIN_FAILED };
             }
             // Insert credentials and click login.
@@ -204,7 +212,7 @@ class PuppeteerService {
             await this.sleepAction();
             // Validate login was successfull.
             if (await page.$(domService.loginErrorDOM) || await page.$(domService.signInHeaderDOM)) {
-                await this.close(browser);
+                await this.close(browser, true);
                 return { exitReason: Status.LOGIN_LOAD_FAILED };
             }
             await this.sleepAction();
@@ -232,7 +240,7 @@ class PuppeteerService {
             }
             // Validate course URL.
             if (!course.udemyURL) {
-                courseService.coursesData.coursesList[i] = courseService.updateCourseStatus({
+                courseService.coursesData.coursesList[i] = await courseService.updateCourseStatus({
                     course: course,
                     status: CourseStatus.EMPTY_URL,
                     details: 'Course status is CREATE but the udemyURL is empty.'
@@ -292,17 +300,17 @@ class PuppeteerService {
             this.logSessionStage('LOAD');
             // Validate if page exists.
             if (await page.$(domService.courseNotExistsDOM)) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.NOT_EXISTS,
-                    details: 'Course page does not exists, no such course.'
+                    details: 'Course page does not exists, no such course.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE EXISTS');
             // Validate if the course exists.
             if (await page.$(domService.courseLimitAccessDOM)) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.LIMIT_ACCESS,
-                    details: 'Course page has no data and the access is limited.'
+                    details: 'Course page has no data and the access is limited.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE NOT LIMIT ACCESS');
@@ -311,18 +319,18 @@ class PuppeteerService {
                 const courseH1 = await page.$eval(domService.coursesSuggestListDOM, el => el.textContent);
                 const courseBackground = await page.$(domService.courseBackgroundDOM);
                 if (!courseBackground && courseH1.indexOf('Courses') > -1) {
-                    return this.setCourseStatus({
+                    return await this.setCourseStatus({
                         page: page, course: course, status: CourseStatus.SUGGESTIONS_LIST,
-                        details: 'Course page is not purchasable, it\'s a courses list suggestions page.'
+                        details: 'Course page is not purchasable, it\'s a courses list suggestions page.', originalPrices: null
                     });
                 }
             }
             this.logSessionStage('PAGE NOT SUGGESTIONS LIST');
             // Validate that course is not private.
             if (await page.$(domService.courseIsPrivateDOM)) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.PRIVATE,
-                    details: 'Course page is private. It has lock icon button.'
+                    details: 'Course page is private. It has lock icon button.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE NOT PRIVATE');
@@ -331,53 +339,50 @@ class PuppeteerService {
             if (enrollButton) {
                 const enrollButtonText = await page.$eval(domService.courseEnrollButtonDOM, el => el.textContent);
                 if (enrollButtonText.indexOf('Go to course') > -1) {
-                    return this.setCourseStatus({
+                    return await this.setCourseStatus({
                         page: page, course: course, status: CourseStatus.ALREADY_PURCHASE,
-                        details: 'The course already purchased in tha past. No price label exists.'
+                        details: 'The course already purchased in tha past. No price label exists.', originalPrices: null
                     });
                 }
             }
             else {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.ENROLL_NOT_EXISTS,
-                    details: 'Can\'t purchase the course, because the enroll button not exists.'
+                    details: 'Can\'t purchase the course, because the enroll button not exists.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE HAS ENROLL BUTTON');
             // Validate that the course not already purchase.
             if (!await page.$(domService.coursePriceLabelDOM)) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.ALREADY_PURCHASE,
-                    details: 'The course already purchased in tha past. No price label exists.'
+                    details: 'The course already purchased in tha past. No price label exists.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE HAS PRICE LABEL 1');
             const coursePriceLabel = await page.$eval(domService.coursePriceLabelDOM, el => el.textContent);
             if (!coursePriceLabel) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.ALREADY_PURCHASE,
-                    details: 'The course already purchased in tha past. No price label exists.'
+                    details: 'The course already purchased in tha past. No price label exists.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE HAS PRICE LABEL 2');
             // Validate that the course is free.
             if (coursePriceLabel.indexOf('Free') === -1) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.COURSE_PRICE_NOT_FREE,
-                    details: 'The course price is not free. The keyword \'Free\' doesn\'t exists in the price label.'
+                    details: 'The course price is not free. The keyword \'Free\' doesn\'t exists in the price label.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE HAS FREE');
             // Get the course original price.
+            let originalPrices = null;
             if (await page.$(domService.courseOriginalPriceDOM)) {
                 const courseOriginalPriceLabel = await page.$eval(domService.courseOriginalPriceDOM, el => el.textContent);
                 if (courseOriginalPriceLabel) {
                     // Get the prices from the label and save them.
-                    const { priceNumber, priceDisplay } = courseUtils.getCoursePrices(courseOriginalPriceLabel);
-                    course.priceNumber = priceNumber;
-                    course.priceDisplay = priceDisplay;
-                    courseService.coursesData.totalPriceNumber += priceNumber;
-                    courseService.coursesData.course = course;
+                    originalPrices = courseUtils.getCoursePrices(courseOriginalPriceLabel);
                 }
             }
             this.logSessionStage('PAGE PASS ORIGINAL PRICE');
@@ -392,34 +397,34 @@ class PuppeteerService {
             // Possible that is a course without checkout page. Validate it.
             if (await page.$(domService.purchaseSuccessDOM)) {
                 // Course has no checkout page and has been purchased.
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.PURCHASE,
-                    details: 'Course has been purchased successfully.'
+                    details: 'Course has been purchased successfully.', originalPrices: originalPrices
                 });
             }
             this.logSessionStage('PAGE NOT PURCHASED YET');
             // In the checkout page, Validate that price exists.
             if (!await page.$(domService.checkoutPriceDOM)) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.CHECKOUT_PRICE_NOT_EXISTS,
-                    details: 'Course\'s price in checkout page doesn\'t exists. No checkout price label exists.'
+                    details: 'Course\'s price in checkout page doesn\'t exists. No checkout price label exists.', originalPrices: originalPrices
                 });
             }
             this.logSessionStage('PAGE HAS CHECKOUT PRICE 1');
             // In the checkout page, Validate that the total price is 0.00.
             const checkoutPriceLabel = await page.$eval(domService.checkoutPriceDOM, el => el.textContent);
             if (!checkoutPriceLabel) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.CHECKOUT_PRICE_NOT_EXISTS,
-                    details: 'Course\'s price in checkout page doesn\'t exists. No checkout price label exists.'
+                    details: 'Course\'s price in checkout page doesn\'t exists. No checkout price label exists.', originalPrices: originalPrices
                 });
             }
             this.logSessionStage('PAGE HAS CHECKOUT PRICE 2');
             const { priceNumber } = courseUtils.getCoursePrices(checkoutPriceLabel);
             if (priceNumber > 0) {
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.CHECKOUT_PRICE_NOT_FREE,
-                    details: `Course's priceNumber in checkout not equal to 0, but priceNumber equal to ${priceNumber}.`
+                    details: `Course's priceNumber in checkout not equal to 0, but priceNumber equal to ${priceNumber}.`, originalPrices: originalPrices
                 });
             }
             this.logSessionStage('PAGE CHECKOUT PRICE IS 0.00');
@@ -435,38 +440,41 @@ class PuppeteerService {
             if (await page.$(domService.purchaseSuccessDOM)) {
                 this.logSessionStage('PURCHASE SUCCESS');
                 // Course has been purchased successfully.
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.PURCHASE,
-                    details: 'Course has been purchased successfully.'
+                    details: 'Course has been purchased successfully.', originalPrices: originalPrices
                 });
             }
             else {
                 // Something went wrong with the purchase.
                 this.logSessionStage('PURCHASE FAIL');
-                return this.setCourseStatus({
+                return await this.setCourseStatus({
                     page: page, course: course, status: CourseStatus.FAIL,
-                    details: 'The purchase has failed. Successfully purchase label does not exists.'
+                    details: 'The purchase has failed. Successfully purchase label does not exists.', originalPrices: originalPrices
                 });
             }
         }
         catch (error) {
             const errorDetails = systemUtils.getErrorDetails(error);
             this.logSessionStage(`PURCHASE ERROR: ${errorDetails}`);
-            return this.setCourseStatus({
+            return await this.setCourseStatus({
                 page: page, course: course, status: CourseStatus.PURCHASE_ERROR,
-                details: `Unexpected error occurred durning the purchase process. More details: ${errorDetails}`
+                details: `Unexpected error occurred durning the purchase process. More details: ${errorDetails}`, originalPrices: null
             });
         }
     }
 
-    setCourseStatus(data) {
-        const { page, status, details } = data;
+    async setCourseStatus(data) {
+        const { page, status, details, originalPrices } = data;
         let { course } = data;
-        course = courseService.updateCourseStatus({
+        course = await courseService.updateCourseStatus({
             course: course,
             status: status,
             details: details
         });
+        if (originalPrices) {
+            course = courseService.updateCoursePrices(course, originalPrices);
+        }
         if (applicationService.applicationData.mode === Mode.SESSION) {
             logUtils.log(course);
         }
@@ -496,13 +504,13 @@ class PuppeteerService {
             const urls = await page.$$eval(domService.href, a => a.map(url => url.href));
             const urlIndex = urls.findIndex(url => url.indexOf(applicationService.applicationData.udemyLogoutURL) > -1);
             if (urlIndex === -1) {
-                await this.close(browser);
+                await this.close(browser, true);
                 return { exitReason: Status.LOGOUT_FAILED };
             }
             await page.goto(urls[urlIndex], this.pageOptions);
             await page.waitForFunction(this.waitForFunction, { timeout: this.timeout });
             await this.sleepAction();
-            await this.close(browser);
+            await this.close(browser, true);
         }
         catch (error) {
             logUtils.log(error);
@@ -545,9 +553,13 @@ class PuppeteerService {
         await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutUdemyPageLoad);
     }
 
-    async close(browser) {
+    async close(browser, isPlannedClose) {
+        this.isPlannedClose = isPlannedClose;
         if (browser) {
-            await browser.close();
+            try {
+                await browser.close();
+            }
+            catch (error) { }
         }
     }
 }

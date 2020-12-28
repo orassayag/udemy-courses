@@ -1,7 +1,13 @@
 const enumUtils = require('../enum.utils');
 
+const Environment = enumUtils.createEnum([
+    ['PRODUCTION', 'PRODUCTION'],
+    ['DEVELOPMENT', 'DEVELOPMENT']
+]);
+
 const Method = enumUtils.createEnum([
-    ['GET_COURSES', 'GET COURSES'],
+    ['CREATE_COURSES', 'CREATE COURSES'],
+    ['UPDATE_COURSES', 'UPDATE COURSES'],
     ['PURCHASE_COURSES', 'PURCHASE COURSES']
 ]);
 
@@ -13,19 +19,19 @@ const Mode = enumUtils.createEnum([
 const ScriptType = enumUtils.createEnum([
     ['BACKUP', 'backup'],
     ['PURCHASE', 'purchase'],
-    ['UDEMY_SESSION', 'udemy-session'],
-    ['SANDBOX', 'sandbox']
+    ['TEST', 'test']
 ]);
 
 const Status = enumUtils.createEnum([
     ['ABORT_BY_THE_USER', 'ABORT BY THE USER'],
     ['INITIATE', 'INITIATE'],
-    ['GET_COURSES', 'GET COURSES'],
+    ['CREATE_COURSES', 'CREATE COURSES'],
     ['LOGIN', 'LOGIN'],
     ['LOGIN_LOAD_FAILED', 'LOGIN LOAD FAILED'],
     ['LOGIN_FAILED', 'LOGIN FAILED'],
     ['INVALID_METHOD', 'INVALID METHOD'],
-    ['GET_ERROR_IN_A_ROW', 'GET ERROR IN A ROW'],
+    ['CREATE_UPDATE_ERROR_IN_A_ROW', 'CREATE UPDATE ERROR IN A ROW'],
+    ['UPDATE_COURSES', 'UPDATE COURSES'],
     ['PURCHASE_ERROR_IN_A_ROW', 'PURCHASE ERROR IN A ROW'],
     ['NO_COURSES_EXISTS', 'NO COURSES EXISTS'],
     ['NO_VALID_COURSES_EXISTS', 'NO VALID COURSES EXISTS'],
@@ -35,7 +41,8 @@ const Status = enumUtils.createEnum([
     ['PAUSE', 'PAUSE'],
     ['PURCHASE', 'PURCHASE'],
     ['LOGOUT', 'LOGOUT'],
+    ['BROWSER_CLOSE', 'BROWSER CLOSE'],
     ['FINISH', 'FINISH']
 ]);
 
-module.exports = { Method, Mode, ScriptType, Status };
+module.exports = { Environment, Method, Mode, ScriptType, Status };

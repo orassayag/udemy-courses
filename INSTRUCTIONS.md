@@ -2,7 +2,7 @@ FAST & BASIC START
 ==================
 1. Open the project in IDE (Current to 12/19/2020 I'm using VSCode).
 2. Open the following file in the src/settings/settings.js file.
-3. Search for the first setting - 'IS_GET_COURSES_METHOD_ACTIVE' and 'IS_PURCHASE_COURSES_METHOD_ACTIVE' - Make sure they are set to true.
+3. Search for the first setting - 'IS_CREATE_COURSES_METHOD_ACTIVE' and 'IS_PURCHASE_COURSES_METHOD_ACTIVE' - Make sure they are set to true.
 4. Next - Time to install the NPM packages. On the terminal run 'npm run i'.
 5. Once finished with the node_modules installation, it's time to set up your date.
 6. Open once again the Open the following file in the src/settings/settings.js file.

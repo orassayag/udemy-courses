@@ -12,12 +12,12 @@ class TimeUtils {
 
     getFullTime() {
         const date = new Date();
-        return `${textUtils.addLeadingZero(date.getHours())}:${textUtils.addLeadingZero(date.getMinutes())}:${textUtils.addLeadingZero(date.getSeconds())}`;
+        return `${this.getHours(date)}:${this.getMinutes(date)}:${this.getSeconds(date)}`;
     }
 
     getDateNoSpaces() {
         const date = new Date();
-        return [textUtils.addLeadingZero(date.getDate()), (textUtils.addLeadingZero(date.getMonth() + 1)), date.getFullYear()].join('');
+        return [this.getDay(date), this.getMonth(date), this.getYear(date)].join('');
     }
 
     getDateNoSpacesFromString(date) {
@@ -26,12 +26,12 @@ class TimeUtils {
 
     getFullDateNoSpaces() {
         const date = new Date();
-        return `${[date.getFullYear(), (textUtils.addLeadingZero(date.getMonth() + 1)), textUtils.addLeadingZero(date.getDate())].join('')}_${[textUtils.addLeadingZero(date.getHours()), textUtils.addLeadingZero(date.getMinutes()), textUtils.addLeadingZero(date.getSeconds())].join('')}`;
+        return `${[this.getYear(date), this.getMonth(date), this.getDay(date)].join('')}_${[this.getHours(date), this.getMinutes(date), this.getSeconds(date)].join('')}`;
     }
 
     getCommasDate() {
         const date = new Date();
-        return `${[date.getFullYear(), (textUtils.addLeadingZero(date.getMonth() + 1)), textUtils.addLeadingZero(date.getDate())].join('/')}`;
+        return `${[this.getYear(date), this.getMonth(date), this.getDay(date)].join('/')}`;
     }
 
     // Format yyyy-mm-dd. Example: 8 Dec , 2020.
@@ -47,7 +47,31 @@ class TimeUtils {
         if (!date) {
             date = new Date();
         }
-        return `${[textUtils.addLeadingZero(date.getDate()), (textUtils.addLeadingZero(date.getMonth() + 1)), date.getFullYear()].join('/')} ${[textUtils.addLeadingZero(date.getHours()), textUtils.addLeadingZero(date.getMinutes()), textUtils.addLeadingZero(date.getSeconds())].join(':')}`;
+        return `${[this.getDay(date), this.getMonth(date), this.getYear(date)].join('/')} ${[this.getHours(date), this.getMinutes(date), this.getSeconds(date)].join(':')}`;
+    }
+
+    getSeconds(date) {
+        return textUtils.addLeadingZero(date.getSeconds());
+    }
+
+    getMinutes(date) {
+        return textUtils.addLeadingZero(date.getMinutes());
+    }
+
+    getHours(date) {
+        return textUtils.addLeadingZero(date.getHours());
+    }
+
+    getDay(date) {
+        return textUtils.addLeadingZero(date.getDate());
+    }
+
+    getMonth(date) {
+        return textUtils.addLeadingZero(date.getMonth() + 1);
+    }
+
+    getYear(date) {
+        return date.getFullYear();
     }
 
     getDifferenceTimeBetweenDates(data) {

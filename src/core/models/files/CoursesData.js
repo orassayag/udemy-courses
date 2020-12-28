@@ -6,7 +6,8 @@ class CoursesData {
 		this.coursesList = [];
 		this.totalPurchasedCount = 0;
 		this.totalPriceNumber = 0;
-		this.courseIndex = 0;
+		this.totalCreateCoursesCount = 0;
+		this.courseIndex = null;
 		this.course = null;
 		const keysList = Object.values(CourseStatus);
 		for (let i = 0; i < keysList.length; i++) {
@@ -23,4 +24,3 @@ class CoursesData {
 }
 
 module.exports = CoursesData;
-			//isAdd ? this[fieldName] += count : this[fieldName] -= count;

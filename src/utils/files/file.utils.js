@@ -12,7 +12,7 @@ class FileUtils {
     async isPathExists(targetPath) {
         // Check if the path parameter was received.
         if (!targetPath) {
-            throw new Error(`targetPath not received: ${targetPath} (1000024)`);
+            throw new Error(`targetPath not received: ${targetPath} (1000023)`);
         }
         // Check if the path parameter exists.
         try {
@@ -58,10 +58,10 @@ class FileUtils {
     async appendFile(data) {
         const { targetPath, message } = data;
         if (!targetPath) {
-            throw new Error(`targetPath not found: ${targetPath} (1000025)`);
+            throw new Error(`targetPath not found: ${targetPath} (1000024)`);
         }
         if (!message) {
-            throw new Error(`message not found: ${message} (1000026)`);
+            throw new Error(`message not found: ${message} (1000025)`);
         }
         if (!await this.isPathExists(targetPath)) {
             await fs.promises.mkdir(pathUtils.getDirName(targetPath), { recursive: true }).catch();

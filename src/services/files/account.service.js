@@ -1,5 +1,5 @@
 const { AccountData } = require('../../core/models');
-const { textUtils, validationUtils } = require('../../utils');
+const { applicationUtils, textUtils, validationUtils } = require('../../utils');
 const fileService = require('./file.service');
 
 class AccountService {
@@ -11,6 +11,7 @@ class AccountService {
     async initiate(settings) {
         this.accountData = new AccountData(settings);
         const account = await fileService.getFileData({
+            environment: applicationUtils.getApplicationEnvironment(settings.IS_PRODUCTION_ENVIRONMENT),
             path: this.accountData.accountFilePath,
             parameterName: 'accountFilePath',
             fileExtension: '.json'
