@@ -53,6 +53,16 @@ class ValidationUtils {
     validateEmailAddress(emailAddress) {
         return regexUtils.validateEmailAddressRegex.test(emailAddress);
     }
+
+    // This method validates that a given string exists in array list of specific types.
+    isValidEnum(data) {
+        // Validate the existence and validity of the validateEnumData parameters. If not exists, return false.
+        if (!data || !data.enum || !data.value) {
+            return false;
+        }
+        // Check if the value exists within a given array. Return false if not.
+        return Object.values(data.enum).indexOf(data.value) > -1;
+    }
 }
 
 module.exports = new ValidationUtils();

@@ -74,6 +74,11 @@ class FileUtils {
         const stats = fs.statSync(path);
         return stats.isFile();
     }
+
+    isDirectoryPath(path) {
+        const stats = fs.statSync(path);
+        return stats.isDirectory();
+    }
 }
 
 module.exports = new FileUtils();

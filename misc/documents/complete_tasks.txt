@@ -1,5 +1,6 @@
 Complete / canceled tasks:
 ==========================
+-Copy the logic of validation of isDirectory in the initiate servrvice from 'crawler' project. *
 -Remove all comments. *
 -Fix TXT files spell mistakes. *
 -Fix all spell mistakes in all TXT files. *
