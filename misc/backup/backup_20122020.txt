@@ -1,1 +1,0 @@
-		//const isDate = fileName.indexOf(Placeholder.DATE) > -1;

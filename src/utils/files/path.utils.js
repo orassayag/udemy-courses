@@ -8,11 +8,11 @@ class PathUtils {
         const { targetPath, targetName } = data;
         // Check if the targetPath parameter was received.
         if (!targetPath) {
-            throw new Error(`targetPath not received: ${targetPath} (1000030)`);
+            throw new Error(`targetPath not received: ${targetPath} (1000032)`);
         }
         // Check if the fileName parameter was received.
         if (!targetName) {
-            throw new Error(`targetName not received: ${targetName} (1000031)`);
+            throw new Error(`targetName not received: ${targetName} (1000033)`);
         }
         return path.join(targetPath, targetName);
     }

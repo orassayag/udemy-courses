@@ -1,4 +1,4 @@
-const { pathUtils, fileUtils, textUtils } = require('../../utils');
+const { fileUtils, pathUtils, textUtils } = require('../../utils');
 
 class FileService {
 

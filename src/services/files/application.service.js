@@ -6,12 +6,8 @@ class ApplicationService {
         this.applicationData = null;
     }
 
-    initiate(settings, status, mode) {
-        this.applicationData = new ApplicationData({
-            settings: settings,
-            status: status,
-            mode: mode
-        });
+    initiate(data) {
+        this.applicationData = new ApplicationData(data);
     }
 }
 

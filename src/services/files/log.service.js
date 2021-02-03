@@ -1,6 +1,5 @@
-const { fileUtils, logUtils, pathUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
-const { CourseStatusLog, CourseStatus, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
 const { LogData } = require('../../core/models');
+const { CourseStatusLog, CourseStatus, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
 const accountService = require('./account.service');
 const applicationService = require('./application.service');
 const countLimitService = require('./countLimit.service');
@@ -8,10 +7,12 @@ const courseService = require('./course.service');
 const domService = require('./dom.service');
 const pathService = require('./path.service');
 const puppeteerService = require('./puppeteer.service');
+const { fileUtils, logUtils, pathUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 
 class LogService {
 
 	constructor() {
+		this.isLogProgress = null;
 		this.logData = null;
 		this.logInterval = null;
 		// ===PATH=== //
@@ -34,10 +35,11 @@ class LogService {
 		this.logData = new LogData(settings);
 		// Check if any logs active.
 		this.isLogs = applicationService.applicationData.mode === Mode.STANDARD &&
-			(this.logData.isLogCreateCoursesValid || this.logData.isLogCreateCoursesInvalid ||
-				this.logData.isLogUpdateCoursesValid || this.logData.isLogUpdateCoursesInvalid ||
-				this.logData.isLogPurchaseCoursesValid || this.logData.isLogPurchaseCoursesInvalid);
+			(this.logData.isLogCreateCoursesMethodValid || this.logData.isLogCreateCoursesMethodInvalid ||
+				this.logData.isLogUpdateCoursesMethodValid || this.logData.isLogUpdateCoursesMethodInvalid ||
+				this.logData.isLogPurchaseCoursesMethodValid || this.logData.isLogPurchaseCoursesMethodInvalid);
 		await this.initiateDirectories();
+		this.isLogProgress = applicationService.applicationData.mode === Mode.STANDARD;
 	}
 
 	async initiateDirectories() {
@@ -47,23 +49,23 @@ class LogService {
 		// ===PATH=== //
 		this.baseSessionPath = pathService.pathData.distPath;
 		await this.createSessionDirectory();
-		if (this.logData.isLogCreateCoursesValid) {
-			this.createCoursesValidPath = this.createFilePath(`create_courses_valid_${Placeholder.DATE}`);
+		if (this.logData.isLogCreateCoursesMethodValid) {
+			this.createCoursesValidPath = this.createFilePath(`create_courses_method_valid_${Placeholder.DATE}`);
 		}
-		if (this.logData.isLogCreateCoursesInvalid) {
-			this.createCoursesInvalidPath = this.createFilePath(`create_courses_invalid_${Placeholder.DATE}`);
+		if (this.logData.isLogCreateCoursesMethodInvalid) {
+			this.createCoursesInvalidPath = this.createFilePath(`create_courses_method_invalid_${Placeholder.DATE}`);
 		}
-		if (this.logData.isLogUpdateCoursesValid) {
-			this.updateCoursesValidPath = this.createFilePath(`update_courses_valid_${Placeholder.DATE}`);
+		if (this.logData.isLogUpdateCoursesMethodValid) {
+			this.updateCoursesValidPath = this.createFilePath(`update_courses_method_valid_${Placeholder.DATE}`);
 		}
-		if (this.logData.isLogUpdateCoursesInvalid) {
-			this.updateCoursesInvalidPath = this.createFilePath(`update_courses_invalid_${Placeholder.DATE}`);
+		if (this.logData.isLogUpdateCoursesMethodInvalid) {
+			this.updateCoursesInvalidPath = this.createFilePath(`update_courses_method_invalid_${Placeholder.DATE}`);
 		}
-		if (this.logData.isLogPurchaseCoursesValid) {
-			this.purchaseCoursesValidPath = this.createFilePath(`purchase_courses_valid_${Placeholder.DATE}`);
+		if (this.logData.isLogPurchaseCoursesMethodValid) {
+			this.purchaseCoursesValidPath = this.createFilePath(`purchase_courses_method_valid_${Placeholder.DATE}`);
 		}
-		if (this.logData.isLogPurchaseCoursesInvalid) {
-			this.purchaseCoursesInvalidPath = this.createFilePath(`purchase_courses_invalid_${Placeholder.DATE}`);
+		if (this.logData.isLogPurchaseCoursesMethodInvalid) {
+			this.purchaseCoursesInvalidPath = this.createFilePath(`purchase_courses_method_invalid_${Placeholder.DATE}`);
 		}
 	}
 
@@ -98,19 +100,19 @@ class LogService {
 		let isValid = null;
 		switch (applicationService.applicationData.method) {
 			case Method.CREATE_COURSES:
-				isValid = course.status = CourseStatus.CREATE;
-				path = isValid ? (this.logData.isLogCreateCoursesValid ? this.createCoursesValidPath : null) :
-					(this.logData.isLogCreateCoursesInvalid ? this.createCoursesInvalidPath : null);
+				isValid = course.status === CourseStatus.CREATE;
+				path = isValid ? (this.logData.isLogCreateCoursesMethodValid ? this.createCoursesValidPath : null) :
+					(this.logData.isLogCreateCoursesMethodInvalid ? this.createCoursesInvalidPath : null);
 				break;
 			case Method.UPDATE_COURSES:
-				isValid = course.status = CourseStatus.CREATE;
-				path = isValid ? (this.logData.isLogUpdateCoursesValid ? this.updateCoursesValidPath : null) :
-					(this.logData.isLogUpdateCoursesInvalid ? this.updateCoursesInvalidPath : null);
+				isValid = course.status === CourseStatus.CREATE;
+				path = isValid ? (this.logData.isLogUpdateCoursesMethodValid ? this.updateCoursesValidPath : null) :
+					(this.logData.isLogUpdateCoursesMethodInvalid ? this.updateCoursesInvalidPath : null);
 				break;
 			case Method.PURCHASE_COURSES:
-				isValid = course.status = CourseStatus.PURCHASE;
-				path = isValid ? (this.logData.isLogPurchaseCoursesValid ? this.purchaseCoursesValidPath : null) :
-					(this.logData.isLogPurchaseCoursesInvalid ? this.purchaseCoursesInvalidPath : null);
+				isValid = course.status === CourseStatus.PURCHASE;
+				path = isValid ? (this.logData.isLogPurchaseCoursesMethodValid ? this.purchaseCoursesValidPath : null) :
+					(this.logData.isLogPurchaseCoursesMethodInvalid ? this.purchaseCoursesInvalidPath : null);
 				break;
 		}
 		if (!path) {
@@ -133,7 +135,7 @@ class LogService {
 		if (courseURLCourseName) {
 			name = courseURLCourseName;
 		}
-		if (!name && udemyURLCourseName) {
+		if (name === this.emptyValue && udemyURLCourseName) {
 			name = udemyURLCourseName;
 		}
 		return isLog ? name : textUtils.cutText({ text: name, count: countLimitService.countLimitData.maximumCourseNameCharactersDisplayCount });
@@ -208,6 +210,7 @@ class LogService {
 		}
 		const purchaseCount = `${StatusIcon.V}  ${textUtils.getNumberWithCommas(courseService.coursesData.purchaseCount)}`;
 		const failCount = `${StatusIcon.X}  ${textUtils.getNumberWithCommas(courseService.coursesData.failCount)}`;
+		const coursesCurrentDate = applicationService.applicationData.coursesCurrentDate ? applicationService.applicationData.coursesCurrentDate : this.emptyValue;
 		let creationDateTime = this.emptyValue;
 		let id = this.emptyValue;
 		let postId = this.emptyValue;
@@ -254,25 +257,35 @@ class LogService {
 					count: countLimitService.countLimitData.maximumResultCharactersDisplayCount
 				}) : this.emptyValue;
 		}
+		if (!this.isLogProgress) {
+			return;
+		}
 		logUtils.logProgress({
-			titlesList: ['SETTINGS', 'GENERAL', 'ACCOUNT', 'PROCESS1', 'PROCESS2', 'PROCESS3',
-				'PROCESS4', 'DATA1', 'DATA2', 'DATA3', 'ERRORS', 'NAME', 'COURSE URL', 'UDEMY URL',
-				'RESULT'],
+			titlesList: ['SETTINGS', 'GENERAL1', 'GENERAL2', 'DATES', 'ACCOUNT', 'PROCESS1', 'PROCESS2',
+				'PROCESS3', 'PROCESS4', 'DATA1', 'DATA2', 'DATA3', 'ERRORS', 'NAME', 'COURSE URL',
+				'UDEMY URL', 'RESULT'],
 			colorsTitlesList: [Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE,
 			Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE,
-			Color.BLUE],
+			Color.BLUE, Color.BLUE, Color.BLUE],
 			keysLists: [{
 				'Environment': applicationService.applicationData.environment,
 				'Method': applicationService.applicationData.method,
-				'Query Date': applicationService.applicationData.coursesDate,
-				'Specific Page Number': specificPageNumber,
-				'Is Key Words Filter': isKeyWordsFilter
+				'Specific Page Number': specificPageNumber
 			}, {
 				'Time': time,
 				'Total Price Purchase': totalPricePurchased,
 				'Course': courseIndex,
-				'Courses Count': courseService.coursesData.coursesList.length,
+				'Courses Count': courseService.coursesData.coursesList.length
+			}, {
+				'Session Number': applicationService.applicationData.sessionNumber,
+				'Is Key Words Filter': isKeyWordsFilter,
+				'Pages Count': courseService.coursesData.totalPagesCount,
 				'Status': applicationService.applicationData.status
+			}, {
+				'Type': applicationService.applicationData.coursesDatesType,
+				'Value': applicationService.applicationData.coursesDatesDisplayValue,
+				'Dates Count': applicationService.applicationData.coursesDatesValue.length,
+				'Current Date': coursesCurrentDate
 			}, {
 				'Email': accountService.accountData.email,
 				'Password': accountService.accountData.asterixsPassword
@@ -326,8 +339,10 @@ class LogService {
 				'Result': resultDetails
 			}],
 			colorsLists: [
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
+				[Color.YELLOW, Color.YELLOW, Color.YELLOW],
+				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
+				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
+				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW],
 				[Color.GREEN, Color.RED, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
 				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
@@ -356,12 +371,12 @@ class LogService {
 	}
 
 	createConfirmSettingsTemplate(settings) {
-		const parameters = ['IS_PRODUCTION_ENVIRONMENT', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
-			'COURSES_DATE', 'SPECIFIC_COURSES_PAGE_NUMBER', 'KEY_WORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
-			'IS_UPDATE_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_CREATE_COURSES_VALID',
-			'IS_LOG_CREATE_COURSES_INVALID', 'IS_LOG_UPDATE_COURSES_VALID', 'IS_LOG_UPDATE_COURSES_INVALID',
-			'IS_LOG_PURCHASE_COURSES_VALID', 'IS_LOG_PURCHASE_COURSES_INVALID', 'MAXIMUM_COURSES_PURCHASE_COUNT',
-			'MAXIMUM_PAGES_NUMBER'];
+		const parameters = ['MODE', 'IS_PRODUCTION_ENVIRONMENT', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
+			'COURSES_DATES_VALUE', 'SPECIFIC_COURSES_PAGE_NUMBER', 'KEY_WORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
+			'IS_UPDATE_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_CREATE_COURSES_METHOD_VALID',
+			'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID', 'IS_LOG_UPDATE_COURSES_METHOD_INVALID',
+			'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_ONLY',
+			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MAXIMUM_PAGES_NUMBER'];
 		let settingsText = this.createLineTemplate('EMAIL', accountService.accountData.email);
 		settingsText += Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
 			.map(k => this.createLineTemplate(k, settings[k])).join('');

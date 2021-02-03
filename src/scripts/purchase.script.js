@@ -1,10 +1,7 @@
+const errorScript = require('./error.script');
 require('../services/files/initiate.service').initiate('purchase');
 const PurchaseLogic = require('../logics/purchase.logic');
-const { Mode } = require('../core/enums');
 
 (async () => {
-    await new PurchaseLogic().run({
-        urls: null,
-        mode: Mode.STANDARD
-    });
-})();
+    await new PurchaseLogic().run(null);
+})().catch(e => errorScript.handleScriptError(e, 1));

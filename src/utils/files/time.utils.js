@@ -5,8 +5,8 @@ class TimeUtils {
 
     constructor() {
         this.shortMonths = {
-            'jan': '01', 'feb': '02', 'mar': '03', 'apr': '04', 'may': '05', 'jun': '06',
-            'jul': '07', 'aug': '08', 'sep': '09', 'oct': '10', 'nov': '11', 'dec': '12'
+            'jan': '1', 'feb': '2', 'mar': '3', 'apr': '4', 'may': '5', 'jun': '6',
+            'jul': '7', 'aug': '8', 'sep': '9', 'oct': '10', 'nov': '11', 'dec': '12'
         };
     }
 
@@ -29,8 +29,10 @@ class TimeUtils {
         return `${[this.getYear(date), this.getMonth(date), this.getDay(date)].join('')}_${[this.getHours(date), this.getMinutes(date), this.getSeconds(date)].join('')}`;
     }
 
-    getCommasDate() {
-        const date = new Date();
+    getCommasDate(date) {
+        if (!date) {
+            date = new Date();
+        }
         return `${[this.getYear(date), this.getMonth(date), this.getDay(date)].join('/')}`;
     }
 
@@ -96,6 +98,38 @@ class TimeUtils {
         // In theory the modulus is not required.
         const seconds = textUtils.getFloorPositiveNumber(delta % 60);
         return `${days}.${hours}:${minutes}:${seconds}`;
+    }
+
+    getDateObjFromString(date) {
+        const parts = date.split('/');
+        try {
+            // Format: yyyy/mm/dd.
+            date = new Date(parts[0], parts[1] - 1, parts[2]);
+        }
+        catch {
+            date = null;
+        }
+        return date;
+    }
+
+    getAllDatesBetweenDates(data) {
+        let { startDateTime, endDateTime } = data;
+        if (!startDateTime || !endDateTime) {
+            return null;
+        }
+        startDateTime = this.getDateObjFromString(startDateTime);
+        endDateTime = this.getDateObjFromString(endDateTime);
+        if (!startDateTime || !endDateTime) {
+            return null;
+        }
+        if (startDateTime > endDateTime) {
+            return null;
+        }
+        const list = [];
+        for (const dt = new Date(startDateTime); dt <= endDateTime; dt.setDate(dt.getDate() + 1)) {
+            list.push(this.getCommasDate(new Date(dt)));
+        }
+        return list;
     }
 }
 

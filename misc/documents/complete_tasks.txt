@@ -1,6 +1,82 @@
 Complete / canceled tasks:
 ==========================
--Copy the logic of validation of isDirectory in the initiate servrvice from 'crawler' project. *
+-Fix bug with taking not udemy URL - canceled. *
+-Make sure all comments ends with . *
+-Update puppeteer package again + verify all works good. *
+-Rewrite error numbers. *
+-Format all files. *
+-Run on production to verify all works well. *
+-Fix bug with single date log name. *
+-Copy the .gitignore and .npmignore from one of the projects and delete the misc/backup directroy from git: *
+git rm -r one-of-the-directories // This deletes from filesystem. *
+-Upload to GitHub. *
+-Move all complete tasks from here to complete_tasks.txt. *
+-Clean all comments again. *
+-Remove all debugger. *
+-Fix TXT files spell mistakes. *
+-Fix all spell mistakes in all TXT files. *
+-Fix spell mistakes in all txt files. *
+-Re-check all imports in the entire project (check for duplicate imports paths). *
+-Sort alphabetically all imports: external packages, settings, (containers, components, store, assert) data, models, enums, services, utils. *
+-Sort alphabetically by https://alphabetizer.flap.tv/. *
+-Replace all 'let' to 'const' and where no bugs - change it. *
+-Add 'Misc.' section to gitignore and npmignore files (include tasks txt files + backups directory). *
+-Check for empty lines inside functions / models with regular expression: ^\s*$. *
+-Remove all unused files, functions, and variables. *
+-Clean all comments. *
+-Make sure spaces in all files between bottom, need to fix cases like this: *
+} *
+module.exports *
+} *
+export default *
+-Update packages npm outdated --depth 9999. *
+-Fix change in the IDC site of specific udemy link. *
+-Update packages + re-create package.json file. *
+-Add logic to take single date, array of dates, or range of dates, and the daily limit will be on each date. *
+-Only one dates functionality allowed: single date, array of dates, or range of dates (add parameter on settings.js of the type and the value). *
+-The structure on the console status will be: *
+[DATE] Type: SINGLE/ARRAY/RANGE | Value: #value from settings.js# | dates count: 23 | Current Date: 24/01/2021 *
+-Add retry on courses that failed to be purchased or got 'purchase error', with new status of *
+'RETRY'. In the and take all the retries status courses and retry to purchase each of them (maximum tries 5 from settings.js). *
+-Add another logic of take dates according to the missing on misc directory until now - canceled. *
+-Add logic that if [NAME] not exists - Take the name from udemy URL course (split the `-` and Capital each word). *
+-Fix bug of not waiting to courses lists to finish when scaning courses. *
+-Add the maximum pages exists in the session to the console status. *
+-Update packages + Re-create package-lock.json. *
+-Fix the status on console line: Status: PURCHASE many time is actually ALREADY_PURCHASE. Fix all statuses. *
+-Change the log file names with the word "-method" in the end. *
+-Add another log file for purchased courses only - canceled - Already exists. *
+-Add the mode parameter from the settings.js file + add 'SILENT' mode. *
+-Fix Publish Date: 2021/001/09 | *
+-Add retry on validate the coupons URL, take a number from settings.js and delay from settings.js. *
+-Add *
+  '--disable-background-timer-throttling', *
+  '--disable-backgrounding-occluded-windows', *
+  '--disable-renderer-backgrounding' *
+to solve issue of hand while not in focus. *
+-Update packages. *
+-Fix description in package.json + README.MD + re-create package.json-lock file. *
+-Take the initiate service from 'crawler' project. *
+-Check if comments of all backup parmeters in settings.js relevant to this project. *
+-Add .catch(e => console.log(e)); to all (async () => { - Take the logic from 'crawler' project. *
+-Take backup.logic.js file from 'mbox-crawler' project. *
+-Change all places from 'exports = {' to 'module.exports = {'. *
+-Change all places from '../settings' to '../settings/settings'. *
+-Fix issue that script not working anymore - canceled. *
+-Fix uneeded formats with: "formatFiles.excludePattern": "**/node_modules,**/.vscode,**/dist/**,**/.chrome,**/misc". *
+-Add 'Complete + canceled tasks: *
+==========================' to complete_tasks.txt. *
+-In .eslintrc file - set "no-unused-vars": 1. *
+-Add .eslintignore file from 'crawler' project. *
+-Add .jsbeautifyrc file from 'crawler' project. *
+-Take updated 'Misc' section from 'crawler' project for npmignore and gitignore files. *
+-Change the maximum purchase courses to 3000. *
+-Fix bug: not showing data: *
+===[NAME] Persuasive Writing Ft. Two Forbes Contributors & Copywriters=== *
+===[COURSE URL] https://idownloadcoupon.com/2021/01/10/free-udemy-courses-list-12-15-2020/=== *
+===[UDEMY URL] https://www.udemy.com/course/persuasive-writing-copywriting/?couponCode=YOUACCEL34694=== *
+===[RESULT] Time: ## | Result: ##=== *
+-Copy the logic of validation of isDirectory in the initiate service from 'crawler' project. *
 -Remove all comments. *
 -Fix TXT files spell mistakes. *
 -Fix all spell mistakes in all TXT files. *

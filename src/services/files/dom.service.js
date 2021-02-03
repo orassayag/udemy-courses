@@ -1,10 +1,10 @@
 const jsdom = require('jsdom');
+const { CourseStatus } = require('../../core/enums');
 const applicationService = require('./application.service');
 const countLimitService = require('./countLimit.service');
 const courseService = require('./course.service');
 const { courseUtils, systemUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 const globalUtils = require('../../utils/files/global.utils');
-const { CourseStatus } = require('../../core/enums');
 
 class DomService {
 
@@ -12,6 +12,7 @@ class DomService {
         this.createUpdateErrorsInARowCount = 0;
         // ===DOM=== //
         this.href = 'a';
+        this.img = 'img';
         // ===COURSE=== //
         this.postDOM = '[id^="post-"]';
         this.singleCourseTitleDOM = 'grid-tit';
@@ -86,8 +87,9 @@ class DomService {
             const dom = new jsdom.JSDOM(courseContent);
             const urls = dom.window.document.getElementsByTagName(this.href);
             for (let i = 0; i < urls.length; i++) {
-                const url = urls[i].href;
-                if (url.indexOf(applicationService.applicationData.udemyBaseURL) > -1) {
+                const url = urls[i];
+                const urlHref = url.href;
+                if (urlHref.indexOf(applicationService.applicationData.udemyBaseURL) > -1) {
                     coursesLists.push({
                         course: course,
                         courseIndex: courseIndex,
@@ -95,21 +97,23 @@ class DomService {
                     });
                     break;
                 }
-                if (url.indexOf(applicationService.applicationData.singleCourseInit) > -1) {
-                    const result = courseUtils.createCourseSingleData(url);
-                    await courseService.updateSingleCourseData({
-                        course: course,
-                        courseIndex: courseIndex,
-                        udemyURL: result.udemyURL,
-                        udemyURLCompare: textUtils.toLowerCaseTrim(result.udemyURL),
-                        couponKey: result.couponKey
-                    });
-                    break;
+                if (urlHref.indexOf(applicationService.applicationData.singleCourseInit) > -1) {
+                    if (!url.getElementsByTagName(this.img).length) {
+                        const result = courseUtils.createCourseSingleData(urlHref);
+                        await courseService.updateSingleCourseData({
+                            course: course,
+                            courseIndex: courseIndex,
+                            udemyURL: result.udemyURL,
+                            udemyURLCompare: textUtils.toLowerCaseTrim(result.udemyURL),
+                            couponKey: result.couponKey
+                        });
+                        await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesUpdate);
+                        break;
+                    }
                 }
-                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesUpdate);
             }
             if (validationUtils.isExists(coursesLists)) {
-                this.createCoursesList(coursesLists);
+                await this.createCoursesList(coursesLists);
             }
             return this.validateErrorInARow(false);
         }

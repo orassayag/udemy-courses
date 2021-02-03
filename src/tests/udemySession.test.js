@@ -1,6 +1,5 @@
 require('../services/files/initiate.service').initiate('test');
 const PurchaseLogic = require('../logics/purchase.logic');
-const { Mode } = require('../core/enums');
 const { validationUtils } = require('../utils');
 
 const urls = [
@@ -12,9 +11,5 @@ const urls = [
     if (!validationUtils.isExists(urls)) {
         throw new Error('No urls exists to run a session');
     }
-    await new PurchaseLogic().run({
-        urls: urls,
-        mode: Mode.SESSION
-    });
+    await new PurchaseLogic().run(urls);
 })();
-    //'https://www.udemy.com/course/dashboard-reporting-in-excel-tips/'

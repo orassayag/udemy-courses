@@ -15,15 +15,22 @@ build/
 /build
 build
 
-# Dist directories
+# Dist directories.
 dist/
 /dist
 dist
 
+# Misc.
+**/misc/backup/
+/misc/backup
+misc/backup/
+/misc/backup/
+misc/backup
+
 # Logs.
 /logs
 
-# Testing
+# Testing.
 /coverage
 test
 coverage
@@ -41,19 +48,3 @@ coverage
 .eslintignore
 .eslintrc*
 .stylelintrc
-
-# Editor settings.
-.idea
-.editorconfig
-
-# Misc.
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Debug & Error.
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*

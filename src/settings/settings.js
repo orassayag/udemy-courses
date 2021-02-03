@@ -1,16 +1,22 @@
+const { Mode } = require('../core/enums');
 const { pathUtils, timeUtils } = require('../utils');
 
 const settings = {
     // ===GENERAL=== //
+    // Determine the mode of the application. STANDARD/SESSION/SILENT.
+    MODE: Mode.STANDARD,
     // Determine the URL of the courses to get the courses URLs from.
     COURSES_BASE_URL: 'https://www.idownloadcoupon.com',
     // Determine the URL of Udemy site to purchase the courses by the URLs.
     UDEMY_BASE_URL: 'https://www.udemy.com',
     // Determine if the init of the link to the single course on Udemy.
     SINGLE_COURSE_INIT: 'https://click.linksynergy.com/deeplink?',
-    // Determine the date of the courses page. Default is the current date.
-    // If not, use 'yyyy/mm/dd' format. Example: '2020/12/13'.
-    COURSES_DATE: timeUtils.getCommasDate(),
+    // Determine the courses date value. The options are: single date, array of dates,
+    // or range of dates, and the daily limit will be on each date.
+    // SINGLE - Single date to scan, the default is the current date. If not, use 'yyyy/mm/dd' format. Example: '2020/12/13'.
+    // ARRAY - List of dates to scan. Example: ['2020/12/13', '2020/12/14'].
+    // RANGE - Range of dates to scan. Example: { from: '2020/12/13', to: '2020/12/14' }.
+    COURSES_DATES_VALUE: timeUtils.getCommasDate(),
     // Determine the specific courses page (in the pagination) to crawl. If null,
     // will scan all the courses pages until reached the maximum number (MAXIMUM_PAGES_NUMBER).
     SPECIFIC_COURSES_PAGE_NUMBER: null,
@@ -30,25 +36,27 @@ const settings = {
 
     // ===LOG=== //
     // Determine if to log the create valid courses (create courses method).
-    IS_LOG_CREATE_COURSES_VALID: true,
+    IS_LOG_CREATE_COURSES_METHOD_VALID: true,
     // Determine if to log the create invalid courses (create courses method).
-    IS_LOG_CREATE_COURSES_INVALID: true,
+    IS_LOG_CREATE_COURSES_METHOD_INVALID: true,
     // Determine if to log the update valid courses (update courses method).
-    IS_LOG_UPDATE_COURSES_VALID: true,
+    IS_LOG_UPDATE_COURSES_METHOD_VALID: true,
     // Determine if to log the update invalid courses (update courses method).
-    IS_LOG_UPDATE_COURSES_INVALID: true,
+    IS_LOG_UPDATE_COURSES_METHOD_INVALID: true,
     // Determine if to log the purchase valid courses (purchase courses method).
-    IS_LOG_PURCHASE_COURSES_VALID: true,
+    IS_LOG_PURCHASE_COURSES_METHOD_VALID: true,
     // Determine if to log the purchase invalid courses (purchase courses method).
-    IS_LOG_PURCHASE_COURSES_INVALID: true,
+    IS_LOG_PURCHASE_COURSES_METHOD_INVALID: true,
 
     // ===COUNT & LIMIT=== //
     // Determine the maximum courses count to purchase per process.
-    MAXIMUM_COURSES_PURCHASE_COUNT: 1000,
+    MAXIMUM_COURSES_PURCHASE_COUNT: 3000,
     // Determine the milliseconds count timeout to wait for answer to get the page or engine source.
     MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT: 60000,
     // Determine the maximum number of pagination for courses on the main page of the courses URL.
     MAXIMUM_PAGES_NUMBER: 20,
+    // Determine the maximum sessions counts to run in order to retry purchase failed courses.
+    MAXIMUM_SESSIONS_COUNT: 5,
     // Determine how much milliseconds interval to run to calculate the time of the
     // status line in the console.
     MILLISECONDS_INTERVAL_COUNT: 500,
@@ -62,7 +70,7 @@ const settings = {
     MAXIMUM_COURSE_NAME_CHARACTERS_DISPLAY_COUNT: 150,
     // Determine the maximum characters count to display URL (courses or Udemy) on the console status.
     MAXIMUM_URL_CHARACTERS_DISPLAY_COUNT: 150,
-    // Determine the maximum characters count to result details on the console status.
+    // Determine the maximum characters count to display the result details on the console status.
     MAXIMUM_RESULT_CHARACTERS_DISPLAY_COUNT: 150,
     // Determine the maximum Udemy login attempts before exit.
     MAXIMUM_UDEMY_LOGIN_ATTEMPTS_COUNT: 5,
@@ -78,6 +86,12 @@ const settings = {
     MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT: 5,
     // Determine the milliseconds count timeout to wait before exit the application.
     MILLISECONDS_TIMEOUT_EXIT_APPLICATION: 1000,
+    // Determine the number of retries to validate the URLs.
+    MAXIMUM_URL_VALIDATION_COUNT: 5,
+    // Determine the milliseconds count timeout to wait between URL validation retry.
+    MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
+    // Determine the maximum courses dates count to display the course date value console status.
+    MAXIMUM_COURSES_DATES_DISPLAY_COUNT: 3,
 
     // ===ROOT PATH=== //
     // Determine the application name used for some of the calculated paths.
@@ -112,14 +126,13 @@ const settings = {
     // Determine the dist directory path which there, all the outcome of the crawling will be created.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\udemy-courses\\dist').
     DIST_PATH: 'dist',
-    // Determine the directory path of the node_modules, do refresh each time switching from development and production modes.
+    // Determine the directory path of the node_modules.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\udemy-courses\\node_modules').
     NODE_MODULES_PATH: 'node_modules',
-    // Determine the directory of the package.json to update each time switching
-    // from development and production modes (add/remove Puppeeter.js NPM package).
+    // Determine the directory of the package.json.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\udemy-courses\\package.json').
     PACKAGE_JSON_PATH: 'package.json',
-    // Determine the path of the package-lock.json to remove it each time switching from development and production modes.
+    // Determine the path of the package-lock.json.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\udemy-courses\\package-lock.json').
     PACKAGE_LOCK_JSON_PATH: 'package-lock.json',
 

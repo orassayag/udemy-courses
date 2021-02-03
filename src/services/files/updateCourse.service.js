@@ -1,6 +1,6 @@
+const { Status } = require('../../core/enums');
 const courseService = require('./course.service');
 const puppeteerService = require('./puppeteer.service');
-const { Status } = require('../../core/enums');
 
 class UpdateCourseService {
 
@@ -8,7 +8,7 @@ class UpdateCourseService {
 
     async updateCourses() {
         // Update single courses data.
-        let isErrorInARow = await puppeteerService.updateCoursesData();
+        const isErrorInARow = await puppeteerService.updateCoursesData();
         if (isErrorInARow) {
             return Status.CREATE_UPDATE_ERROR_IN_A_ROW;
         }

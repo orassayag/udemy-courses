@@ -1,7 +1,7 @@
 const settings = require('../settings/settings');
-const { Color } = require('../core/enums');
-const { pathUtils, fileUtils, logUtils, textUtils, timeUtils } = require('../utils');
 const { BackupData } = require('../core/models');
+const { Color } = require('../core/enums');
+const { fileUtils, logUtils, pathUtils, textUtils, timeUtils } = require('../utils');
 const globalUtils = require('../utils/files/global.utils');
 
 class BackupLogic {
@@ -14,8 +14,8 @@ class BackupLogic {
     initiate() {
         // Get the backup title from the console.
         this.backupTitle = process.argv[2];
-        logUtils.logMagentaStatus('INITIATE THE BASE PARAMETERS');
         this.backupData = new BackupData(settings);
+        logUtils.logMagentaStatus('INITIATE THE BASE PARAMETERS');
     }
 
     async run() {
@@ -61,9 +61,6 @@ class BackupLogic {
         if (!this.backupData.targetBackupName) {
             throw new Error('No backup name was provided (1000001)');
         }
-        if (this.backupData.targetBackupName.length <= 0) {
-            throw new Error('Invalid backup name length was provided (1000002)');
-        }
         // Reset the backup directory.
         await fileUtils.removeDirectoryIfExists(this.backupData.targetFullPath);
         await fileUtils.createDirectoryIfNotExists(this.backupData.targetFullPath);
@@ -97,7 +94,7 @@ class BackupLogic {
     async verifyBackup() {
         await globalUtils.sleep(this.backupData.millisecondsDelayVerifyBackupCount);
         if (!await fileUtils.isPathExists(this.backupData.targetFullPath)) {
-            throw new Error('No backup was provided (1000003)');
+            throw new Error('No backup was provided (1000002');
         }
         logUtils.logColorStatus({
             status: `FINISH TO CREATE BACKUP: ${this.backupData.targetBackupName}`,

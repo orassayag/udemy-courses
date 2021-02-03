@@ -1,7 +1,8 @@
 const applicationService = require('./application.service');
-const { CourseData, CoursesData } = require('../../core/models');
-const { CourseStatus, CourseType, Status } = require('../../core/enums');
-const { courseUtils, textUtils, validationUtils } = require('../../utils');
+const countLimitService = require('./countLimit.service');
+const { CourseData, CoursesData, CoursesDatesResult } = require('../../core/models');
+const { CoursesDatesType, CourseStatus, CourseType, Status } = require('../../core/enums');
+const { courseUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 
 class CourseService {
 
@@ -20,9 +21,78 @@ class CourseService {
         this.logCourse = logCourse;
     }
 
+    updateCoursesDatesResult(coursesDatesResult, coursesDatesType) {
+        coursesDatesResult.coursesDatesType = coursesDatesType;
+        coursesDatesResult.coursesDatesValue = [...new Set(coursesDatesResult.coursesDatesValue)];
+        const dates = coursesDatesResult.coursesDatesValue.slice(0, countLimitService.countLimitData.maximumCoursesDatesDisplayCount);
+        coursesDatesResult.coursesDatesDisplayValue = dates.join(' | ');
+        coursesDatesResult.coursesDatesLogName = textUtils.replaceCharacter(dates.join('-'), '/', '');
+        return coursesDatesResult;
+    }
+
+    validateCoursesDatesValue(coursesDatesValue) {
+        const errorBaseTemplate = 'Invalid COURSES_DATES_VALUE parameter was found:';
+        let coursesDatesResult = new CoursesDatesResult();
+        switch (textUtils.getVariableType(coursesDatesValue)) {
+            case 'string': {
+                if (!validationUtils.isValidDateFormat(coursesDatesValue)) {
+                    coursesDatesResult.coursesError = `${errorBaseTemplate} Excpected a Date (yyyy/mm/dd) but received: ${coursesDatesValue} (1000006)`;
+                    return coursesDatesResult;
+                }
+                coursesDatesResult.coursesDatesType = CoursesDatesType.SINGLE;
+                coursesDatesResult.coursesDatesValue = [coursesDatesValue];
+                coursesDatesResult.coursesDatesDisplayValue = coursesDatesValue;
+                coursesDatesResult.coursesDatesLogName = timeUtils.getDateNoSpacesFromString(coursesDatesValue);
+                break;
+            }
+            case 'array': {
+                coursesDatesResult.coursesDatesValue = [];
+                for (let i = 0; i < coursesDatesValue.length; i++) {
+                    const coursesDate = coursesDatesValue[i];
+                    if (validationUtils.isValidDateFormat(coursesDate)) {
+                        coursesDatesResult.coursesDatesValue.push(coursesDate);
+                    }
+                }
+                if (!validationUtils.isExists(coursesDatesResult.coursesDatesValue)) {
+                    coursesDatesResult.coursesError = `${errorBaseTemplate} Array is empty or contains invalid dates: ${coursesDatesValue} (1000007)`;
+                    return coursesDatesResult;
+                }
+                coursesDatesResult = this.updateCoursesDatesResult(coursesDatesResult, CoursesDatesType.ARRAY);
+                break;
+            }
+            case 'object': {
+                coursesDatesResult.coursesDatesValue = timeUtils.getAllDatesBetweenDates({
+                    startDateTime: coursesDatesValue.from,
+                    endDateTime: coursesDatesValue.to
+                });
+                if (!validationUtils.isExists(coursesDatesResult.coursesDatesValue)) {
+                    coursesDatesResult.coursesError = `${errorBaseTemplate} Object is empty or contains invalid dates: ${coursesDatesValue} (1000008)`;
+                    return coursesDatesResult;
+                }
+                coursesDatesResult = this.updateCoursesDatesResult(coursesDatesResult, CoursesDatesType.RANGE);
+                break;
+            }
+        }
+        if (!coursesDatesResult.coursesDatesType) {
+            coursesDatesResult.coursesError = `${errorBaseTemplate} Expected string, array, or object. Received: ${coursesDatesValue} (1000009)`;
+            return coursesDatesResult;
+        }
+        return coursesDatesResult;
+    }
+
+    getUdemyCourseName(udemyURL) {
+        if (!udemyURL) {
+            return null;
+        }
+        udemyURL = udemyURL.replace(applicationService.applicationData.udemyCourseURL, '');
+        udemyURL = udemyURL.slice(0, udemyURL.indexOf('/'));
+        return textUtils.getCapitalEachWordFromURL(udemyURL);
+    }
+
     async createCourse(course) {
         course.id = this.lastCourseId;
         course = new CourseData(course);
+        course.udemyURLCourseName = this.getUdemyCourseName(course.udemyURL);
         this.coursesData.coursesList.push(course);
         this.lastCourseId++;
         this.coursesData.course = course;
@@ -33,6 +103,7 @@ class CourseService {
         const { course, courseIndex, udemyURL, udemyURLCompare, couponKey } = data;
         course.udemyURL = udemyURL;
         course.udemyURLCompare = udemyURLCompare;
+        course.udemyURLCourseName = this.getUdemyCourseName(udemyURL);
         course.couponKey = couponKey;
         course.isFree = !validationUtils.isExists(couponKey);
         this.coursesData.coursesList[courseIndex] = course;
@@ -41,7 +112,7 @@ class CourseService {
     }
 
     async updateCoursesListCourseData(data) {
-        let { course, courseIndex } = data;
+        const { course, courseIndex } = data;
         course.isFree = false;
         course.type = CourseType.COURSES_LIST;
         this.coursesData.coursesList[courseIndex] = course;
@@ -99,7 +170,7 @@ class CourseService {
                 }
             }
             // Compare courses and detect duplicates.
-            this.compare(course);
+            await this.compare(course);
         }
         // Validate that there are any courses to purchase.
         if (this.coursesData.coursesList.map(c => c.status === CourseStatus.CREATE).length <= 0) {
@@ -200,7 +271,7 @@ class CourseService {
         return scanFieldsResult;
     }
 
-    compare(course) {
+    async compare(course) {
         // Check if duplicate courses exists, not to enter Udemy course page several times.
         if (course.status !== CourseStatus.CREATE) {
             return;
@@ -211,7 +282,7 @@ class CourseService {
                 continue;
             }
             if (course.udemyURLCompare === currentCourse.udemyURLCompare) {
-                this.coursesData.coursesList[i] = this.updateCourseStatus({
+                this.coursesData.coursesList[i] = await this.updateCourseStatus({
                     course: currentCourse,
                     status: CourseStatus.DUPLICATE,
                     details: 'This course repeats multiple times in this session and should be purchased.'

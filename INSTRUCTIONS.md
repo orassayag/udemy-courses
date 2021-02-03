@@ -6,7 +6,7 @@ FAST & BASIC START
 4. Next - Time to install the NPM packages. On the terminal run 'npm run i'.
 5. Once finished with the node_modules installation, it's time to set up your date.
 6. Open once again the Open the following file in the src/settings/settings.js file.
-7. Go to the 'COURSES_DATE' setting and change the date to the desaired date. If you want the date of current day, don't change anything.
+7. Go to the 'COURSES_DATES_VALUE' setting and change the date to the desaired date. If you want the date of current day, don't change anything.
 8. You are ready to start to crawl.
 9. On terminal run 'npm start'. If everything goes well, you will start to see
 	the console status line appear.

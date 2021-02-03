@@ -1,36 +1,48 @@
 const settings = require('../settings/settings');
-const { accountService, applicationService, confirmationService, countLimitService, courseService,
-    createCourseService, logService, pathService, puppeteerService, purchaseCourseService,
-    updateCourseService, validationService } = require('../services');
+const { accountService, applicationService, confirmationService, countLimitService,
+    courseService, createCourseService, logService, pathService, puppeteerService,
+    purchaseCourseService, updateCourseService, validationService } = require('../services');
 const { Color, Method, Mode, Status } = require('../core/enums');
-const { logUtils, systemUtils } = require('../utils');
+const { logUtils, systemUtils, validationUtils } = require('../utils');
 const globalUtils = require('../utils/files/global.utils');
 
 class PurchaseLogic {
 
     constructor() { }
 
-    async run(data) {
+    async run(urls) {
         // Initiate the account service first.
         await accountService.initiate(settings);
         // Validate all settings are fit to the user needs.
         await this.confirm();
-        // Initiate all the settings, configurations, services, ect.
-        await this.initiate(data.mode);
+        // Initiate all the settings, configurations, services, ect...
+        await this.initiate();
         // Validate general settings.
         await this.validateGeneralSettings();
         // Start the sending emails processes.
-        await this.startSession(data.urls);
+        await this.startSession(urls);
     }
 
-    async initiate(mode) {
+    async initiate() {
         logUtils.logMagentaStatus('INITIATE THE SERVICES');
-        applicationService.initiate(settings, Status.INITIATE, mode);
         countLimitService.initiate(settings);
+        applicationService.initiate({
+            settings: settings,
+            coursesDatesResult: this.validateCoursesDatesValue(settings.COURSES_DATES_VALUE),
+            status: Status.INITIATE
+        });
         pathService.initiate(settings);
         puppeteerService.initiate();
         await logService.initiate(settings);
         courseService.initiate(logService.logCourse.bind(logService));
+    }
+
+    validateCoursesDatesValue(coursesDatesValue) {
+        const coursesDatesResult = courseService.validateCoursesDatesValue(coursesDatesValue);
+        if (coursesDatesResult.coursesError) {
+            throw new Error(coursesDatesResult.coursesError);
+        }
+        return coursesDatesResult;
     }
 
     async validateGeneralSettings() {
@@ -46,6 +58,9 @@ class PurchaseLogic {
     async startSession(urls) {
         // Initiate.
         if (applicationService.applicationData.mode === Mode.SESSION) {
+            if (!validationUtils.isExists(urls)) {
+                await this.exit(Status.FINISH, Color.GREEN);
+            }
             createCourseService.createSessionCourses(urls);
             const purchaseCoursesResult = await purchaseCourseService.purchaseCourses();
             if (purchaseCoursesResult) {

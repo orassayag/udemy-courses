@@ -21,7 +21,7 @@ class CourseUtils {
     }
 
     getCoursePrices(text) {
-        text = textUtils.removeAllNonNumbers(text);
+        text = textUtils.removeAllNoneNumbers(text);
         return {
             priceNumber: parseFloat(text),
             priceDisplay: `₪${parseFloat(text).toFixed(2)}`

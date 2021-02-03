@@ -1,5 +1,6 @@
 const puppeteerExtra = require('puppeteer-extra');
 const pluginStealth = require('puppeteer-extra-plugin-stealth');
+const { Color, CourseStatus, Mode, Status } = require('../../core/enums');
 const accountService = require('./account.service');
 const applicationService = require('./application.service');
 const courseService = require('./course.service');
@@ -7,7 +8,6 @@ const countLimitService = require('./countLimit.service');
 const domService = require('./dom.service');
 const { courseUtils, crawlUtils, logUtils, systemUtils, validationUtils } = require('../../utils');
 const globalUtils = require('../../utils/files/global.utils');
-const { Color, CourseStatus, Mode, Status } = require('../../core/enums');
 
 class PuppeteerService {
 
@@ -38,7 +38,10 @@ class PuppeteerService {
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
-                '--start-maximized'
+                '--start-maximized',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-renderer-backgrounding'
             ]
         });
         const pid = browser.process().pid;
@@ -82,31 +85,36 @@ class PuppeteerService {
         const { browser, page } = await this.initiateCrawl(true);
         try {
             // Go to the courses from single URLs.
-            for (let i = 0; i < countLimitService.countLimitData.maximumPagesNumber; i++) {
-                applicationService.applicationData.status = Status.CREATE_COURSES;
-                const pageNumber = isSpecificPage ? applicationService.applicationData.specificCoursesPageNumber : i + 1;
-                const url = `${applicationService.applicationData.coursesBaseURL}/${applicationService.applicationData.coursesDate}/page/${pageNumber}/`;
-                await page.goto(url, this.pageOptions);
-                await page.waitForFunction(this.waitForFunction, { timeout: this.timeout });
-                const mainContent = await page.content();
-                // Create all the courses from the main page with pagination.
-                const coursesResult = await domService.createSingleCourses({
-                    mainContent: mainContent,
-                    pageNumber: pageNumber,
-                    indexPageNumber: i
-                });
-                if (coursesResult.isErrorInARow) {
-                    isErrorInARow = true;
-                    break;
-                }
-                if (!coursesResult.coursesCount) {
-                    break;
-                }
-                courseService.coursesData.totalCreateCoursesCount += coursesResult.coursesCount;
-                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesMainPages);
-                applicationService.applicationData.status = Status.PAUSE;
-                if (isSpecificPage) {
-                    break;
+            for (let i = 0; i < applicationService.applicationData.coursesDatesValue.length; i++) {
+                const coursesCurrentDate = applicationService.applicationData.coursesDatesValue[i];
+                for (let y = 0; y < countLimitService.countLimitData.maximumPagesNumber; y++) {
+                    applicationService.applicationData.status = Status.CREATE_COURSES;
+                    applicationService.applicationData.coursesCurrentDate = coursesCurrentDate;
+                    const pageNumber = isSpecificPage ? applicationService.applicationData.specificCoursesPageNumber : y + 1;
+                    const url = `${applicationService.applicationData.coursesBaseURL}/${coursesCurrentDate}/page/${pageNumber}/`;
+                    await page.goto(url, this.pageOptions);
+                    await page.waitForFunction(this.waitForFunction, { timeout: this.timeout });
+                    const mainContent = await page.content();
+                    // Create all the courses from the main page with pagination.
+                    const coursesResult = await domService.createSingleCourses({
+                        mainContent: mainContent,
+                        pageNumber: pageNumber,
+                        indexPageNumber: y
+                    });
+                    if (coursesResult.isErrorInARow) {
+                        isErrorInARow = true;
+                        break;
+                    }
+                    if (!coursesResult.coursesCount) {
+                        break;
+                    }
+                    courseService.coursesData.totalPagesCount += 1;
+                    courseService.coursesData.totalCreateCoursesCount += coursesResult.coursesCount;
+                    await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesMainPages);
+                    applicationService.applicationData.status = Status.PAUSE;
+                    if (isSpecificPage) {
+                        break;
+                    }
                 }
             }
         }
@@ -227,6 +235,15 @@ class PuppeteerService {
     }
 
     async udemyPurchases(data) {
+        for (let i = 1; i <= countLimitService.countLimitData.maximumSessionsCount; i++) {
+            applicationService.applicationData.sessionNumber = i;
+            data = await this.udemyPurchasesSession(data);
+            await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesPurchase);
+        }
+        return data;
+    }
+
+    async udemyPurchasesSession(data) {
         // Purchase courses at Udemy.
         let { browser, page } = data;
         for (let i = 0; i < courseService.coursesData.coursesList.length; i++) {
@@ -234,16 +251,24 @@ class PuppeteerService {
             courseService.coursesData.courseIndex = i + 1;
             const course = courseService.coursesData.coursesList[i];
             courseService.coursesData.course = course;
-            // Validate course status.
-            if (course.status !== CourseStatus.CREATE) {
+            if (!course || !course.status) {
                 continue;
+            }
+            // Validate course status.
+            switch (course.status) {
+                case CourseStatus.CREATE: case CourseStatus.EMPTY_URL:
+                case CourseStatus.PURCHASE_ERROR: case CourseStatus.FAIL: {
+                    await globalUtils.sleep(10);
+                    break;
+                }
+                default: { continue; }
             }
             // Validate course URL.
             if (!course.udemyURL) {
                 courseService.coursesData.coursesList[i] = await courseService.updateCourseStatus({
                     course: course,
                     status: CourseStatus.EMPTY_URL,
-                    details: 'Course status is CREATE but the udemyURL is empty.'
+                    details: 'The udemyURL is empty.'
                 });
                 continue;
             }
@@ -279,8 +304,8 @@ class PuppeteerService {
                     exitReason: Status.PURCHASE_LIMIT_EXCEEDED
                 };
             }
-            await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesPurchase);
             applicationService.applicationData.status = Status.PAUSE;
+            await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesPurchase);
         }
         return {
             page: page,

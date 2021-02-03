@@ -1,9 +1,7 @@
 const settings = require('../../settings/settings');
+const { Mode, ScriptType } = require('../../core/enums/files/system.enum');
+const { fileUtils, pathUtils, validationUtils } = require('../../utils');
 const globalUtils = require('../../utils/files/global.utils');
-const fileUtils = require('../../utils/files/file.utils');
-const pathUtils = require('../../utils/files/path.utils');
-const validationUtils = require('../../utils/files/validation.utils');
-const { ScriptType } = require('../../core/enums/files/system.enum');
 
 class InitiateService {
 
@@ -12,11 +10,11 @@ class InitiateService {
 	}
 
 	initiate(scriptType) {
+		// First, setup handle errors and promises.
+		this.setup();
 		// Validate the script type.
 		this.scriptType = scriptType;
 		this.validateScriptType();
-		// First, setup handle errors and promises.
-		this.setup();
 		// The second important thing to to it to validate all the parameters of the settings.js file.
 		this.validateSettings();
 		// The next thing is to calculate paths and inject back to the settings.js file.
@@ -25,15 +23,6 @@ class InitiateService {
 		this.validateDirectories();
 		// Validate that certain directories exists, and if not, create them.
 		this.createDirectories();
-	}
-
-	validateScriptType() {
-		if (!validationUtils.isValidEnum({
-			enum: ScriptType,
-			value: this.scriptType
-		})) {
-			throw new Error('Invalid or no ScriptType parameter was found (1000014)');
-		}
 	}
 
 	setup() {
@@ -54,6 +43,15 @@ class InitiateService {
 		});
 	}
 
+	validateScriptType() {
+		if (!validationUtils.isValidEnum({
+			enum: ScriptType,
+			value: this.scriptType
+		})) {
+			throw new Error('Invalid or no ScriptType parameter was found (1000014)');
+		}
+	}
+
 	validateSettings() {
 		// Validate the settings object existence.
 		if (!settings) {
@@ -63,6 +61,7 @@ class InitiateService {
 		this.validateStrings();
 		this.validateBooleans();
 		this.validateArrays();
+		this.validateEnums();
 		this.validateSpecial();
 	}
 
@@ -83,12 +82,13 @@ class InitiateService {
 	validatePositiveNumbers() {
 		[
 			// ===COUNT & LIMIT=== //
-			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT', 'MAXIMUM_PAGES_NUMBER',
+			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT', 'MAXIMUM_PAGES_NUMBER', 'MAXIMUM_SESSIONS_COUNT',
 			'MILLISECONDS_INTERVAL_COUNT', 'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_CREATE', 'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_MAIN_PAGES',
 			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_UPDATE', 'MAXIMUM_COURSE_NAME_CHARACTERS_DISPLAY_COUNT', 'MAXIMUM_URL_CHARACTERS_DISPLAY_COUNT',
 			'MAXIMUM_RESULT_CHARACTERS_DISPLAY_COUNT', 'MILLISECONDS_TIMEOUT_UDEMY_ACTIONS', 'MAXIMUM_UDEMY_LOGIN_ATTEMPTS_COUNT',
 			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_PURCHASE', 'MILLISECONDS_TIMEOUT_UDEMY_PAGE_LOAD', 'MAXIMUM_CREATE_UPDATE_ERROR_IN_A_ROW_COUNT',
-			'MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION',
+			'MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION', 'MAXIMUM_URL_VALIDATION_COUNT',
+			'MILLISECONDS_TIMEOUT_URL_VALIDATION', 'MAXIMUM_COURSES_DATES_DISPLAY_COUNT',
 			// ===BACKUP=== //
 			'MILLISECONDS_DELAY_VERIFY_BACKUP_COUNT', 'BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT'
 		].map(key => {
@@ -104,7 +104,7 @@ class InitiateService {
 		[
 			...keys,
 			// ===GENERAL=== //
-			'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
+			'MODE', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
 			// ===ROOT PATH=== //
 			'APPLICATION_NAME', 'OUTER_APPLICATION_PATH', 'INNER_APPLICATION_PATH', 'ACCOUNT_FILE_PATH',
 			// ===DYNAMIC PATH=== //
@@ -124,8 +124,8 @@ class InitiateService {
 			'IS_PRODUCTION_ENVIRONMENT', 'IS_CREATE_COURSES_METHOD_ACTIVE', 'IS_UPDATE_COURSES_METHOD_ACTIVE',
 			'IS_PURCHASE_COURSES_METHOD_ACTIVE',
 			// ===LOG=== //
-			'IS_LOG_CREATE_COURSES_VALID', 'IS_LOG_CREATE_COURSES_INVALID', 'IS_LOG_UPDATE_COURSES_VALID',
-			'IS_LOG_UPDATE_COURSES_INVALID', 'IS_LOG_PURCHASE_COURSES_VALID', 'IS_LOG_PURCHASE_COURSES_INVALID'
+			'IS_LOG_CREATE_COURSES_METHOD_VALID', 'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID',
+			'IS_LOG_UPDATE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID'
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidBoolean(value)) {
@@ -148,6 +148,17 @@ class InitiateService {
 		});
 	}
 
+	validateEnums() {
+		const { MODE } = settings;
+		// ===GENERAL=== //
+		if (!validationUtils.isValidEnum({
+			enum: Mode,
+			value: MODE
+		})) {
+			throw new Error('Invalid or no MODE parameter was found (1000020)');
+		}
+	}
+
 	validateSpecial() {
 		[
 			// ===GENERAL=== //
@@ -155,12 +166,12 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidURL(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a URL but received: ${value} (1000020)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a URL but received: ${value} (1000021)`);
 			}
 		});
-		const { COURSES_DATE } = settings;
-		if (!validationUtils.isValidDateFormat(COURSES_DATE)) {
-			throw new Error(`Invalid or no COURSES_DATE parameter was found: Excpected a Date (mm-dd-yyyy) but received: ${COURSES_DATE} (1000021)`);
+		const { COURSES_DATES_VALUE } = settings;
+		if (!COURSES_DATES_VALUE) {
+			throw new Error(`Missing COURSES_DATES_VALUE parameter: ${COURSES_DATES_VALUE} (1000022)`);
 		}
 	}
 
@@ -170,7 +181,7 @@ class InitiateService {
 			...keys,
 			// ===ROOT PATH=== //
 			'OUTER_APPLICATION_PATH', 'INNER_APPLICATION_PATH',
-			// ===DYNAMIC PATH===
+			// ===DYNAMIC PATH=== //
 			'APPLICATION_PATH', 'PACKAGE_JSON_PATH'
 		].map(key => {
 			const value = settings[key];
@@ -187,19 +198,19 @@ class InitiateService {
 			const value = settings[key];
 			// Verify that the paths are of directory and not a file.
 			if (!fileUtils.isDirectoryPath(value)) {
-				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000042)`);
+				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000023)`);
 			}
 		});
 	}
 
 	createDirectories() {
 		[
-			// ===DYNAMIC PATH===
+			// ===DYNAMIC PATH=== //
 			'DIST_PATH', 'NODE_MODULES_PATH'
 		].map(key => {
 			const value = settings[key];
 			// Make sure that the dist directory exists, if not, create it.
-			globalUtils.createDirectory(value);
+			fileUtils.createDirectory(value);
 		});
 	}
 }

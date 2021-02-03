@@ -86,7 +86,7 @@ class TextUtils {
         return text.toLowerCase().trim();
     }
 
-    removeAllNonNumbers(text) {
+    removeAllNoneNumbers(text) {
         if (!text) {
             return '';
         }
@@ -158,6 +158,23 @@ class TextUtils {
             return '';
         }
         return email.split('@')[0];
+    }
+
+    getCapitalEachWordFromURL(url) {
+        return url.split('-').map(word => {
+            return word ? word[0].toUpperCase() + word.substring(1) : '';
+        }).join(' ');
+    }
+
+    getVariableType(obj) {
+        return {}.toString.call(obj).split(' ')[1].slice(0, -1).toLowerCase();
+    }
+
+    replaceCharacter(text, origin, target) {
+        if (!text) {
+            return '';
+        }
+        return text.replace(regexUtils.createRegex(origin, 'g'), target);
     }
 }
 

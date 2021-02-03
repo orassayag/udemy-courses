@@ -1,5 +1,11 @@
 const enumUtils = require('../enum.utils');
 
+const CoursesDatesType = enumUtils.createEnum([
+    ['SINGLE', 'SINGLE'],
+    ['ARRAY', 'ARRAY'],
+    ['RANGE', 'RANGE']
+]);
+
 const Environment = enumUtils.createEnum([
     ['PRODUCTION', 'PRODUCTION'],
     ['DEVELOPMENT', 'DEVELOPMENT']
@@ -13,7 +19,8 @@ const Method = enumUtils.createEnum([
 
 const Mode = enumUtils.createEnum([
     ['STANDARD', 'STANDARD'],
-    ['SESSION', 'SESSION']
+    ['SESSION', 'SESSION'],
+    ['SILENT', 'SILENT']
 ]);
 
 const ScriptType = enumUtils.createEnum([
@@ -45,4 +52,4 @@ const Status = enumUtils.createEnum([
     ['FINISH', 'FINISH']
 ]);
 
-module.exports = { Environment, Method, Mode, ScriptType, Status };
+module.exports = { CoursesDatesType, Environment, Method, Mode, ScriptType, Status };
