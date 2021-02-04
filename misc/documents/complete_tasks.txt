@@ -1,5 +1,19 @@
 Complete / canceled tasks:
 ==========================
+-Update packages. *
+-Remove the check on empty URL in the purchase method. *
+-Fix the bug that if not Udemy URL, change it to new counter 'invalid Udemy URL'. *
+-Add new counter for course not exists (other counter from
+limit access and URL not exists): https://www.udemy.com/course/local-lead-generation-rank-and-rent-definitive-guide/?couponCode=RANKANDRENT2021 *
+-This is limit access: https://www.udemy.com/course/draft/3526008/?couponCode=56191CDC04DF350FE15A *
+-Clean all comments. *
+-Rewrite error numbers. *
+-Remove all debugger. *
+-Fix TXT files spell mistakes. *
+-Update packages again. *
+-Format all files. *
+-Upload to GitHub. *
+-Move all complete tasks from here to complete_tasks.txt. *
 -Fix bug with taking not udemy URL - canceled. *
 -Make sure all comments ends with . *
 -Update puppeteer package again + verify all works good. *

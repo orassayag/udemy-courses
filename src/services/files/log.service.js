@@ -299,15 +299,17 @@ class LogService {
 			}, {
 				'Create Update Error': courseService.coursesData.createUpdateErrorCount,
 				'Empty URL': courseService.coursesData.emptyURLCount,
+				'Invalid URL': courseService.coursesData.invalidURLCount,
 				'Not Exists': courseService.coursesData.notExistsCount,
-				'Limit Access': courseService.coursesData.limitAccessCount,
+				'Page Not Found': courseService.coursesData.pageNotFoundCount,
+				'Limit Access': courseService.coursesData.limitAccessCount
+			}, {
 				'Suggestions List': courseService.coursesData.suggestionsListCount,
-				'Private': courseService.coursesData.privateCount
-			}, {
+				'Private': courseService.coursesData.privateCount,
 				'Already Purchase': courseService.coursesData.alreadyPurchaseCount,
-				'Course Price Not Free': courseService.coursesData.coursePriceNotFreeCount,
-				'Enroll Not Exists': courseService.coursesData.enrollNotExistsCount
+				'Course Price Not Free': courseService.coursesData.coursePriceNotFreeCount
 			}, {
+				'Enroll Not Exists': courseService.coursesData.enrollNotExistsCount,
 				'Checkout Price Not Exists': courseService.coursesData.checkoutPriceNotExistsCount,
 				'Checkout Price Not Free': courseService.coursesData.checkoutPriceNotFreeCount,
 				'Purchase Error': courseService.coursesData.purchaseErrorCount
@@ -346,8 +348,8 @@ class LogService {
 				[Color.YELLOW, Color.YELLOW],
 				[Color.GREEN, Color.RED, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
 				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
-				[Color.CYAN, Color.CYAN, Color.CYAN],
-				[Color.CYAN, Color.CYAN, Color.CYAN],
+				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
+				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
 				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],

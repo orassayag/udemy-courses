@@ -89,10 +89,26 @@ class CourseService {
         return textUtils.getCapitalEachWordFromURL(udemyURL);
     }
 
+    async validateUdemyURL(course) {
+        const { udemyURL } = course;
+        if (!udemyURL) {
+            return course;
+        }
+        if (udemyURL.indexOf(applicationService.applicationData.udemyBaseURL) === -1) {
+            course = await this.updateCourseStatus({
+                course: course,
+                status: CourseStatus.INVALID_URL,
+                details: 'The Udemy URL is invalid.'
+            });
+        }
+        return course;
+    }
+
     async createCourse(course) {
         course.id = this.lastCourseId;
         course = new CourseData(course);
         course.udemyURLCourseName = this.getUdemyCourseName(course.udemyURL);
+        course = await this.validateUdemyURL(course);
         this.coursesData.coursesList.push(course);
         this.lastCourseId++;
         this.coursesData.course = course;
@@ -100,12 +116,14 @@ class CourseService {
     }
 
     async updateSingleCourseData(data) {
-        const { course, courseIndex, udemyURL, udemyURLCompare, couponKey } = data;
+        const { courseIndex, udemyURL, udemyURLCompare, couponKey } = data;
+        let { course } = data;
         course.udemyURL = udemyURL;
         course.udemyURLCompare = udemyURLCompare;
         course.udemyURLCourseName = this.getUdemyCourseName(udemyURL);
         course.couponKey = couponKey;
         course.isFree = !validationUtils.isExists(couponKey);
+        course = await this.validateUdemyURL(course);
         this.coursesData.coursesList[courseIndex] = course;
         this.coursesData.course = course;
         await this.logCourse(course);

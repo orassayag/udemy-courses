@@ -256,8 +256,9 @@ class PuppeteerService {
             }
             // Validate course status.
             switch (course.status) {
-                case CourseStatus.CREATE: case CourseStatus.EMPTY_URL:
-                case CourseStatus.PURCHASE_ERROR: case CourseStatus.FAIL: {
+                case CourseStatus.CREATE:
+                case CourseStatus.PURCHASE_ERROR:
+                case CourseStatus.FAIL: {
                     await globalUtils.sleep(10);
                     break;
                 }
@@ -326,16 +327,27 @@ class PuppeteerService {
             // Validate if page exists.
             if (await page.$(domService.courseNotExistsDOM)) {
                 return await this.setCourseStatus({
-                    page: page, course: course, status: CourseStatus.NOT_EXISTS,
-                    details: 'Course page does not exists, no such course.', originalPrices: null
+                    page: page, course: course, status: CourseStatus.PAGE_NOT_FOUND,
+                    details: 'Course page does not found, no such course.', originalPrices: null
                 });
             }
             this.logSessionStage('PAGE EXISTS');
             // Validate if the course exists.
             if (await page.$(domService.courseLimitAccessDOM)) {
+                let status = null;
+                let details = null;
+                const courseH2 = await page.$eval(domService.courseLimitAccessDOM, el => el.textContent);
+                if (courseH2.indexOf('available') > -1) {
+                    status = CourseStatus.NOT_EXISTS;
+                    details = 'The course is no longer available.';
+                }
+                if (courseH2.indexOf('enrollments') > -1) {
+                    status = CourseStatus.LIMIT_ACCESS;
+                    details = 'The course is no longer accepting enrollments.';
+                }
                 return await this.setCourseStatus({
-                    page: page, course: course, status: CourseStatus.LIMIT_ACCESS,
-                    details: 'Course page has no data and the access is limited.', originalPrices: null
+                    page: page, course: course, status: status,
+                    details: details, originalPrices: null
                 });
             }
             this.logSessionStage('PAGE NOT LIMIT ACCESS');
