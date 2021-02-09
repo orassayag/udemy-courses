@@ -1,5 +1,6 @@
 Complete / canceled tasks:
 ==========================
+-Update Packages. *
 -Update packages. *
 -Remove the check on empty URL in the purchase method. *
 -Fix the bug that if not Udemy URL, change it to new counter 'invalid Udemy URL'. *
