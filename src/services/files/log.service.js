@@ -197,6 +197,9 @@ class LogService {
 		const time = `${applicationService.applicationData.time} [${this.frames[this.i = ++this.i % this.frames.length]}]`;
 		const totalPricePurchased = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalPriceNumber)}`;
 		let courseIndex = this.emptyValue;
+		const totalSingleCount = textUtils.getNumberWithCommas(courseService.coursesData.totalSingleCount);
+		const totalCourseListCount = textUtils.getNumberWithCommas(courseService.coursesData.totalCourseListCount);
+		const coursesCount = `${textUtils.getNumberWithCommas(courseService.coursesData.coursesList.length)} (Single: ${totalSingleCount} / Course List: ${totalCourseListCount})`;
 		switch (applicationService.applicationData.method) {
 			case Method.CREATE_COURSES:
 				courseIndex = courseService.coursesData.coursesList.length;
@@ -208,6 +211,7 @@ class LogService {
 				courseIndex = this.getCurrentIndex(true);
 				break;
 		}
+		let date = textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length);
 		const purchaseCount = `${StatusIcon.V}  ${textUtils.getNumberWithCommas(courseService.coursesData.purchaseCount)}`;
 		const failCount = `${StatusIcon.X}  ${textUtils.getNumberWithCommas(courseService.coursesData.failCount)}`;
 		const coursesCurrentDate = applicationService.applicationData.coursesCurrentDate ? applicationService.applicationData.coursesCurrentDate : this.emptyValue;
@@ -256,6 +260,7 @@ class LogService {
 					text: courseService.coursesData.course.resultDetails.join(' '),
 					count: countLimitService.countLimitData.maximumResultCharactersDisplayCount
 				}) : this.emptyValue;
+			date = `${textUtils.getNumberWithCommas(courseService.coursesData.course.indexDate + 1)}/${textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length)}`;
 		}
 		if (!this.isLogProgress) {
 			return;
@@ -275,7 +280,7 @@ class LogService {
 				'Time': time,
 				'Total Price Purchase': totalPricePurchased,
 				'Course': courseIndex,
-				'Courses Count': courseService.coursesData.coursesList.length
+				'Courses Count': coursesCount
 			}, {
 				'Session Number': applicationService.applicationData.sessionNumber,
 				'Is Key Words Filter': isKeyWordsFilter,
@@ -284,7 +289,7 @@ class LogService {
 			}, {
 				'Type': applicationService.applicationData.coursesDatesType,
 				'Value': applicationService.applicationData.coursesDatesDisplayValue,
-				'Dates Count': applicationService.applicationData.coursesDatesValue.length,
+				'Dates': date,
 				'Current Date': coursesCurrentDate
 			}, {
 				'Email': accountService.accountData.email,

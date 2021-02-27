@@ -106,6 +106,12 @@ class CourseService {
 
     async createCourse(course) {
         course.id = this.lastCourseId;
+        if (course.isSingleCourse) {
+            this.coursesData.totalSingleCount++;
+        }
+        else {
+            this.coursesData.totalCourseListCount++;
+        }
         course = new CourseData(course);
         course.udemyURLCourseName = this.getUdemyCourseName(course.udemyURL);
         course = await this.validateUdemyURL(course);
@@ -132,7 +138,6 @@ class CourseService {
     async updateCoursesListCourseData(data) {
         const { course, courseIndex } = data;
         course.isFree = false;
-        course.type = CourseType.COURSES_LIST;
         this.coursesData.coursesList[courseIndex] = course;
         this.coursesData.course = course;
         await this.logCourse(course);

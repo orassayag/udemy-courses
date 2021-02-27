@@ -4,13 +4,15 @@ class CourseData {
 
     constructor(course) {
         const { id, postId, pageNumber, indexPageNumber, isFree, courseURL, udemyURL,
-            udemyURLCompare, couponKey, courseURLCourseName, publishDate, isSingleCourse } = course;
+            udemyURLCompare, couponKey, courseURLCourseName, publishDate,
+            indexDate, isSingleCourse } = course;
         this.id = id;
         this.postId = postId;
         this.creationDateTime = new Date();
         this.pageNumber = pageNumber;
         this.indexPageNumber = indexPageNumber;
         this.publishDate = publishDate;
+        this.indexDate = indexDate;
         this.priceNumber = null;
         this.priceDisplay = null;
         this.courseURLCourseName = courseURLCourseName;

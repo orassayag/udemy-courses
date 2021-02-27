@@ -2,11 +2,17 @@ const textUtils = require('./text.utils');
 
 class CourseUtils {
 
-    constructor() { }
+    constructor() {
+        this.murlKey = 'murl=';
+        this.couponCodeKey = 'couponCode=';
+        this.coursesKey = '/course/';
+    }
 
     createCourseSingleData(url) {
-        url = unescape(url);
-        url = url.split('murl=')[1];
+        if (url.indexOf(this.murlKey) > -1) {
+            url = unescape(url);
+            url = url.split(this.murlKey)[1];
+        }
         return {
             udemyURL: url,
             couponKey: this.getCourseCoupon(url)
@@ -17,7 +23,7 @@ class CourseUtils {
         if (!url) {
             return url;
         }
-        return url.split('couponCode=')[1];
+        return url.split(this.couponCodeKey)[1];
     }
 
     getCoursePrices(text) {
@@ -29,14 +35,10 @@ class CourseUtils {
     }
 
     getUdemyURLKeyWords(udemyURL, udemyBaseURL) {
-        if (!udemyURL) {
+        if (!udemyURL || udemyURL.indexOf(this.coursesKey) === -1) {
             return [];
         }
-        const courseKeyWord = '/course/';
-        if (udemyURL.indexOf(courseKeyWord) === -1) {
-            return [];
-        }
-        return udemyURL.replace(`${udemyBaseURL}${courseKeyWord}`, '').split('/')[0].split('-');
+        return udemyURL.replace(`${udemyBaseURL}${this.coursesKey}`, '').split('/')[0].split('-');
     }
 }
 

@@ -44,7 +44,7 @@ class InitiateService {
 	}
 
 	validateScriptType() {
-		if (!validationUtils.isValidEnum({
+		if (!this.scriptType || !validationUtils.isValidEnum({
 			enum: ScriptType,
 			value: this.scriptType
 		})) {

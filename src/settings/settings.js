@@ -26,7 +26,7 @@ const settings = {
 
     // ===FLAG=== //
     // Determine if to load Udemy account of development or production.
-    IS_PRODUCTION_ENVIRONMENT: true,
+    IS_PRODUCTION_ENVIRONMENT: false,
     // Determine if to perform the create courses method.
     IS_CREATE_COURSES_METHOD_ACTIVE: true,
     // Determine if to perform the update courses method.
@@ -57,7 +57,7 @@ const settings = {
     MAXIMUM_PAGES_NUMBER: 20,
     // Determine the maximum sessions counts to run in order to retry purchase failed courses.
     MAXIMUM_SESSIONS_COUNT: 5,
-    // Determine how much milliseconds interval to run to calculate the time of the
+    // Determine how much milliseconds interval to calculate the time of the
     // status line in the console.
     MILLISECONDS_INTERVAL_COUNT: 500,
     // Determine the milliseconds count timeout to wait for between courses creation.

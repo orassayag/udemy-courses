@@ -1,5 +1,39 @@
 Complete / canceled tasks:
 ==========================
+-Update packages. *
+-Update packages again. *
+-Add logic to detect single Udemy link + same logic as today: *
+-Single redirect course example: https://idownloadcoupon.com/2021/02/26/100-off-client-care-and-consultation/ *
+-Single direct course example: https://idownloadcoupon.com/2021/02/19/free-microsoft-powerpoint/ *
+-Courses list example: https://idownloadcoupon.com/2021/02/26/free-udemy-courses-list-12-15-2020/ *
+-Fix Udemy links that are empty in the update method. *
+-Add single and courses count to the console status log. *
+-Keep update the "Current Date" in the console status log. *
+-Change the "Dates Count" to be 1/1 or 1/7 and keep it updated. *
+-Check the order of the parameters in the initiate.service.js (Titles order identical to settings.js order). *
+-Add script name to tests and add validation for empty script name in initiate.service.js (copy from sender project). *
+-Go over timeUtils and make sure all local "this.getDay" are being used, and not "date.getDate()" for example. *
+-Fix comment in settings.js 'interval to run to calculate' => 'interval to calculate'. *
+-Add index.js to "configurations" direcotry and replace in all places. *
+-Fix comment:         // Get the backup title from the console.s *
+-Fix all README.me + package.json from 'create-react-up' to 'create-react-app'. *
+-Remove comments. *
+-Verify all works as expected. *
+-Change all ect => etc - In all projects. *
+-Verify package.json project name. *
+-Change all README.md files to the title of the project as first line (Only one #). *
+-Change from 'Start to be built' to 'Built in', and remove space lines, and the "-Goal:", *
+and remove the 'This project was bootstrapped with [Create React App] *
+(https://github.com/facebook/create-react-app).' line under to the description *
+with line space,  all fixes in README.md. *
+-Re-format all error numbers + last_index.txt file. *
+-Clear all comments. *
+-Fix all misspells in all TXT files. *
+-Format all documents.
+-Move all complete tasks to complete_tasks.txt. *
+-Verify all works good + delete all uneeded dist. *
+-Upload to GitHub. *
+-Backup iOmega. *
 -Update Packages. *
 -Update packages. *
 -Remove the check on empty URL in the purchase method. *
@@ -78,7 +112,7 @@ to solve issue of hand while not in focus. *
 -Change all places from 'exports = {' to 'module.exports = {'. *
 -Change all places from '../settings' to '../settings/settings'. *
 -Fix issue that script not working anymore - canceled. *
--Fix uneeded formats with: "formatFiles.excludePattern": "**/node_modules,**/.vscode,**/dist/**,**/.chrome,**/misc". *
+-Fix uneeded formats with: "formatFiles.excludePattern": "**'/node_modules,**'/.vscode,**'/dist/'**,**'/.chrome,**'/misc". *
 -Add 'Complete + canceled tasks: *
 ==========================' to complete_tasks.txt. *
 -In .eslintrc file - set "no-unused-vars": 1. *

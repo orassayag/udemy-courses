@@ -15,7 +15,7 @@ class PurchaseLogic {
         await accountService.initiate(settings);
         // Validate all settings are fit to the user needs.
         await this.confirm();
-        // Initiate all the settings, configurations, services, ect...
+        // Initiate all the settings, configurations, services, etc...
         await this.initiate();
         // Validate general settings.
         await this.validateGeneralSettings();

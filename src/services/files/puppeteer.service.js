@@ -99,7 +99,8 @@ class PuppeteerService {
                     const coursesResult = await domService.createSingleCourses({
                         mainContent: mainContent,
                         pageNumber: pageNumber,
-                        indexPageNumber: y
+                        indexPageNumber: y,
+                        indexDate: i
                     });
                     if (coursesResult.isErrorInARow) {
                         isErrorInARow = true;
@@ -135,6 +136,7 @@ class PuppeteerService {
                 applicationService.applicationData.status = Status.UPDATE_COURSES;
                 courseService.coursesData.courseIndex = i + 1;
                 const course = courseService.coursesData.coursesList[i];
+                applicationService.applicationData.coursesCurrentDate = course.publishDate;
                 await page.goto(course.courseURL, this.pageOptions);
                 await page.waitForFunction(this.waitForFunction, { timeout: this.timeout });
                 const postContent = await page.content();
@@ -250,6 +252,7 @@ class PuppeteerService {
             applicationService.applicationData.status = Status.PURCHASE;
             courseService.coursesData.courseIndex = i + 1;
             const course = courseService.coursesData.coursesList[i];
+            applicationService.applicationData.coursesCurrentDate = course.publishDate;
             courseService.coursesData.course = course;
             if (!course || !course.status) {
                 continue;

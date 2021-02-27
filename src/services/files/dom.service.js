@@ -17,6 +17,7 @@ class DomService {
         this.postDOM = '[id^="post-"]';
         this.singleCourseTitleDOM = 'grid-tit';
         this.singleCourseDateDOM = 'meta';
+        this.singleCourseUdemyAttributeDOM = 'data-coupon-id';
         this.coursesListTitleDOM = 'course_title';
         this.coursesListContainerDOM = 'amz-deal';
         // ===UDEMY=== //
@@ -41,7 +42,7 @@ class DomService {
     async createSingleCourses(data) {
         let coursesCount = 0;
         try {
-            const { mainContent, pageNumber, indexPageNumber } = data;
+            const { mainContent, pageNumber, indexPageNumber, indexDate } = data;
             const dom = new jsdom.JSDOM(mainContent);
             const courses = dom.window.document.querySelectorAll(this.postDOM);
             for (let i = 0; i < courses.length; i++) {
@@ -58,6 +59,7 @@ class DomService {
                     couponKey: null,
                     courseURLCourseName: url?.text,
                     publishDate: date,
+                    indexDate: indexDate,
                     isSingleCourse: true
                 });
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
@@ -88,8 +90,9 @@ class DomService {
             const urls = dom.window.document.getElementsByTagName(this.href);
             for (let i = 0; i < urls.length; i++) {
                 const url = urls[i];
+                const isDirectUdemyURL = url.hasAttribute(this.singleCourseUdemyAttributeDOM);
                 const urlHref = url.href;
-                if (urlHref.indexOf(applicationService.applicationData.udemyBaseURL) > -1) {
+                if (!isDirectUdemyURL && urlHref.indexOf(applicationService.applicationData.udemyBaseURL) > -1) {
                     coursesLists.push({
                         course: course,
                         courseIndex: courseIndex,
@@ -97,8 +100,8 @@ class DomService {
                     });
                     break;
                 }
-                if (urlHref.indexOf(applicationService.applicationData.singleCourseInit) > -1) {
-                    if (!url.getElementsByTagName(this.img).length) {
+                if (isDirectUdemyURL || urlHref.indexOf(applicationService.applicationData.singleCourseInit) > -1) {
+                    if (isDirectUdemyURL || !url.getElementsByTagName(this.img).length) {
                         const result = courseUtils.createCourseSingleData(urlHref);
                         await courseService.updateSingleCourseData({
                             course: course,
@@ -147,6 +150,7 @@ class DomService {
                     couponKey: courseUtils.getCourseCoupon(udemyURL),
                     courseURLCourseName: url?.text,
                     publishDate: date,
+                    dateIndex: course.dateIndex,
                     isSingleCourse: false
                 });
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
@@ -183,6 +187,7 @@ class DomService {
                     couponKey: courseUtils.getCourseCoupon(udemyURL),
                     courseURLCourseName: null,
                     publishDate: date,
+                    dateIndex: course.dateIndex,
                     isSingleCourse: false
                 });
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);

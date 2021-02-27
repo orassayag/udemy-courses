@@ -1,9 +1,6 @@
-# Server
+# Udemy Courses
 
-Start to be built in December 2020.
--Goal:
-The goal of this project is to get Udemy courses links from a coupon site,
-and purchase the FREE ONLY courses (by the coupon) on Udemy site.
+Built in December 2020. A Node.js + Puppeteer.js application to get Udemy courses links from a coupon site, and purchase the FREE ONLY courses (by the coupon) on Udemy site.
 
 ## Getting Started
 
@@ -11,6 +8,7 @@ Clone the application to your computer.
 Steps to view the solution:
 1. Open server application on IDE (I use VSCode).
 2. Terminal: npm i
+3. In terminal: npm start
 
 READ THE FOLLOWING SETTINGS BEFORE YOU BEGIN:
 
