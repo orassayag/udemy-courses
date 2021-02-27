@@ -26,7 +26,7 @@ const settings = {
 
     // ===FLAG=== //
     // Determine if to load Udemy account of development or production.
-    IS_PRODUCTION_ENVIRONMENT: false,
+    IS_PRODUCTION_ENVIRONMENT: true,
     // Determine if to perform the create courses method.
     IS_CREATE_COURSES_METHOD_ACTIVE: true,
     // Determine if to perform the update courses method.
