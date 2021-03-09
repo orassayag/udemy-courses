@@ -30,7 +30,7 @@ class ValidationService {
             }
         }
         if (!isConnected) {
-            throw new Error(`${url} is not available (1000024)`);
+            throw new Error(`${url} is not available (1000025)`);
         }
     }
 }

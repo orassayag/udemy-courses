@@ -10,7 +10,7 @@ class AccountService {
 
     async initiate(settings) {
         this.accountData = new AccountData(settings);
-        const account = await fileService.getFileData({
+        const account = await fileService.getJsonFileData({
             environment: applicationUtils.getApplicationEnvironment(settings.IS_PRODUCTION_ENVIRONMENT),
             path: this.accountData.accountFilePath,
             parameterName: 'accountFilePath',
@@ -31,7 +31,7 @@ class AccountService {
         if (!email) {
             throw new Error('Missing email account (1000003)');
         }
-        if (!validationUtils.validateEmailAddress(textUtils.toLowerCase(email))) {
+        if (!validationUtils.isValidEmailAddress(textUtils.toLowerCase(email))) {
             throw new Error('Invalid email account (1000004)');
         }
         if (!password) {

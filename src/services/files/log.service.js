@@ -31,24 +31,24 @@ class LogService {
 		this.isLogs = true;
 	}
 
-	async initiate(settings) {
+	initiate(settings) {
 		this.logData = new LogData(settings);
 		// Check if any logs active.
 		this.isLogs = applicationService.applicationData.mode === Mode.STANDARD &&
 			(this.logData.isLogCreateCoursesMethodValid || this.logData.isLogCreateCoursesMethodInvalid ||
 				this.logData.isLogUpdateCoursesMethodValid || this.logData.isLogUpdateCoursesMethodInvalid ||
 				this.logData.isLogPurchaseCoursesMethodValid || this.logData.isLogPurchaseCoursesMethodInvalid);
-		await this.initiateDirectories();
+				this.initiateDirectories();
 		this.isLogProgress = applicationService.applicationData.mode === Mode.STANDARD;
 	}
 
-	async initiateDirectories() {
+	initiateDirectories() {
 		if (!this.isLogs) {
 			return;
 		}
 		// ===PATH=== //
 		this.baseSessionPath = pathService.pathData.distPath;
-		await this.createSessionDirectory();
+		this.createSessionDirectory();
 		if (this.logData.isLogCreateCoursesMethodValid) {
 			this.createCoursesValidPath = this.createFilePath(`create_courses_method_valid_${Placeholder.DATE}`);
 		}
@@ -77,12 +77,12 @@ class LogService {
 		return Math.max(...directories.map(name => textUtils.getSplitNumber(name))) + 1;
 	}
 
-	async createSessionDirectory() {
+	createSessionDirectory() {
 		this.sessionDirectoryPath = pathUtils.getJoinPath({
 			targetPath: this.baseSessionPath,
 			targetName: `${this.getNextDirectoryIndex()}_${applicationService.applicationData.logDateTime}-${textUtils.getEmailLocalPart(accountService.accountData.email)}`
 		});
-		await fileUtils.createDirectory(this.sessionDirectoryPath);
+		fileUtils.createDirectory(this.sessionDirectoryPath);
 	}
 
 	createFilePath(fileName) {
@@ -211,7 +211,7 @@ class LogService {
 				courseIndex = this.getCurrentIndex(true);
 				break;
 		}
-		let date = textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length);
+		let dates = textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length);
 		const purchaseCount = `${StatusIcon.V}  ${textUtils.getNumberWithCommas(courseService.coursesData.purchaseCount)}`;
 		const failCount = `${StatusIcon.X}  ${textUtils.getNumberWithCommas(courseService.coursesData.failCount)}`;
 		const coursesCurrentDate = applicationService.applicationData.coursesCurrentDate ? applicationService.applicationData.coursesCurrentDate : this.emptyValue;
@@ -260,7 +260,7 @@ class LogService {
 					text: courseService.coursesData.course.resultDetails.join(' '),
 					count: countLimitService.countLimitData.maximumResultCharactersDisplayCount
 				}) : this.emptyValue;
-			date = `${textUtils.getNumberWithCommas(courseService.coursesData.course.indexDate + 1)}/${textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length)}`;
+			dates = `${textUtils.getNumberWithCommas(courseService.coursesData.course.indexDate + 1)}/${textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length)}`;
 		}
 		if (!this.isLogProgress) {
 			return;
@@ -289,7 +289,7 @@ class LogService {
 			}, {
 				'Type': applicationService.applicationData.coursesDatesType,
 				'Value': applicationService.applicationData.coursesDatesDisplayValue,
-				'Dates': date,
+				'Dates': dates,
 				'Current Date': coursesCurrentDate
 			}, {
 				'Email': accountService.accountData.email,
@@ -373,18 +373,38 @@ class LogService {
 		}
 	}
 
+	getCourseTime(title, coursesDatesValue) {
+		let value = '';
+		switch (textUtils.getVariableType(coursesDatesValue)) {
+			case 'string': {
+				value = coursesDatesValue;
+				break;
+			}
+			case 'array': {
+				value = coursesDatesValue.slice(0, 3).join(' ');
+				break;
+			}
+			case 'object': {
+				value = `${coursesDatesValue.from} - ${coursesDatesValue.to}`;
+				break;
+			}
+		}
+		return this.createLineTemplate(title, value);
+	}
+
 	createLineTemplate(title, value) {
 		return textUtils.addBreakLine(`${logUtils.logColor(`${title}:`, Color.MAGENTA)} ${value}`);
 	}
 
 	createConfirmSettingsTemplate(settings) {
 		const parameters = ['MODE', 'IS_PRODUCTION_ENVIRONMENT', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
-			'COURSES_DATES_VALUE', 'SPECIFIC_COURSES_PAGE_NUMBER', 'KEY_WORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
+			'SPECIFIC_COURSES_PAGE_NUMBER', 'KEY_WORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
 			'IS_UPDATE_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_CREATE_COURSES_METHOD_VALID',
 			'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID', 'IS_LOG_UPDATE_COURSES_METHOD_INVALID',
 			'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_ONLY',
 			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MAXIMUM_PAGES_NUMBER'];
-		let settingsText = this.createLineTemplate('EMAIL', accountService.accountData.email);
+		let settingsText = this.getCourseTime('COURSES_DATES_VALUE', settings['COURSES_DATES_VALUE']);
+		settingsText += this.createLineTemplate('EMAIL', accountService.accountData.email);
 		settingsText += Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
 			.map(k => this.createLineTemplate(k, settings[k])).join('');
 		settingsText = textUtils.removeLastCharacters({

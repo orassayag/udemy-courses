@@ -1,5 +1,5 @@
 const settings = require('../../settings/settings');
-const { Mode, ScriptType } = require('../../core/enums/files/system.enum');
+const { Mode, ScriptType } = require('../../core/enums');
 const { fileUtils, pathUtils, validationUtils } = require('../../utils');
 const globalUtils = require('../../utils/files/global.utils');
 
@@ -125,9 +125,18 @@ class InitiateService {
 			'IS_PURCHASE_COURSES_METHOD_ACTIVE',
 			// ===LOG=== //
 			'IS_LOG_CREATE_COURSES_METHOD_VALID', 'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID',
-			'IS_LOG_UPDATE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID'
+			'IS_LOG_UPDATE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID',
+			// ===INNER SETTINGS=== //
+			'INNER_SETTINGS.IS_LONG_RUN'
 		].map(key => {
-			const value = settings[key];
+			let value = null;
+			if (key.indexOf('.') === -1) {
+				value = settings[key];
+			}
+			else {
+				const split = key.split('.');
+				value = settings[split[0]][split[1]];
+			}
 			if (!validationUtils.isValidBoolean(value)) {
 				throw new Error(`Invalid or no ${key} parameter was found: Excpected a boolean but received: ${value} (1000018)`);
 			}
@@ -159,6 +168,16 @@ class InitiateService {
 		}
 	}
 
+	validateObject() {
+		// ===INNER SETTINGS=== //
+		['INNER_SETTINGS'].map(key => {
+			const value = settings[key];
+			if (!validationUtils.isObject(value)) {
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a number but received: ${value} (1000021)`);
+			}
+		});
+	}
+
 	validateSpecial() {
 		[
 			// ===GENERAL=== //
@@ -166,12 +185,12 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidURL(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a URL but received: ${value} (1000021)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Excpected a URL but received: ${value} (1000022)`);
 			}
 		});
 		const { COURSES_DATES_VALUE } = settings;
 		if (!COURSES_DATES_VALUE) {
-			throw new Error(`Missing COURSES_DATES_VALUE parameter: ${COURSES_DATES_VALUE} (1000022)`);
+			throw new Error(`Missing COURSES_DATES_VALUE parameter: ${COURSES_DATES_VALUE} (1000023)`);
 		}
 	}
 
@@ -198,7 +217,7 @@ class InitiateService {
 			const value = settings[key];
 			// Verify that the paths are of directory and not a file.
 			if (!fileUtils.isDirectoryPath(value)) {
-				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000023)`);
+				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000024)`);
 			}
 		});
 	}

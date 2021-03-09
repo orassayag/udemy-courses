@@ -1,5 +1,12 @@
 const { Mode } = require('../core/enums');
-const { pathUtils, timeUtils } = require('../utils');
+const { courseUtils, pathUtils } = require('../utils');
+
+const innerSettings = {
+    // ===FLAG=== //
+    // Determine if to run for a long time. Settings this to true, will set automatically
+    // the COURSES_DATES_VALUE to the current date subtract one day.
+    IS_LONG_RUN: true
+};
 
 const settings = {
     // ===GENERAL=== //
@@ -16,7 +23,9 @@ const settings = {
     // SINGLE - Single date to scan, the default is the current date. If not, use 'yyyy/mm/dd' format. Example: '2020/12/13'.
     // ARRAY - List of dates to scan. Example: ['2020/12/13', '2020/12/14'].
     // RANGE - Range of dates to scan. Example: { from: '2020/12/13', to: '2020/12/14' }.
-    COURSES_DATES_VALUE: timeUtils.getCommasDate(),
+    // If empty/null/undefined - Will get the current date automatically.
+    COURSES_DATES_VALUE: innerSettings.IS_LONG_RUN ? courseUtils.getLongRunTime() :
+        courseUtils.getCourseTime({ from: '2021/03/03', to: '2021/03/04' }),
     // Determine the specific courses page (in the pagination) to crawl. If null,
     // will scan all the courses pages until reached the maximum number (MAXIMUM_PAGES_NUMBER).
     SPECIFIC_COURSES_PAGE_NUMBER: null,
@@ -25,7 +34,7 @@ const settings = {
     KEY_WORDS_FILTER_LIST: [],
 
     // ===FLAG=== //
-    // Determine if to load Udemy account of development or production.
+    // Determine if to load Udemy account of development (=false) or production (=true).
     IS_PRODUCTION_ENVIRONMENT: true,
     // Determine if to perform the create courses method.
     IS_CREATE_COURSES_METHOD_ACTIVE: true,
@@ -49,7 +58,7 @@ const settings = {
     IS_LOG_PURCHASE_COURSES_METHOD_INVALID: true,
 
     // ===COUNT & LIMIT=== //
-    // Determine the maximum courses count to purchase per process.
+    // Determine the maximum courses count to purchase per date.
     MAXIMUM_COURSES_PURCHASE_COUNT: 3000,
     // Determine the milliseconds count timeout to wait for answer to get the page or engine source.
     MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT: 60000,
@@ -123,7 +132,7 @@ const settings = {
     // Determine the backups directory which all the local backup will be created to.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\backups').
     BACKUPS_PATH: 'backups',
-    // Determine the dist directory path which there, all the outcome of the crawling will be created.
+    // Determine the dist directory path which there, all the outcome of the logs will be created.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\udemy-courses\\dist').
     DIST_PATH: 'dist',
     // Determine the directory path of the node_modules.
@@ -152,7 +161,11 @@ const settings = {
     // Determine the number of time in loop to check for version of a backup.
     // For example, if a backup name "test-test-test-1" exists, it will check for "test-test-test-2",
     // and so on, until the current maximum number.
-    BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT: 50
+    BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT: 50,
+
+    // ===INNER SETTINGS=== //
+    // A copy of all the inner settings declared on top in order to do validation.
+    INNER_SETTINGS: innerSettings
 };
 
 module.exports = settings;

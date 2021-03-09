@@ -61,7 +61,7 @@ class ValidationUtils {
         return typeof boolean == typeof true;
     }
 
-    validateEmailAddress(emailAddress) {
+    isValidEmailAddress(emailAddress) {
         return regexUtils.validateEmailAddressRegex.test(emailAddress);
     }
 

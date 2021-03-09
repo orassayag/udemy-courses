@@ -140,17 +140,17 @@ class DomService {
                 }
                 const couponKey = courseUtils.getCourseCoupon(udemyURL);
                 await courseService.createCourse({
-                    postId: null,
+                    postId: course.postId,
                     pageNumber: course.pageNumber,
                     indexPageNumber: course.indexPageNumber,
-                    isFree: !validationUtils.isExists(couponKey),
+                    isFree: validationUtils.isExists(couponKey),
                     courseURL: course.courseURL,
                     udemyURL: udemyURL,
                     udemyURLCompare: textUtils.toLowerCaseTrim(udemyURL),
                     couponKey: courseUtils.getCourseCoupon(udemyURL),
                     courseURLCourseName: url?.text,
                     publishDate: date,
-                    dateIndex: course.dateIndex,
+                    indexDate: course.indexDate,
                     isSingleCourse: false
                 });
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
@@ -177,17 +177,17 @@ class DomService {
                 }
                 const couponKey = courseUtils.getCourseCoupon(udemyURL);
                 await courseService.createCourse({
-                    postId: null,
+                    postId: course.postId,
                     pageNumber: course.pageNumber,
                     indexPageNumber: course.indexPageNumber,
-                    isFree: !validationUtils.isExists(couponKey),
+                    isFree: validationUtils.isExists(couponKey),
                     courseURL: course.courseURL,
                     udemyURL: udemyURL,
                     udemyURLCompare: textUtils.toLowerCaseTrim(udemyURL),
                     couponKey: courseUtils.getCourseCoupon(udemyURL),
                     courseURLCourseName: null,
                     publishDate: date,
-                    dateIndex: course.dateIndex,
+                    indexDate: course.indexDate,
                     isSingleCourse: false
                 });
                 await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);

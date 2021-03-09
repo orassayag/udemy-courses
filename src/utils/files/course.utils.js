@@ -1,4 +1,5 @@
 const textUtils = require('./text.utils');
+const timeUtils = require('./time.utils');
 
 class CourseUtils {
 
@@ -39,6 +40,16 @@ class CourseUtils {
             return [];
         }
         return udemyURL.replace(`${udemyBaseURL}${this.coursesKey}`, '').split('/')[0].split('-');
+    }
+
+    getCourseTime(data) {
+        return data ? data : timeUtils.getCommasDate();
+    }
+
+    getLongRunTime() {
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+        return timeUtils.getCommasDate(date);
     }
 }
 

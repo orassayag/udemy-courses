@@ -1,7 +1,7 @@
-const applicationService = require('./application.service');
-const countLimitService = require('./countLimit.service');
 const { CourseData, CoursesData, CoursesDatesResult } = require('../../core/models');
 const { CoursesDatesType, CourseStatus, CourseType, Status } = require('../../core/enums');
+const applicationService = require('./application.service');
+const countLimitService = require('./countLimit.service');
 const { courseUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 
 class CourseService {
@@ -128,7 +128,7 @@ class CourseService {
         course.udemyURLCompare = udemyURLCompare;
         course.udemyURLCourseName = this.getUdemyCourseName(udemyURL);
         course.couponKey = couponKey;
-        course.isFree = !validationUtils.isExists(couponKey);
+        course.isFree = validationUtils.isExists(couponKey);
         course = await this.validateUdemyURL(course);
         this.coursesData.coursesList[courseIndex] = course;
         this.coursesData.course = course;
@@ -169,13 +169,13 @@ class CourseService {
 
     async finalizeCreateUpdateCourses() {
         // Validate any courses exists to purchase.
-        if (this.coursesData.coursesList.length <= 0) {
+        if (!validationUtils.isExists(this.coursesData.coursesList)) {
             return Status.NO_COURSES_EXISTS;
         }
         for (let i = 0; i < this.coursesData.coursesList.length; i++) {
             const course = this.coursesData.coursesList[i];
             // Validate all fields.
-            let scanFieldsResult = this.validate(course);
+            let scanFieldsResult = this.validateFields(course);
             if (scanFieldsResult) {
                 this.coursesData.coursesList[i] = await this.updateCourseStatus({
                     course: course,
@@ -193,20 +193,20 @@ class CourseService {
                 }
             }
             // Compare courses and detect duplicates.
-            await this.compare(course);
+            await this.compareCourses(course);
         }
         // Validate that there are any courses to purchase.
-        if (this.coursesData.coursesList.map(c => c.status === CourseStatus.CREATE).length <= 0) {
+        if (!validationUtils.isExists(this.coursesData.coursesList.filter(c => c.status === CourseStatus.CREATE))) {
             return Status.NO_VALID_COURSES_EXISTS;
         }
     }
 
-    validate(course) {
+    validateFields(course) {
         // Validate all expected fields.
         let scanFieldsResult = this.scanFields({
             course: course,
             keysList: ['id', 'creationDateTime', 'pageNumber', 'publishDate', 'type', 'isFree', 'courseURL', 'status'],
-            isExpectedFilled: true
+            isFilledExpected: true
         });
         if (!scanFieldsResult) {
             return scanFieldsResult;
@@ -215,7 +215,7 @@ class CourseService {
         scanFieldsResult = this.scanFields({
             course: course,
             keysList: ['priceNumber', 'priceDisplay', 'resultDateTime', 'resultDetails'],
-            isExpectedFilled: false
+            isFilledExpected: false
         });
         if (!scanFieldsResult) {
             return scanFieldsResult;
@@ -237,7 +237,7 @@ class CourseService {
             };
         }
         // Validate free course coupon or free course originally.
-        if (isFree && couponKey) {
+        if (isFree && !couponKey) {
             return {
                 status: CourseStatus.INVALID,
                 details: 'Field isFree set to true, but couponKey field is not empty.'
@@ -267,12 +267,12 @@ class CourseService {
     }
 
     scanFields(data) {
-        const { course, keysList, isExpectedFilled } = data;
+        const { course, keysList, isFilledExpected } = data;
         let scanFieldsResult = null;
         for (let i = 0; i < keysList.length; i++) {
             const key = keysList[i];
             const value = course[key];
-            if (isExpectedFilled) {
+            if (isFilledExpected) {
                 if (!value) {
                     scanFieldsResult = {
                         status: CourseStatus.MISSING_FIELD,
@@ -294,7 +294,7 @@ class CourseService {
         return scanFieldsResult;
     }
 
-    async compare(course) {
+    async compareCourses(course) {
         // Check if duplicate courses exists, not to enter Udemy course page several times.
         if (course.status !== CourseStatus.CREATE) {
             return;

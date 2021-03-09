@@ -1,10 +1,10 @@
-const { fileUtils, pathUtils, textUtils } = require('../../utils');
+const { fileUtils, pathUtils, textUtils, validationUtils } = require('../../utils');
 
 class FileService {
 
     constructor() { }
 
-    async getFileData(data) {
+    async getJsonFileData(data) {
         const { environment, path, parameterName, fileExtension } = data;
         const filePath = `${path}account-${textUtils.toLowerCase(environment)}.json`;
         if (!await fileUtils.isPathExists(filePath)) {
@@ -19,7 +19,7 @@ class FileService {
         }
         const fileData = await fileUtils.read(filePath);
         const jsonData = JSON.parse(fileData);
-        if (jsonData.length <= 0) {
+        if (!validationUtils.isExists(jsonData)) {
             throw new Error(`No data exists in the file: ${filePath} (1000013)`);
         }
         return jsonData;

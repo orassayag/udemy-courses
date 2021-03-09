@@ -1,5 +1,43 @@
 Complete / canceled tasks:
 ==========================
+-In all the maintainance projects: *
+-Update packages + re-create package.json files. *
+01. Update the 'REMEMBER' section of this document. *
+02. ' all the outcome of the crawling will be created' comment should be updated. *
+03. Add to package.json file the 'INSTRUCTIONS.md' key in the files section (if it exists in the project). *
+04. In the initate.service - const { Mode, ScriptType } = require('../../core/enums/files/system.enum'); - Need to change to ../../core/enums. *
+05. Check if async copyDirectory( is not with line break. *
+06. Fix createDirectory - No need for await in createSessionDirectory method. *
+07. "Validate internet connection works." => "Validate that the internet connection works." *
+08. "sending emails processes." in udemy-courses project. *
+09. Rename the function 'getFileData' to 'getJsonFileData'. *
+10. Copy the logic of 'this.updateStatus' to all change statuses in the main script file. *
+11. On udemy-courses project, change the "validate" and "compare" functions to "validateFields" and "compareCourses". *
+12. On udemy-courses project, change 'isExpectedFilled' to 'isFilledExpected'. *
+13. Change all functions names that return true/false to 'isValidXXX' in validationUtils. *
+14. -In all places change to use isExists instead of .length > 0 or .length <= 0. *
+15. Copy the logic of retry on check internet connection in all relevant projects (like in the udemy courses project). *
+16. Add to "INSTRUCTIONS.md" how the console log should be (take the specific sentence from other project). *
+18. Place this in all "ToDo" documents of all the projects. *
+-Bring back production to true in settings.js. *
+-Remove all comments. *
+-Re-format error numbers + last_index.txt file. *
+-Fix all spell mistakes. *
+-Format all files. *
+-Upload to GitHub. *
+-Backup iOmega. *
+-Clear complete tasks. *
+-Update packages + re-create package.json files. *
+-Change the timeUtils in settings.js to except function. *
+-Fix issue with PostId: ## in case of course list type course. *
+-Make sure that courses list course property 'isFree' will be updated by the coupon exists or not. *
+-Fix COURSES_DATES_VALUE: [object Object] in the confirmation panel in case of an range. Built it to fit all cases. *
+-Fix 'Dates: /8 ' - Not working as expected. *
+-Add inner settings for long run - Take the current day - 1 day (add inner settings validations like in crawler project). *
+-Check exceeded courses logic - Maximum limit per day. If 2 days, maximum X 2. *
+-In the line of 'this.coursesData.coursesList.map(c => c.status === CourseStatus.CREATE).length <= 0)' - *
+ Change it to filter (like in 'spam-revenge' project) + use isExists instead of .length <= 0. *
+-In all places change to use isExists instead of .length > 0 or .length <= 0. *
 -Update packages. *
 -Update packages again. *
 -Add logic to detect single Udemy link + same logic as today: *

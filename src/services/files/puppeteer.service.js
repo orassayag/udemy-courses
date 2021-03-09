@@ -12,7 +12,8 @@ const globalUtils = require('../../utils/files/global.utils');
 class PuppeteerService {
 
     constructor() {
-        this.purchaseErrorInARowCount = 0;
+        this.purchaseErrorInARowCount = null;
+        this.maximumCoursesPurchaseCount = null;
         this.timeout = null;
         this.pageOptions = null;
         this.waitForFunction = null;
@@ -20,6 +21,9 @@ class PuppeteerService {
     }
 
     initiate() {
+        this.purchaseErrorInARowCount = 0;
+        this.maximumCoursesPurchaseCount = applicationService.applicationData.coursesDatesValue.length *
+            countLimitService.countLimitData.maximumCoursesPurchaseCount;
         puppeteerExtra.use(pluginStealth());
         this.timeout = countLimitService.countLimitData.millisecondsTimeoutSourceRequestCount;
         this.pageOptions = {
@@ -531,7 +535,7 @@ class PuppeteerService {
             return false;
         }
         courseService.coursesData.totalPurchasedCount++;
-        return courseService.coursesData.totalPurchasedCount >= countLimitService.countLimitData.maximumCoursesPurchaseCount;
+        return courseService.coursesData.totalPurchasedCount >= this.maximumCoursesPurchaseCount;
     }
 
     async udemyLogout(data) {

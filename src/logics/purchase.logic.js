@@ -16,15 +16,15 @@ class PurchaseLogic {
         // Validate all settings are fit to the user needs.
         await this.confirm();
         // Initiate all the settings, configurations, services, etc...
-        await this.initiate();
+        this.initiate();
         // Validate general settings.
         await this.validateGeneralSettings();
-        // Start the sending emails processes.
+        // Start the purchase courses processes.
         await this.startSession(urls);
     }
 
-    async initiate() {
-        logUtils.logMagentaStatus('INITIATE THE SERVICES');
+    initiate() {
+        this.updateStatus('INITIATE THE SERVICES', Status.INITIATE);
         countLimitService.initiate(settings);
         applicationService.initiate({
             settings: settings,
@@ -33,7 +33,7 @@ class PurchaseLogic {
         });
         pathService.initiate(settings);
         puppeteerService.initiate();
-        await logService.initiate(settings);
+        logService.initiate(settings);
         courseService.initiate(logService.logCourse.bind(logService));
     }
 
@@ -46,12 +46,12 @@ class PurchaseLogic {
     }
 
     async validateGeneralSettings() {
-        logUtils.logMagentaStatus('VALIDATE GENERAL SETTINGS');
+        this.updateStatus('VALIDATE GENERAL SETTINGS', Status.VALIDATE);
         // Validate methods.
         if (!applicationService.applicationData.isCreateCoursesMethodActive) {
             this.exit(Status.INVALID_METHOD, Color.RED);
         }
-        // Validate internet connection works.
+        // Validate that the internet connection works.
         await validationService.validateURLs();
     }
 
@@ -105,6 +105,13 @@ class PurchaseLogic {
     async confirm() {
         if (!await confirmationService.confirm(settings)) {
             this.exit(Status.ABORT_BY_THE_USER, Color.RED);
+        }
+    }
+
+    updateStatus(text, status) {
+        logUtils.logMagentaStatus(text);
+        if (applicationService.applicationData) {
+            applicationService.applicationData.status = status;
         }
     }
 
