@@ -13,9 +13,9 @@ class CourseService {
     }
 
     initiate(logCourse) {
-        if (validationUtils.isExists(applicationService.applicationData.keyWordsFilterList)) {
-            for (let i = 0; i < applicationService.applicationData.keyWordsFilterList.length; i++) {
-                applicationService.applicationData.keyWordsFilterList[i] = textUtils.toLowerCaseTrim(applicationService.applicationData.keyWordsFilterList[i]);
+        if (validationUtils.isExists(applicationService.applicationData.keywordsFilterList)) {
+            for (let i = 0; i < applicationService.applicationData.keywordsFilterList.length; i++) {
+                applicationService.applicationData.keywordsFilterList[i] = textUtils.toLowerCaseTrim(applicationService.applicationData.keywordsFilterList[i]);
             }
         }
         this.logCourse = logCourse;
@@ -36,7 +36,7 @@ class CourseService {
         switch (textUtils.getVariableType(coursesDatesValue)) {
             case 'string': {
                 if (!validationUtils.isValidDateFormat(coursesDatesValue)) {
-                    coursesDatesResult.coursesError = `${errorBaseTemplate} Excpected a Date (yyyy/mm/dd) but received: ${coursesDatesValue} (1000006)`;
+                    coursesDatesResult.coursesError = `${errorBaseTemplate} Expected a date (yyyy/mm/dd) but received: ${coursesDatesValue} (1000006)`;
                     return coursesDatesResult;
                 }
                 coursesDatesResult.coursesDatesType = CoursesDatesType.SINGLE;
@@ -74,7 +74,7 @@ class CourseService {
             }
         }
         if (!coursesDatesResult.coursesDatesType) {
-            coursesDatesResult.coursesError = `${errorBaseTemplate} Expected string, array, or object. Received: ${coursesDatesValue} (1000009)`;
+            coursesDatesResult.coursesError = `${errorBaseTemplate} Expected a string, array, or object. Received: ${coursesDatesValue} (1000009)`;
             return coursesDatesResult;
         }
         return coursesDatesResult;
@@ -168,7 +168,7 @@ class CourseService {
     }
 
     async finalizeCreateUpdateCourses() {
-        // Validate any courses exists to purchase.
+        // Validate any courses that exists to purchase.
         if (!validationUtils.isExists(this.coursesData.coursesList)) {
             return Status.NO_COURSES_EXISTS;
         }
@@ -183,12 +183,12 @@ class CourseService {
                     details: scanFieldsResult.details
                 });
             }
-            if (validationUtils.isExists(applicationService.applicationData.keyWordsFilterList)) {
+            if (validationUtils.isExists(applicationService.applicationData.keywordsFilterList)) {
                 if (this.filter(course)) {
                     this.coursesData.coursesList[i] = await this.updateCourseStatus({
                         course: course,
                         status: CourseStatus.FILTER,
-                        details: 'The course has been filtered since no entered key words has been found match to the course name.'
+                        details: 'The course has been filtered since no entered keywords have been found to match to the course name.'
                     });
                 }
             }
@@ -251,14 +251,14 @@ class CourseService {
         if (!udemyURLCompare || status !== CourseStatus.CREATE) {
             return true;
         }
-        const udemyKeyWords = courseUtils.getUdemyURLKeyWords(udemyURLCompare, applicationService.applicationData.udemyBaseURL);
-        if (!validationUtils.isExists(udemyKeyWords)) {
+        const udemyKeywords = courseUtils.getUdemyURLKeywords(udemyURLCompare, applicationService.applicationData.udemyBaseURL);
+        if (!validationUtils.isExists(udemyKeywords)) {
             return true;
         }
-        for (let i = 0; i < applicationService.applicationData.keyWordsFilterList.length; i++) {
-            const keyWord = applicationService.applicationData.keyWordsFilterList[i];
-            for (let y = 0; y < udemyKeyWords.length; y++) {
-                if (keyWord === udemyKeyWords[y]) {
+        for (let i = 0; i < applicationService.applicationData.keywordsFilterList.length; i++) {
+            const keyword = applicationService.applicationData.keywordsFilterList[i];
+            for (let y = 0; y < udemyKeywords.length; y++) {
+                if (keyword === udemyKeywords[y]) {
                     return false;
                 }
             }
@@ -295,7 +295,7 @@ class CourseService {
     }
 
     async compareCourses(course) {
-        // Check if duplicate courses exists, not to enter Udemy course page several times.
+        // Check if duplicate courses exist, not to enter Udemy course page several times.
         if (course.status !== CourseStatus.CREATE) {
             return;
         }

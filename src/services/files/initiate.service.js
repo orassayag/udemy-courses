@@ -10,18 +10,18 @@ class InitiateService {
 	}
 
 	initiate(scriptType) {
-		// First, setup handle errors and promises.
+		// First, setup handles errors and promises.
 		this.setup();
 		// Validate the script type.
 		this.scriptType = scriptType;
 		this.validateScriptType();
-		// The second important thing to to it to validate all the parameters of the settings.js file.
+		// The second important thing to do is to validate all the parameters of the settings.js file.
 		this.validateSettings();
 		// The next thing is to calculate paths and inject back to the settings.js file.
 		this.calculateSettings();
 		// Make sure that the dist directory exists. If not, create it.
 		this.validateDirectories();
-		// Validate that certain directories exists, and if not, create them.
+		// Validate that certain directories exist, and if not, create them.
 		this.createDirectories();
 	}
 
@@ -94,7 +94,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isPositiveNumber(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a number but received: ${value} (1000016)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a number but received: ${value} (1000016)`);
 			}
 		});
 	}
@@ -113,7 +113,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isExists(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a string but received: ${value} (1000017)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a string but received: ${value} (1000017)`);
 			}
 		});
 	}
@@ -138,7 +138,7 @@ class InitiateService {
 				value = settings[split[0]][split[1]];
 			}
 			if (!validationUtils.isValidBoolean(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a boolean but received: ${value} (1000018)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a boolean but received: ${value} (1000018)`);
 			}
 		});
 	}
@@ -146,13 +146,13 @@ class InitiateService {
 	validateArrays() {
 		[
 			// ===GENERAL=== //
-			'KEY_WORDS_FILTER_LIST',
+			'KEYWORDS_FILTER_LIST',
 			// ===BACKUP=== //
 			'IGNORE_DIRECTORIES', 'IGNORE_FILES', 'INCLUDE_FILES'
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidArray(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a array but received: ${value} (1000019)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a array but received: ${value} (1000019)`);
 			}
 		});
 	}
@@ -173,7 +173,7 @@ class InitiateService {
 		['INNER_SETTINGS'].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isObject(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a number but received: ${value} (1000021)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a number but received: ${value} (1000021)`);
 			}
 		});
 	}
@@ -185,7 +185,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidURL(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Excpected a URL but received: ${value} (1000022)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a URL but received: ${value} (1000022)`);
 			}
 		});
 		const { COURSES_DATES_VALUE } = settings;
@@ -206,7 +206,7 @@ class InitiateService {
 			const value = settings[key];
 			// Verify that the dist and the sources paths exists.
 			globalUtils.isPathExistsError(value);
-			// Verify that the dist and the sources paths accessible.
+			// Verify that the dist and the source paths are accessible.
 			globalUtils.isPathAccessible(value);
 		});
 		[

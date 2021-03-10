@@ -27,7 +27,7 @@ class LogService {
 		this.i = 0;
 		this.frames = ['-', '\\', '|', '/'];
 		this.emptyValue = '##';
-		this.logSeperator = '==========';
+		this.logSeparator = '==========';
 		this.isLogs = true;
 	}
 
@@ -166,7 +166,7 @@ class LogService {
 		lines.push(`Course URL: ${displayCourseURL}`);
 		lines.push(`Udemy URL: ${displayUdemyURL}`);
 		lines.push(`Result Details: ${displayResultDetails}`);
-		lines.push(`${this.logSeperator}${isLog ? '\n' : ''}`);
+		lines.push(`${this.logSeparator}${isLog ? '\n' : ''}`);
 		return lines.join('\n');
 	}
 
@@ -193,7 +193,7 @@ class LogService {
 	logProgress() {
 		const specificPageNumber = applicationService.applicationData.specificCoursesPageNumber ?
 			applicationService.applicationData.specificCoursesPageNumber : this.emptyValue;
-		const isKeyWordsFilter = validationUtils.isExists(applicationService.applicationData.keyWordsFilterList);
+		const isKeywordsFilter = validationUtils.isExists(applicationService.applicationData.keywordsFilterList);
 		const time = `${applicationService.applicationData.time} [${this.frames[this.i = ++this.i % this.frames.length]}]`;
 		const totalPricePurchased = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalPriceNumber)}`;
 		let courseIndex = this.emptyValue;
@@ -283,7 +283,7 @@ class LogService {
 				'Courses Count': coursesCount
 			}, {
 				'Session Number': applicationService.applicationData.sessionNumber,
-				'Is Key Words Filter': isKeyWordsFilter,
+				'Is Keywords Filter': isKeywordsFilter,
 				'Pages Count': courseService.coursesData.totalPagesCount,
 				'Status': applicationService.applicationData.status
 			}, {
@@ -398,7 +398,7 @@ class LogService {
 
 	createConfirmSettingsTemplate(settings) {
 		const parameters = ['MODE', 'IS_PRODUCTION_ENVIRONMENT', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
-			'SPECIFIC_COURSES_PAGE_NUMBER', 'KEY_WORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
+			'SPECIFIC_COURSES_PAGE_NUMBER', 'KEYWORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
 			'IS_UPDATE_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_CREATE_COURSES_METHOD_VALID',
 			'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID', 'IS_LOG_UPDATE_COURSES_METHOD_INVALID',
 			'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_ONLY',

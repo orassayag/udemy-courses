@@ -8,7 +8,7 @@ class FileService {
         const { environment, path, parameterName, fileExtension } = data;
         const filePath = `${path}account-${textUtils.toLowerCase(environment)}.json`;
         if (!await fileUtils.isPathExists(filePath)) {
-            throw new Error(`Invalid or no ${parameterName} parameter was found: Excpected a number but received: ${filePath} (1000010)`);
+            throw new Error(`Invalid or no ${parameterName} parameter was found: Expected a number but received: ${filePath} (1000010)`);
         }
         if (!fileUtils.isFilePath(filePath)) {
             throw new Error(`The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000011)`);

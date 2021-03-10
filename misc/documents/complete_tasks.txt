@@ -1,6 +1,25 @@
 Complete / canceled tasks:
 ==========================
--In all the maintainance projects: *
+15. Copy the 'updateCount' function (if exists) from 'sender' project. *
+16. Add to 'INSTRUCTIONS.md' how the console log should be (take the specific sentence from other project) + *
+   /* cSpell:disable */ before the console log status example. *
+18. Place this in all "ToDo" documents of all the projects. *
+16. Add 'INSTRUCTIONS.md' file if it does not exist (add it to files in package.json). *
+17. Add to 'INSTRUCTIONS.md' how the console log should be (take the specific sentence from other project) + *
+ /* cSpell:disable */ before the console log status example. *
+19. Copy the 'updateCount' function (if exists) from 'sender' project. *
+20. Update settings.json:
+"formatFiles.excludePattern": "**/node_modules,**/.vscode,**/dist,**/dist/**,**/.chrome,**/misc,**/misc/**,**/sources,**/sources/**". *
+21. Add to .eslintignore, .gitignore, .npmignore files: *
+# Sources. *
+sources/ *
+/sources *
+sources *
+-Remove comments. *
+-Fix all spell mistakes via Gmail. *
+-Clear all the tasks from here. *
+-Verify all works good. *
+-In all the maintenance projects: *
 -Update packages + re-create package.json files. *
 01. Update the 'REMEMBER' section of this document. *
 02. ' all the outcome of the crawling will be created' comment should be updated. *
@@ -14,10 +33,10 @@ Complete / canceled tasks:
 10. Copy the logic of 'this.updateStatus' to all change statuses in the main script file. *
 11. On udemy-courses project, change the "validate" and "compare" functions to "validateFields" and "compareCourses". *
 12. On udemy-courses project, change 'isExpectedFilled' to 'isFilledExpected'. *
-13. Change all functions names that return true/false to 'isValidXXX' in validationUtils. *
+13. Change all function names that return true/false to 'isValidXXX' in validationUtils. *
 14. -In all places change to use isExists instead of .length > 0 or .length <= 0. *
 15. Copy the logic of retry on check internet connection in all relevant projects (like in the udemy courses project). *
-16. Add to "INSTRUCTIONS.md" how the console log should be (take the specific sentence from other project). *
+16. Add to "INSTRUCTIONS.md" how the console log should be (take the specific sentence from another project). *
 18. Place this in all "ToDo" documents of all the projects. *
 -Bring back production to true in settings.js. *
 -Remove all comments. *
@@ -28,13 +47,13 @@ Complete / canceled tasks:
 -Backup iOmega. *
 -Clear complete tasks. *
 -Update packages + re-create package.json files. *
--Change the timeUtils in settings.js to except function. *
+-Change the timeUtils in settings.js to accept a function. *
 -Fix issue with PostId: ## in case of course list type course. *
--Make sure that courses list course property 'isFree' will be updated by the coupon exists or not. *
--Fix COURSES_DATES_VALUE: [object Object] in the confirmation panel in case of an range. Built it to fit all cases. *
+-Make sure that courses list course property 'isFree' will be updated if the coupon exists or not. *
+-Fix COURSES_DATES_VALUE: [object Object] in the confirmation panel in case of a range. Built it to fit all cases. *
 -Fix 'Dates: /8 ' - Not working as expected. *
 -Add inner settings for long run - Take the current day - 1 day (add inner settings validations like in crawler project). *
--Check exceeded courses logic - Maximum limit per day. If 2 days, maximum X 2. *
+-Check exceeded course's logic - Maximum limit per day. If 2 days, maximum X 2. *
 -In the line of 'this.coursesData.coursesList.map(c => c.status === CourseStatus.CREATE).length <= 0)' - *
  Change it to filter (like in 'spam-revenge' project) + use isExists instead of .length <= 0. *
 -In all places change to use isExists instead of .length > 0 or .length <= 0. *
@@ -52,7 +71,7 @@ Complete / canceled tasks:
 -Add script name to tests and add validation for empty script name in initiate.service.js (copy from sender project). *
 -Go over timeUtils and make sure all local "this.getDay" are being used, and not "date.getDate()" for example. *
 -Fix comment in settings.js 'interval to run to calculate' => 'interval to calculate'. *
--Add index.js to "configurations" direcotry and replace in all places. *
+-Add index.js to "configurations" directory and replace in all places. *
 -Fix comment:         // Get the backup title from the console.s *
 -Fix all README.me + package.json from 'create-react-up' to 'create-react-app'. *
 -Remove comments. *
@@ -69,16 +88,16 @@ with line space,  all fixes in README.md. *
 -Fix all misspells in all TXT files. *
 -Format all documents.
 -Move all complete tasks to complete_tasks.txt. *
--Verify all works good + delete all uneeded dist. *
+-Verify all works good + delete all unneeded dist. *
 -Upload to GitHub. *
 -Backup iOmega. *
 -Update Packages. *
 -Update packages. *
--Remove the check on empty URL in the purchase method. *
+-Remove the check on the empty URL in the purchase method. *
 -Fix the bug that if not Udemy URL, change it to new counter 'invalid Udemy URL'. *
 -Add new counter for course not exists (other counter from
 limit access and URL not exists): https://www.udemy.com/course/local-lead-generation-rank-and-rent-definitive-guide/?couponCode=RANKANDRENT2021 *
--This is limit access: https://www.udemy.com/course/draft/3526008/?couponCode=56191CDC04DF350FE15A *
+-This is limited access: https://www.udemy.com/course/draft/3526008/?couponCode=56191CDC04DF350FE15A *
 -Clean all comments. *
 -Rewrite error numbers. *
 -Remove all debugger. *
@@ -87,14 +106,14 @@ limit access and URL not exists): https://www.udemy.com/course/local-lead-genera
 -Format all files. *
 -Upload to GitHub. *
 -Move all complete tasks from here to complete_tasks.txt. *
--Fix bug with taking not udemy URL - canceled. *
--Make sure all comments ends with . *
+-Fix bug with taking no udemy URL - canceled. *
+-Make sure all comments end with . *
 -Update puppeteer package again + verify all works good. *
 -Rewrite error numbers. *
 -Format all files. *
 -Run on production to verify all works well. *
 -Fix bug with single date log name. *
--Copy the .gitignore and .npmignore from one of the projects and delete the misc/backup directroy from git: *
+-Copy the .gitignore and .npmignore from one of the projects and delete the misc/backup directory from git: *
 git rm -r one-of-the-directories // This deletes from filesystem. *
 -Upload to GitHub. *
 -Move all complete tasks from here to complete_tasks.txt. *
@@ -117,20 +136,20 @@ module.exports *
 } *
 export default *
 -Update packages npm outdated --depth 9999. *
--Fix change in the IDC site of specific udemy link. *
+-Fix change in the IDC site of specific udemy links. *
 -Update packages + re-create package.json file. *
--Add logic to take single date, array of dates, or range of dates, and the daily limit will be on each date. *
--Only one dates functionality allowed: single date, array of dates, or range of dates (add parameter on settings.js of the type and the value). *
+-Add logic to take a single date, array of dates, or range of dates, and the daily limit will be on each date. *
+-Only one date functionality allowed: single date, array of dates, or range of dates (add a parameter on settings.js of the type and the value). *
 -The structure on the console status will be: *
 [DATE] Type: SINGLE/ARRAY/RANGE | Value: #value from settings.js# | dates count: 23 | Current Date: 24/01/2021 *
 -Add retry on courses that failed to be purchased or got 'purchase error', with new status of *
 'RETRY'. In the and take all the retries status courses and retry to purchase each of them (maximum tries 5 from settings.js). *
 -Add another logic of take dates according to the missing on misc directory until now - canceled. *
--Add logic that if [NAME] not exists - Take the name from udemy URL course (split the `-` and Capital each word). *
--Fix bug of not waiting to courses lists to finish when scaning courses. *
--Add the maximum pages exists in the session to the console status. *
+-Add logic that if [NAME] does not exist - Take the name from udemy URL course (split the `-` and Capital each word). *
+-Fix bug of not waiting for courses lists to finish when scanning courses. *
+-Add the maximum pages that exist in the session to the console status. *
 -Update packages + Re-create package-lock.json. *
--Fix the status on console line: Status: PURCHASE many time is actually ALREADY_PURCHASE. Fix all statuses. *
+-Fix the status on the console line: Status: PURCHASE many times is actually ALREADY_PURCHASE. Fix all statuses. *
 -Change the log file names with the word "-method" in the end. *
 -Add another log file for purchased courses only - canceled - Already exists. *
 -Add the mode parameter from the settings.js file + add 'SILENT' mode. *
@@ -140,17 +159,17 @@ export default *
   '--disable-background-timer-throttling', *
   '--disable-backgrounding-occluded-windows', *
   '--disable-renderer-backgrounding' *
-to solve issue of hand while not in focus. *
+to solve issues of hand while not in focus. *
 -Update packages. *
 -Fix description in package.json + README.MD + re-create package.json-lock file. *
--Take the initiate service from 'crawler' project. *
--Check if comments of all backup parmeters in settings.js relevant to this project. *
+-Take the initiate service from the 'crawler' project. *
+-Check if comments of all backup parameters in settings.js are relevant to this project. *
 -Add .catch(e => console.log(e)); to all (async () => { - Take the logic from 'crawler' project. *
 -Take backup.logic.js file from 'mbox-crawler' project. *
 -Change all places from 'exports = {' to 'module.exports = {'. *
 -Change all places from '../settings' to '../settings/settings'. *
 -Fix issue that script not working anymore - canceled. *
--Fix uneeded formats with: "formatFiles.excludePattern": "**'/node_modules,**'/.vscode,**'/dist/'**,**'/.chrome,**'/misc". *
+-Fix unneeded formats with: "formatFiles.excludePattern": "**'/node_modules,**'/.vscode,**'/dist/'**,**'/.chrome,**'/misc". *
 -Add 'Complete + canceled tasks: *
 ==========================' to complete_tasks.txt. *
 -In .eslintrc file - set "no-unused-vars": 1. *
@@ -170,13 +189,13 @@ to solve issue of hand while not in focus. *
 -Remove all unused files, functions, and variables. *
 -Rewrite error numbers. *
 -Remove all debugger. *
--Make sure all comments ends with . *
+-Make sure all comments end with . *
 -Format all files. *
 -Move all completed tasks to complete tasks text file. *
--Delete old project from guthub + Re-upload GitHub. *
+-Delete old project from GitHub + Re-upload GitHub. *
 -Delete from developer-Story in StackOverFlow + Re-add it. *
--All the last course need to be removed from console status when finish - Canceled. *
-===[SETTINGS] Environment: PRODUCTION | Method: PURCHASE COURSES | Query Date: 2020/12/21 | Specific Page Number: ## | Is Key Words Filter: false=== *
+-All the last course needs to be removed from console status when finished - Canceled. *
+===[SETTINGS] Environment: PRODUCTION | Method: PURCHASE COURSES | Query Date: 2020/12/21 | Specific Page Number: ## | Is Keywords Filter: false=== *
 ===[GENERAL] Time: 00.02:04:54 [-] | Total Price Purchase: ₪30,363.00 | Course: 409/409 (100.00%) | Courses Count: 450 | Status: LOGOUT=== *
 ===[ACCOUNT] Email: orassayag@gmail.com | Password: *******************=== *
 ===[PROCESS1] Purchase: ✅  69 | Fail: ❌  0 | Filter: 0 | Missing Field: 0 | Unexpected Field: 0 | Duplicate: 21=== *
@@ -190,13 +209,13 @@ to solve issue of hand while not in focus. *
 ===[NAME] Microsoft Excel -Basic Excel/ Advanced Excel Formulas=== *
 ===[COURSE URL] https://idownloadcoupon.com/2020/12/21/free-30-best-udemy-courses-100-off-promo-code-deals-discount-friday-august-7-2020-reviews-coupons/=== *
 ===[UDEMY URL] https://www.udemy.com/course/microsoft-excel-basic-excel-advanced-excel-formulas/?couponCode=76CC6BA6766C9CB8FFBF=== *
-===[RESULT] Time: 21/12/2020 21:35:19 | Result: The course already purchased in tha past. No price label exists.=== *
+===[RESULT] Time: 21/12/2020 21:35:19 | Result: The course already purchased in the past. No price label exists.=== *
 ===EXIT: FINISH=== *
 -Fix bug of undefined index index page number. *
 -PostId on console convert to string. *
 -Fix ':' in 'Time' in Result - Remove it. *
 -Make sure that if ctrl+c - The program will exit. *
--Make sure then browser is closed - The program will exit. *
+-Make sure then the browser is closed - The program will exit. *
 -Add original index for update-courses step. *
 -Add final timeout to settings.js. *
 -Final status change to FINISH (not Status: LOGOUT). *
@@ -213,7 +232,7 @@ In the initiateService.js *
 -Refactor time.utils.js like in the 'crawler' project. *
 -Convert all sandbox and udemy sessions on 'ScriptType' enum to 'Test' and change it in all places. *
 -Add validation for the script type in the initiate service. *
--Add to total price purchase, only after successfull purchase. *
+-Add to total price purchase, only after successful purchase. *
 -Change in all places from 'GET_COURSES' to 'CREATE_COURSES'. *
 -Add another method to all places - "UPDATE COURSES" (logs, console, all). *
 -Add new mode, after GET_COURSES, add another status of UPDATE COURSES. *
@@ -234,13 +253,13 @@ In the initiateService.js *
 -Rewrite error numbers. *
 -Remove all comments. *
 -Remove all debugger. *
--Make sure all comments ends with . *
+-Make sure all comments end with . *
 -Fix all spell mistakes in all TXT files. *
 -Format all files. *
 -Test a few sessions from different days (terminal | browser). *
 -Fix bug with price: Total Price Purchase: ₪5468.599999999999. Fix to 2 numbers after dot. *
 -Add private course: https://www.udemy.com/course/html-the-complete-html-practice-test-linkedin-assessment/?couponCode=CODINGINTERVIEW *
--Add option to fetch only courses with specific key (check the key in the udemyURL lowercase). *
+-Add option to fetch only courses with specific keys (check the keys in the udemyURL lowercase). *
 -Add the logic of 'totalPriceNumber'. *
 -Change all console.log to logUtils.log. *
 -Convert all the "exit" methods in all the services to be called only from the purchase.logic.js file, *
@@ -253,7 +272,7 @@ where it will be a graceful exit with closing all the services. *
 -Do the console status. *
 ============================ *
 -Add status console line with the following structure: *
-===[SETTINGS] Method: GET COURSES/PURCHASE COURSES | Query Date: 2020/12/06 | Specific Page Number: ## | Is Key Words Filter: false=== *
+===[SETTINGS] Method: GET COURSES/PURCHASE COURSES | Query Date: 2020/12/06 | Specific Page Number: ## | Is Keywords Filter: false=== *
 ===[GENERAL] Time: 00.05:16:58 [-] | Total Price Purchase: ₪5,450 | Course: 2/348 (48%) | Status: GET COURSES/VALIDATE/PAUSE/NO URLS/LOGIN/ADD CART/CHECKOUT/SUCCESS=== *
 ===[PROCESS1] Purchase: ✅ 0 | Fail: ❌ 0 | Filter: 0 | Missing Field: 0 | Unexpected Field: 0 | Duplicate: 0=== *
 ===[PROCESS2] Get Error: 0 | Empty URL: 0 | Not Exists: 0 | Limit Access: 0 | Suggestions List: 0 | Already Purchase: 0=== *
@@ -269,15 +288,15 @@ where it will be a graceful exit with closing all the services. *
 ===[RESULT] Time: 12/12/2020 18:02:00 | Result: The course has been purchased successfully. (cut it to maximum characters)=== *
 -Add to the log and the console the total price number. *
 ============================ *
--Insert the courses logic into the purchase courses. *
--Between each course perchase wait 5 seconds. *
+-Insert the course's logic into the purchase courses. *
+-Between each course purchase, wait 5 seconds. *
 -Fix bug with maximum pages equal to 1. *
--Add the full logic and test full a session (loop on all the courses that are in the status of CREATE) - Canceled. *
--Test another full a session (loop on all the courses that are in the status of CREATE) - Canceled. *
+-Add the full logic and test full session (loop on all the courses that are in the status of CREATE) - Canceled. *
+-Test another full session (loop on all the courses that are in the status of CREATE) - Canceled. *
 -Insert all parameters to settings.js. *
--Convert all check of (x && x.length > 0) to isExists. *
--Add try catch on login and logout and in case of exception exit grafcully and close browser. *
--Add try catch on each course purchase, and if exception throwed, add error object to details and change to 'ERROR' status, *
+-Convert all checks of (x && x.length > 0) to isExists. *
+-Add try catch on login and logout and in case of exception exit gracefully and close browser. *
+-Add try catch on each course purchase, and if an exception is thrown, add error object to details and change to 'ERROR' status, *
 And redirect back to udemyBaseURL and wait 5 seconds. *
 -Add error in a row logic. *
 -Add logic for error in a row (5 from settings.js) to exit the program. *
@@ -286,7 +305,7 @@ And redirect back to udemyBaseURL and wait 5 seconds. *
 -Add logic for test session. Loop on specific URLS and try to purchase them. *
 -Add specific page on specific date logic. *
 -Add the c:/puppeteer directory to the validation paths, - Canceled. *
- and delete all the content in the end of the process, in each exit process. - Canceled. *
+ and delete all the content at the end of the process, in each exit process. - Canceled. *
 -Add limit to purchase courses. *
 -Separate the existing function to a single purchase course function. *
 -Test array of 2 courses. *
@@ -298,32 +317,32 @@ And redirect back to udemyBaseURL and wait 5 seconds. *
 -For each page, wait 5 seconds (settings.js) (until the 'Add to cart' button will become clickable). *
 -Check that the button with the class 'udlite-heading-md add-to-cart', contains the value 'Add to cart'. *
 -If it contains the value 'Go to cart' or 'Go to course' or not 'Add to cart', continue to the next course. *
--Look for element 'data-purpose="course-price-text"'. Inside it look for '<span>Free</span>'. *
+-Look for element 'data-purpose="course-price-text"'. Inside it looks for '<span>Free</span>'. *
 -If exists, continue. *
 -Go to the element 'data-purpose="course-old-price-text"', search for span with the value of '₪'. *
  This is the price. Get it, separate it to a numeric, not just text. *
--Not a mandatory step. If not found continue anyway. *
+-Not a mandatory step. If not found, continue anyway. *
 -Click on the button that contains the class 'udlite-heading-md add-to-cart' - Canceled. *
 -If not, continue to the next course - Canceled. *
--Wait for element with the id of "cart-success-title" to be exists in the DOM - Canceled. *
+-Wait for an element with the id of "cart-success-title" to exist in the DOM - Canceled. *
 -Continue to the next course - Canceled. *
 -Each X courses, go to the cart and purchase - Canceled. *
 -Go to https://www.udemy.com/cart/checkout, and wait for 5 seconds (settings.js) - Canceled. *
--Change in logic: Each course will be enroll immediately. *
+-Change in logic: Each course will be enrolled immediately. *
 -Search for the element with 'data-purpose="total-price"' and make sure the span inside it contains '₪0.00'. *
 -If it's not the case, continue to the next course. *
 -Search the first element of class 'ellipsis btn btn-lg btn-primary btn-block' and click it. *
 -Wait to be redirected to a page contains 'https://www.udemy.com/cart/success/'. *
 -After successful cart purchase, do a logout process - Canceled. *
--Build all the logic of running the project after downloaded from GitHub. *
+-Build all the logic of running the project after downloading it from GitHub. *
 -Create a dummy account on udemy. *
 -Fill the json file with the dummy account. *
--Build the logic to take the account from external json file. *
+-Build the logic to take the account from an external json file. *
 -Build example json file on the misc directory. *
 -With puppeter.js go to https://www.udemy.com/join/login-popup/. *
 -Like the UdemyData with all elements, do the same (add to existing CoursesData object). *
 -Login with given credentials from external account.json file. *
-('id_email' element, 'id_password' password element), and click on 'submit-id-submit' button. *
+('id_email' element, 'id_password' password element), and click on the 'submit-id-submit' button. *
 -Wait for redirect to Udemy main page, and validate login if 'data-purpose="header-login"' no longer exists. *
 -Do the logout process. *
 -Make sure to add in settings.js parameter of user-agent. If it's empty, take a random one - Canceled. *
@@ -335,13 +354,13 @@ And redirect back to udemyBaseURL and wait 5 seconds. *
 -Get also the title of the course. *
 -Get the URL and store it in the object. *
 -Add variable on settings.js of the date to take the courses + Variable of dynamic date. If empty, take the today date. *
--Get of each URL - Detect of the page is 'courses list' page or a single course page *
+-Get each URL - Detect if the page is a 'courses list' page or a single course page *
  (if https://www.udemy.com URLs found - it's a 'courses list' page. If not, and 'deeplink' href found, it's a single course page). *
 -If it's a single course page - Get all href, and search for the one that starts with 'https://click.linksynergy.com/deeplink'. *
--If neither of them found, continue to the next page. *
+-If neither of them is found, continue to the next page. *
 -Extract the Udemy URL from the href, include the coupon code. *
 -The structure of the URL should look like this: 'https://www.udemy.com/course/learn-how-to-setup-online-exports-business-instantly/?couponCode=A1C8F6566F1EA8D253AC' *
--If it's a URL from 'courses list' page, just copy the URL, and extract the coupon from it (take also the title - 'course_title' element). *
+-If it's a URL from the 'courses list' page, just copy the URL, and extract the coupon from it (take also the title - 'course_title' element). *
 -After finish get the URLs from the current page, go to the next page by: https://idownloadcoupon.com/2020/12/06/page/2/ *
 -When you get to 'Page not found', the get part is over. *
 -Finalize step: Loop on all courses and: *
@@ -354,12 +373,12 @@ And redirect back to udemyBaseURL and wait 5 seconds. *
 -Add method flags + logic in code (add logic that if get courses not active the purchase courses will not work and exit). *
 -Change all places from 'pageURL' to 'courseURL'. *
 -Add validation of free course with coupon. *
--For this method, log all courses that not in CREATED status to seperated file. *
+-For this method, log all courses that are not in CREATED status to a separated file. *
 -Add log publish date to the log file names. *
 -Test this step on random dates (10 dates in the past 10 days). *
 FULL MESSAGE: *
 ============ *
-Time: 15:05:43 | Id: 334 | Creation Date Time: 12/08/2020 15:04:34 | Page Number: 2 | Publis Date: 2020/12/08 *
+Time: 15:05:43 | Id: 334 | Creation Date Time: 12/08/2020 15:04:34 | Page Number: 2 | Publish Date: 2020/12/08 *
 Name: Time Management for Professionals *
 Type: COURSES LIST | Is Free: false | Coupon Key: BD1F9BF485081A1F438B | Status: CREATE *
 Page URL: https://idownloadcoupon.com/2020/12/08/free-udemy-courses-list-9-18-2020/ *
@@ -369,8 +388,8 @@ Udemy URL: https://www.udemy.com/course/time-management-for-professionals/?coupo
  const result = await page.evaluate(() => { *
     return document.querySelectorAll('.footer-tags a').length *
   }) - Canceled. *
--The main goal of the application is to add Udemy free courses, based on coupons, automatically to specific account. *
--The application will be seperated to 2 main parts: *
+-The main goal of the application is to add Udemy free courses, based on coupons, automatically to specific accounts. *
+-The application will be separated to 2 main parts: *
 1. Get courses URLs with coupons. *
 2. Go to Udemy and one after one, insert the courses to cart, and purchase them. *
 -The second part contains several parts: *

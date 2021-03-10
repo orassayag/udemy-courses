@@ -8,7 +8,7 @@ class ValidationUtils {
         return Object.prototype.toString.call(variable) === '[object Array]';
     }
 
-    // This method checks if a given value is a valid number and return the result.
+    // This method validates if a given value is a valid number and returns the result.
     isValidNumber(number) {
         number = Number(number);
         return !isNaN(number) && typeof number == 'number';
@@ -56,7 +56,7 @@ class ValidationUtils {
         }
     }
 
-    // This method checks if a given variable is a valid boolean and return the result.
+    // This method validates if a given variable is a valid boolean and returns the result.
     isValidBoolean(boolean) {
         return typeof boolean == typeof true;
     }
@@ -65,7 +65,7 @@ class ValidationUtils {
         return regexUtils.validateEmailAddressRegex.test(emailAddress);
     }
 
-    // This method validates that a given string exists in array list of specific types.
+    // This method validates that a given string exists in an array list of specific types.
     isValidEnum(data) {
         // Validate the existence and validity of the validateEnumData parameters. If not exists, return false.
         if (!data || !data.enum || !data.value) {

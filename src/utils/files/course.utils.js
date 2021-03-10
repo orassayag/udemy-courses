@@ -35,7 +35,7 @@ class CourseUtils {
         };
     }
 
-    getUdemyURLKeyWords(udemyURL, udemyBaseURL) {
+    getUdemyURLKeywords(udemyURL, udemyBaseURL) {
         if (!udemyURL || udemyURL.indexOf(this.coursesKey) === -1) {
             return [];
         }

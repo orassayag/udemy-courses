@@ -20,6 +20,11 @@ dist/
 /dist
 dist
 
+# Sources.
+sources/
+/sources
+sources
+
 # Misc.
 **/misc/backup/
 /misc/backup

@@ -262,7 +262,7 @@ class DomService {
     async setCourseError(error, course) {
         return await courseService.updateCourseStatus({
             course: course, status: CourseStatus.CREATE_UPDATE_ERROR,
-            details: `Unexpected error occurred durning the create update process. More details: ${systemUtils.getErrorDetails(error)}`
+            details: `Unexpected error occurred during the create update process. More details: ${systemUtils.getErrorDetails(error)}`
         });
     }
 

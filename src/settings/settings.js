@@ -27,11 +27,11 @@ const settings = {
     COURSES_DATES_VALUE: innerSettings.IS_LONG_RUN ? courseUtils.getLongRunTime() :
         courseUtils.getCourseTime({ from: '2021/03/03', to: '2021/03/04' }),
     // Determine the specific courses page (in the pagination) to crawl. If null,
-    // will scan all the courses pages until reached the maximum number (MAXIMUM_PAGES_NUMBER).
+    // will scan all the courses pages until reaching the maximum number (MAXIMUM_PAGES_NUMBER).
     SPECIFIC_COURSES_PAGE_NUMBER: null,
-    // Determine which courses to purchase that contains the specific key words.
+    // Determine which courses to purchase that contain the specific keywords.
     // If empty, will purchase all courses available.
-    KEY_WORDS_FILTER_LIST: [],
+    KEYWORDS_FILTER_LIST: [],
 
     // ===FLAG=== //
     // Determine if to load Udemy account of development (=false) or production (=true).
@@ -60,7 +60,7 @@ const settings = {
     // ===COUNT & LIMIT=== //
     // Determine the maximum courses count to purchase per date.
     MAXIMUM_COURSES_PURCHASE_COUNT: 3000,
-    // Determine the milliseconds count timeout to wait for answer to get the page or engine source.
+    // Determine the milliseconds count timeout to wait for an answer to get to the page or engine source.
     MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT: 60000,
     // Determine the maximum number of pagination for courses on the main page of the courses URL.
     MAXIMUM_PAGES_NUMBER: 20,
@@ -69,7 +69,7 @@ const settings = {
     // Determine how much milliseconds interval to calculate the time of the
     // status line in the console.
     MILLISECONDS_INTERVAL_COUNT: 500,
-    // Determine the milliseconds count timeout to wait for between courses creation.
+    // Determine the milliseconds count timeout to wait for between course's creation.
     MILLISECONDS_TIMEOUT_BETWEEN_COURSES_CREATE: 200,
     // Determine the milliseconds count timeout to wait for between main pagination.
     MILLISECONDS_TIMEOUT_BETWEEN_COURSES_MAIN_PAGES: 200,
@@ -89,11 +89,11 @@ const settings = {
     MILLISECONDS_TIMEOUT_BETWEEN_COURSES_PURCHASE: 5000,
     // Determine the milliseconds count timeout to wait after any Udemy page to load.
     MILLISECONDS_TIMEOUT_UDEMY_PAGE_LOAD: 5000,
-    // Determine the number of create and update processes error in a row, which after exceeded this count the program will exit.
+    // Determine the number of create and update processes errors in a row, which after exceeding this count the program will exit.
     MAXIMUM_CREATE_UPDATE_ERROR_IN_A_ROW_COUNT: 5,
-    // Determine the number of purchase process error in a row, which after exceeded this count the program will exit.
+    // Determine the number of purchase process errors in a row, which after exceeding this count the program will exit.
     MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT: 5,
-    // Determine the milliseconds count timeout to wait before exit the application.
+    // Determine the milliseconds count timeout to wait before exiting the application.
     MILLISECONDS_TIMEOUT_EXIT_APPLICATION: 1000,
     // Determine the number of retries to validate the URLs.
     MAXIMUM_URL_VALIDATION_COUNT: 5,
@@ -124,7 +124,7 @@ const settings = {
     }),
 
     // ===DYNAMIC PATH=== //
-    // All the these paths will be calculated during runtime in the initiate service.
+    // All these paths will be calculated during runtime in the initiate service.
     // DON'T REMOVE THE KEYS, THEY WILL BE CALCULATED TO PATHS DURING RUNTIME.
     // Determine the application path where all the source of the application is located.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\udemy-courses').
@@ -146,7 +146,7 @@ const settings = {
     PACKAGE_LOCK_JSON_PATH: 'package-lock.json',
 
     // ===BACKUP=== //
-    // Determine the directories to ignore when an backup copy is taking place.
+    // Determine the directories to ignore when a backup copy is taking place.
     // For example: 'dist'.
     IGNORE_DIRECTORIES: ['dist', 'node_modules'],
     // Determine the files to ignore when the back copy is taking place.
@@ -158,7 +158,7 @@ const settings = {
     // Determine the period of time in milliseconds to
     // check that files were created / moved to the target path.
     MILLISECONDS_DELAY_VERIFY_BACKUP_COUNT: 1000,
-    // Determine the number of time in loop to check for version of a backup.
+    // Determine the number of times in loop to check for version of a backup.
     // For example, if a backup name "test-test-test-1" exists, it will check for "test-test-test-2",
     // and so on, until the current maximum number.
     BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT: 50,

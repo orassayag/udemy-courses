@@ -13,7 +13,7 @@ class PurchaseLogic {
     async run(urls) {
         // Initiate the account service first.
         await accountService.initiate(settings);
-        // Validate all settings are fit to the user needs.
+        // Validate all settings that fit the user's needs.
         await this.confirm();
         // Initiate all the settings, configurations, services, etc...
         this.initiate();
@@ -101,7 +101,7 @@ class PurchaseLogic {
         courseService.coursesData.courseIndex = 0;
     }
 
-    // Let the user confirm all the IMPORTANT settings before the process start.
+    // Let the user confirm all the IMPORTANT settings before the process starts.
     async confirm() {
         if (!await confirmationService.confirm(settings)) {
             this.exit(Status.ABORT_BY_THE_USER, Color.RED);

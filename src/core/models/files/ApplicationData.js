@@ -7,7 +7,7 @@ class ApplicationData {
 		const { settings, coursesDatesResult, status } = data;
 		const { MODE, IS_PRODUCTION_ENVIRONMENT, COURSES_BASE_URL, UDEMY_BASE_URL, SINGLE_COURSE_INIT,
 			SPECIFIC_COURSES_PAGE_NUMBER, IS_CREATE_COURSES_METHOD_ACTIVE, IS_UPDATE_COURSES_METHOD_ACTIVE,
-			IS_PURCHASE_COURSES_METHOD_ACTIVE, KEY_WORDS_FILTER_LIST } = settings;
+			IS_PURCHASE_COURSES_METHOD_ACTIVE, KEYWORDS_FILTER_LIST } = settings;
 		const { coursesDatesType, coursesDatesValue, coursesDatesDisplayValue, coursesDatesLogName } = coursesDatesResult;
 		this.isProductionEnvironment = IS_PRODUCTION_ENVIRONMENT;
 		this.coursesBaseURL = COURSES_BASE_URL;
@@ -18,7 +18,7 @@ class ApplicationData {
 		this.udemyLogoutURL = '/user/logout/';
 		this.udemyCourseURL = `${this.udemyBaseURL}/course/`;
 		this.specificCoursesPageNumber = SPECIFIC_COURSES_PAGE_NUMBER;
-		this.keyWordsFilterList = KEY_WORDS_FILTER_LIST;
+		this.keywordsFilterList = KEYWORDS_FILTER_LIST;
 		this.isCreateCoursesMethodActive = IS_CREATE_COURSES_METHOD_ACTIVE;
 		this.isUpdateCoursesMethodActive = IS_UPDATE_COURSES_METHOD_ACTIVE;
 		this.isPurchaseCoursesMethodActive = IS_PURCHASE_COURSES_METHOD_ACTIVE;
