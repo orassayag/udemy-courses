@@ -48,7 +48,7 @@ y
 ===[GENERAL1] Time: 00.00:00:13 [/] | Total Price Purchase: ₪0.00 | Course: 19 | Courses Count: 19 (Single: 19 / Course List: 0)===
 ===[GENERAL2] Session Number: 0 | Is Keywords Filter: false | Pages Count: 1 | Status: CREATE COURSES===
 ===[DATES] Type: SINGLE | Value: 2021/03/09 | Dates: 1/1 | Current Date: 2021/03/09===
-===[ACCOUNT] Email: orassayag@gmail.com | Password: *******************===
+===[ACCOUNT] Email: ############### | Password: *******************===
 ===[PROCESS1] Purchase: ✅  0 | Fail: ❌  0 | Filter: 0 | Missing Field: 0 | Unexpected Field: 0 | Duplicate: 0===
 ===[PROCESS2] Create Update Error: 0 | Empty URL: 0 | Invalid URL: 0 | Not Exists: 0 | Page Not Found: 0 | Limit Access: 0===
 ===[PROCESS3] Suggestions List: 0 | Private: 0 | Already Purchase: 0 | Course Price Not Free: 0===
