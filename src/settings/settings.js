@@ -5,7 +5,7 @@ const innerSettings = {
     // ===FLAG=== //
     // Determine if to run for a long time. Settings this to true, will set automatically
     // the COURSES_DATES_VALUE to the current date subtract one day.
-    IS_LONG_RUN: true
+    IS_LONG_RUN: false
 };
 
 const settings = {
@@ -25,7 +25,7 @@ const settings = {
     // RANGE - Range of dates to scan. Example: { from: '2020/12/13', to: '2020/12/14' }.
     // If empty/null/undefined - Will get the current date automatically.
     COURSES_DATES_VALUE: innerSettings.IS_LONG_RUN ? courseUtils.getLongRunTime() :
-        courseUtils.getCourseTime({ from: '2021/03/03', to: '2021/03/04' }),
+        courseUtils.getCourseTime({ from: '2021/03/07', to: '2021/03/12' }),
     // Determine the specific courses page (in the pagination) to crawl. If null,
     // will scan all the courses pages until reaching the maximum number (MAXIMUM_PAGES_NUMBER).
     SPECIFIC_COURSES_PAGE_NUMBER: null,
@@ -148,7 +148,7 @@ const settings = {
     // ===BACKUP=== //
     // Determine the directories to ignore when a backup copy is taking place.
     // For example: 'dist'.
-    IGNORE_DIRECTORIES: ['dist', 'node_modules'],
+    IGNORE_DIRECTORIES: ['dist', 'node_modules', 'sources'],
     // Determine the files to ignore when the back copy is taking place.
     // For example: 'back_sources_tasks.txt'.
     IGNORE_FILES: [],
