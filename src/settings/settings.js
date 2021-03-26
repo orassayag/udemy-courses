@@ -25,7 +25,7 @@ const settings = {
     // RANGE - Range of dates to scan. Example: { from: '2020/12/13', to: '2020/12/14' }.
     // If empty/null/undefined - Will get the current date automatically.
     COURSES_DATES_VALUE: innerSettings.IS_LONG_RUN ? courseUtils.getLongRunTime() :
-        courseUtils.getCourseTime({ from: '2021/03/07', to: '2021/03/12' }),
+        courseUtils.getCourseTime({ from: '2021/03/13', to: '2021/03/19' }),
     // Determine the specific courses page (in the pagination) to crawl. If null,
     // will scan all the courses pages until reaching the maximum number (MAXIMUM_PAGES_NUMBER).
     SPECIFIC_COURSES_PAGE_NUMBER: null,
@@ -120,11 +120,11 @@ const settings = {
     // Determine the path of the JSON file from which the Udemy account will be fetched. Must be a JSON file.
     ACCOUNT_FILE_PATH: pathUtils.getJoinPath({
         targetPath: __dirname,
-        targetName: '../../../../../../Accounts/Udemy/'
+        targetName: '../../../../../../Users/Or/Dropbox/Accounts/Udemy/'
     }),
 
     // ===DYNAMIC PATH=== //
-    // All these paths will be calculated during runtime in the initiate service.
+    // All these paths will be calculated during runtime in the initial service.
     // DON'T REMOVE THE KEYS, THEY WILL BE CALCULATED TO PATHS DURING RUNTIME.
     // Determine the application path where all the source of the application is located.
     // (Working example: 'C:\\Or\\Web\\udemy-courses\\udemy-courses').
@@ -159,7 +159,7 @@ const settings = {
     // check that files were created / moved to the target path.
     MILLISECONDS_DELAY_VERIFY_BACKUP_COUNT: 1000,
     // Determine the number of times in loop to check for version of a backup.
-    // For example, if a backup name "test-test-test-1" exists, it will check for "test-test-test-2",
+    // For example, if a backup name 'test-test-test-1' exists, it will check for 'test-test-test-2',
     // and so on, until the current maximum number.
     BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT: 50,
 

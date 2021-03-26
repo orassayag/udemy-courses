@@ -38,7 +38,7 @@ class LogService {
 			(this.logData.isLogCreateCoursesMethodValid || this.logData.isLogCreateCoursesMethodInvalid ||
 				this.logData.isLogUpdateCoursesMethodValid || this.logData.isLogUpdateCoursesMethodInvalid ||
 				this.logData.isLogPurchaseCoursesMethodValid || this.logData.isLogPurchaseCoursesMethodInvalid);
-				this.initiateDirectories();
+		this.initiateDirectories();
 		this.isLogProgress = applicationService.applicationData.mode === Mode.STANDARD;
 	}
 

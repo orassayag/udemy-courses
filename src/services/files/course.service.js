@@ -168,7 +168,7 @@ class CourseService {
     }
 
     async finalizeCreateUpdateCourses() {
-        // Validate any courses that exists to purchase.
+        // Validate any courses that exist to purchase.
         if (!validationUtils.isExists(this.coursesData.coursesList)) {
             return Status.NO_COURSES_EXISTS;
         }

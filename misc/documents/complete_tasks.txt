@@ -1,12 +1,17 @@
 Complete / canceled tasks:
 ==========================
+17. Accounts re-organization: *
+a. Place the 'Accounts' directory inside 'C:\Users\Or\Dropbox'. *
+b. Refer all the projects to this location. *
+c. Make sure that after each path change the project still works. *
+-Check if the logic still works. Make the fixes if needed. *
 15. Copy the 'updateCount' function (if exists) from 'sender' project. *
 16. Add to 'INSTRUCTIONS.md' how the console log should be (take the specific sentence from other project) + *
-   /* cSpell:disable */ before the console log status example. *
-18. Place this in all "ToDo" documents of all the projects. *
+   /* cSpell:disable */ before the console log status example. *
+18. Place this in all 'ToDo' documents of all the projects. *
 16. Add 'INSTRUCTIONS.md' file if it does not exist (add it to files in package.json). *
 17. Add to 'INSTRUCTIONS.md' how the console log should be (take the specific sentence from other project) + *
- /* cSpell:disable */ before the console log status example. *
+ /* cSpell:disable */ before the console log status example. *
 19. Copy the 'updateCount' function (if exists) from 'sender' project. *
 20. Update settings.json:
 "formatFiles.excludePattern": "**/node_modules,**/.vscode,**/dist,**/dist/**,**/.chrome,**/misc,**/misc/**,**/sources,**/sources/**". *
@@ -18,26 +23,26 @@ sources *
 -Remove comments. *
 -Fix all spell mistakes via Gmail. *
 -Clear all the tasks from here. *
--Verify all works good. *
+-Verify all works well. *
 -In all the maintenance projects: *
 -Update packages + re-create package.json files. *
 01. Update the 'REMEMBER' section of this document. *
 02. ' all the outcome of the crawling will be created' comment should be updated. *
 03. Add to package.json file the 'INSTRUCTIONS.md' key in the files section (if it exists in the project). *
-04. In the initate.service - const { Mode, ScriptType } = require('../../core/enums/files/system.enum'); - Need to change to ../../core/enums. *
+04. In the initiate.service - const { Mode, ScriptType } = require('../../core/enums/files/system.enum'); - Need to change to ../../core/enums. *
 05. Check if async copyDirectory( is not with line break. *
 06. Fix createDirectory - No need for await in createSessionDirectory method. *
-07. "Validate internet connection works." => "Validate that the internet connection works." *
-08. "sending emails processes." in udemy-courses project. *
+07. 'Validate internet connection works.' => 'Validate that the internet connection works.' *
+08. '...sending emails processes.' in udemy-courses project. *
 09. Rename the function 'getFileData' to 'getJsonFileData'. *
 10. Copy the logic of 'this.updateStatus' to all change statuses in the main script file. *
-11. On udemy-courses project, change the "validate" and "compare" functions to "validateFields" and "compareCourses". *
+11. On udemy-courses project, change the 'validate' and 'compare' functions to 'validateFields' and 'compareCourses'. *
 12. On udemy-courses project, change 'isExpectedFilled' to 'isFilledExpected'. *
 13. Change all function names that return true/false to 'isValidXXX' in validationUtils. *
-14. -In all places change to use isExists instead of .length > 0 or .length <= 0. *
+14. In all places change to use isExists instead of .length > 0 or .length <= 0. *
 15. Copy the logic of retry on check internet connection in all relevant projects (like in the udemy courses project). *
-16. Add to "INSTRUCTIONS.md" how the console log should be (take the specific sentence from another project). *
-18. Place this in all "ToDo" documents of all the projects. *
+16. Add to 'INSTRUCTIONS.md' how the console log should be (take the specific sentence from another project). *
+18. Place this in all 'ToDo' documents of all the projects. *
 -Bring back production to true in settings.js. *
 -Remove all comments. *
 -Re-format error numbers + last_index.txt file. *
@@ -55,7 +60,7 @@ sources *
 -Add inner settings for long run - Take the current day - 1 day (add inner settings validations like in crawler project). *
 -Check exceeded course's logic - Maximum limit per day. If 2 days, maximum X 2. *
 -In the line of 'this.coursesData.coursesList.map(c => c.status === CourseStatus.CREATE).length <= 0)' - *
- Change it to filter (like in 'spam-revenge' project) + use isExists instead of .length <= 0. *
+ Change it to filter (like in 'spam-revenge' project) + use isExists instead of .length <= 0. *
 -In all places change to use isExists instead of .length > 0 or .length <= 0. *
 -Update packages. *
 -Update packages again. *
@@ -65,30 +70,30 @@ sources *
 -Courses list example: https://idownloadcoupon.com/2021/02/26/free-udemy-courses-list-12-15-2020/ *
 -Fix Udemy links that are empty in the update method. *
 -Add single and courses count to the console status log. *
--Keep update the "Current Date" in the console status log. *
--Change the "Dates Count" to be 1/1 or 1/7 and keep it updated. *
+-Keep update the 'Current Date' in the console status log. *
+-Change the 'Dates Count' to be 1/1 or 1/7 and keep it updated. *
 -Check the order of the parameters in the initiate.service.js (Titles order identical to settings.js order). *
 -Add script name to tests and add validation for empty script name in initiate.service.js (copy from sender project). *
--Go over timeUtils and make sure all local "this.getDay" are being used, and not "date.getDate()" for example. *
+-Go over timeUtils and make sure all local 'this.getDay' are being used, and not 'date.getDate()' for example. *
 -Fix comment in settings.js 'interval to run to calculate' => 'interval to calculate'. *
--Add index.js to "configurations" directory and replace in all places. *
--Fix comment:         // Get the backup title from the console.s *
+-Add index.js to 'configurations' directory and replace in all places. *
+-Fix comment:         // Get the backup title from the console.s *
 -Fix all README.me + package.json from 'create-react-up' to 'create-react-app'. *
 -Remove comments. *
 -Verify all works as expected. *
 -Change all ect => etc - In all projects. *
 -Verify package.json project name. *
 -Change all README.md files to the title of the project as first line (Only one #). *
--Change from 'Start to be built' to 'Built in', and remove space lines, and the "-Goal:", *
+-Change from 'Start to be built' to 'Built in', and remove space lines, and the '-Goal:', *
 and remove the 'This project was bootstrapped with [Create React App] *
 (https://github.com/facebook/create-react-app).' line under to the description *
-with line space,  all fixes in README.md. *
+with line space,  all fixes in README.md. *
 -Re-format all error numbers + last_index.txt file. *
 -Clear all comments. *
 -Fix all misspells in all TXT files. *
 -Format all documents.
 -Move all complete tasks to complete_tasks.txt. *
--Verify all works good + delete all unneeded dist. *
+-Verify all works well + delete all unneeded dist. *
 -Upload to GitHub. *
 -Backup iOmega. *
 -Update Packages. *
@@ -100,7 +105,7 @@ limit access and URL not exists): https://www.udemy.com/course/local-lead-genera
 -This is limited access: https://www.udemy.com/course/draft/3526008/?couponCode=56191CDC04DF350FE15A *
 -Clean all comments. *
 -Rewrite error numbers. *
--Remove all debugger. *
+-Remove all 'debugger' keywords. *
 -Fix TXT files spell mistakes. *
 -Update packages again. *
 -Format all files. *
@@ -118,7 +123,7 @@ git rm -r one-of-the-directories // This deletes from filesystem. *
 -Upload to GitHub. *
 -Move all complete tasks from here to complete_tasks.txt. *
 -Clean all comments again. *
--Remove all debugger. *
+  -Remove all 'debugger' keywords. *  
 -Fix TXT files spell mistakes. *
 -Fix all spell mistakes in all TXT files. *
 -Fix spell mistakes in all txt files. *
@@ -150,19 +155,19 @@ export default *
 -Add the maximum pages that exist in the session to the console status. *
 -Update packages + Re-create package-lock.json. *
 -Fix the status on the console line: Status: PURCHASE many times is actually ALREADY_PURCHASE. Fix all statuses. *
--Change the log file names with the word "-method" in the end. *
+-Change the log file names with the word '-method' in the end. *
 -Add another log file for purchased courses only - canceled - Already exists. *
 -Add the mode parameter from the settings.js file + add 'SILENT' mode. *
 -Fix Publish Date: 2021/001/09 | *
 -Add retry on validate the coupons URL, take a number from settings.js and delay from settings.js. *
 -Add *
-  '--disable-background-timer-throttling', *
-  '--disable-backgrounding-occluded-windows', *
-  '--disable-renderer-backgrounding' *
+  '--disable-background-timer-throttling', *
+  '--disable-backgrounding-occluded-windows', *
+  '--disable-renderer-backgrounding' *
 to solve issues of hand while not in focus. *
 -Update packages. *
 -Fix description in package.json + README.MD + re-create package.json-lock file. *
--Take the initiate service from the 'crawler' project. *
+-Take the 'initiate service' from the 'crawler' project. *
 -Check if comments of all backup parameters in settings.js are relevant to this project. *
 -Add .catch(e => console.log(e)); to all (async () => { - Take the logic from 'crawler' project. *
 -Take backup.logic.js file from 'mbox-crawler' project. *
@@ -182,13 +187,13 @@ to solve issues of hand while not in focus. *
 ===[COURSE URL] https://idownloadcoupon.com/2021/01/10/free-udemy-courses-list-12-15-2020/=== *
 ===[UDEMY URL] https://www.udemy.com/course/persuasive-writing-copywriting/?couponCode=YOUACCEL34694=== *
 ===[RESULT] Time: ## | Result: ##=== *
--Copy the logic of validation of isDirectory in the initiate service from 'crawler' project. *
+-Copy the logic of validation of isDirectory in the 'initiate service' from 'crawler' project. *
 -Remove all comments. *
 -Fix TXT files spell mistakes. *
 -Fix all spell mistakes in all TXT files. *
 -Remove all unused files, functions, and variables. *
 -Rewrite error numbers. *
--Remove all debugger. *
+  -Remove all 'debugger' keywords. *  
 -Make sure all comments end with . *
 -Format all files. *
 -Move all completed tasks to complete tasks text file. *
@@ -198,7 +203,7 @@ to solve issues of hand while not in focus. *
 ===[SETTINGS] Environment: PRODUCTION | Method: PURCHASE COURSES | Query Date: 2020/12/21 | Specific Page Number: ## | Is Keywords Filter: false=== *
 ===[GENERAL] Time: 00.02:04:54 [-] | Total Price Purchase: ₪30,363.00 | Course: 409/409 (100.00%) | Courses Count: 450 | Status: LOGOUT=== *
 ===[ACCOUNT] Email: orassayag@gmail.com | Password: *******************=== *
-===[PROCESS1] Purchase: ✅  69 | Fail: ❌  0 | Filter: 0 | Missing Field: 0 | Unexpected Field: 0 | Duplicate: 21=== *
+===[PROCESS1] Purchase: ✅  69 | Fail: ❌  0 | Filter: 0 | Missing Field: 0 | Unexpected Field: 0 | Duplicate: 21=== *
 ===[PROCESS2] Create Update Error: 0 | Empty URL: 1 | Not Exists: 2 | Limit Access: 20 | Suggestions List: 2 | Private: 1=== *
 ===[PROCESS3] Already Purchase: 73 | Course Price Not Free: 218 | Enroll Not Exists: 0=== *
 ===[PROCESS4] Checkout Price Not Exists: 1 | Checkout Price Not Free: 0 | Purchase Error: 1=== *
@@ -223,18 +228,18 @@ to solve issues of hand while not in focus. *
 -Add to console status: Course: 50 | Courses Count: 450. *
 -Change the misc directory structure like the 'crawler' project (misc/documents + add complete_tasks.txt). *
 -Copy the logic of backups from the 'crawler' project. *
--Copy the logic of time utils from the 'crawler' project. *
--Add 'validateScriptType' in the initiate service from the 'crawl' project. *
+-Copy the logic of 'time utils' from the 'crawler' project. *
+-Add 'validateScriptType' in the 'initiate service' from the 'crawl' project. *
 -Add 	constructor() { *
 		this.scriptType = null; *
 	} *
 In the initiateService.js *
 -Refactor time.utils.js like in the 'crawler' project. *
 -Convert all sandbox and udemy sessions on 'ScriptType' enum to 'Test' and change it in all places. *
--Add validation for the script type in the initiate service. *
+-Add validation for the script type in the 'initiate service'. *
 -Add to total price purchase, only after successful purchase. *
 -Change in all places from 'GET_COURSES' to 'CREATE_COURSES'. *
--Add another method to all places - "UPDATE COURSES" (logs, console, all). *
+-Add another method to all places - 'UPDATE COURSES' (logs, console, all). *
 -Add new mode, after GET_COURSES, add another status of UPDATE COURSES. *
 -Change the logic to log each course in each step. *
 -Try to replace jsDOM with exposeFunction: https://pptr.dev/#?product=Puppeteer&version=v5.5.0&show=api-pageexposefunctionname-puppeteerfunction - Canceled. *
@@ -252,7 +257,7 @@ In the initiateService.js *
 -Rewrite INSTRUCTIONS.md + README.md. *
 -Rewrite error numbers. *
 -Remove all comments. *
--Remove all debugger. *
+  -Remove all 'debugger' keywords. *  
 -Make sure all comments end with . *
 -Fix all spell mistakes in all TXT files. *
 -Format all files. *
@@ -262,7 +267,7 @@ In the initiateService.js *
 -Add option to fetch only courses with specific keys (check the keys in the udemyURL lowercase). *
 -Add the logic of 'totalPriceNumber'. *
 -Change all console.log to logUtils.log. *
--Convert all the "exit" methods in all the services to be called only from the purchase.logic.js file, *
+-Convert all the 'exit' methods in all the services to be called only from the purchase.logic.js file, *
 where it will be a graceful exit with closing all the services. *
 -Change the console message of confirmation: 'OK to run? (y = yes)' + refactor function logic. *
 -Test a few sessions from different days - Canceled. *
@@ -305,7 +310,7 @@ And redirect back to udemyBaseURL and wait 5 seconds. *
 -Add logic for test session. Loop on specific URLS and try to purchase them. *
 -Add specific page on specific date logic. *
 -Add the c:/puppeteer directory to the validation paths, - Canceled. *
- and delete all the content at the end of the process, in each exit process. - Canceled. *
+ and delete all the content at the end of the process, in each exit process. - Canceled. *
 -Add limit to purchase courses. *
 -Separate the existing function to a single purchase course function. *
 -Test array of 2 courses. *
@@ -320,11 +325,11 @@ And redirect back to udemyBaseURL and wait 5 seconds. *
 -Look for element 'data-purpose="course-price-text"'. Inside it looks for '<span>Free</span>'. *
 -If exists, continue. *
 -Go to the element 'data-purpose="course-old-price-text"', search for span with the value of '₪'. *
- This is the price. Get it, separate it to a numeric, not just text. *
+ This is the price. Get it, separate it to a numeric, not just text. *
 -Not a mandatory step. If not found, continue anyway. *
 -Click on the button that contains the class 'udlite-heading-md add-to-cart' - Canceled. *
 -If not, continue to the next course - Canceled. *
--Wait for an element with the id of "cart-success-title" to exist in the DOM - Canceled. *
+-Wait for an element with the id of 'cart-success-title' to exist in the DOM - Canceled. *
 -Continue to the next course - Canceled. *
 -Each X courses, go to the cart and purchase - Canceled. *
 -Go to https://www.udemy.com/cart/checkout, and wait for 5 seconds (settings.js) - Canceled. *
@@ -355,7 +360,7 @@ And redirect back to udemyBaseURL and wait 5 seconds. *
 -Get the URL and store it in the object. *
 -Add variable on settings.js of the date to take the courses + Variable of dynamic date. If empty, take the today date. *
 -Get each URL - Detect if the page is a 'courses list' page or a single course page *
- (if https://www.udemy.com URLs found - it's a 'courses list' page. If not, and 'deeplink' href found, it's a single course page). *
+ (if https://www.udemy.com URLs found - it's a 'courses list' page. If not, and 'deeplink' href found, it's a single course page). *
 -If it's a single course page - Get all href, and search for the one that starts with 'https://click.linksynergy.com/deeplink'. *
 -If neither of them is found, continue to the next page. *
 -Extract the Udemy URL from the href, include the coupon code. *
@@ -385,9 +390,9 @@ Page URL: https://idownloadcoupon.com/2020/12/08/free-udemy-courses-list-9-18-20
 Udemy URL: https://www.udemy.com/course/time-management-for-professionals/?couponCode=BD1F9BF485081A1F438B *
 ============ *
 -Remove all jsdom from the project, and use: *
- const result = await page.evaluate(() => { *
-    return document.querySelectorAll('.footer-tags a').length *
-  }) - Canceled. *
+ const result = await page.evaluate(() => { *
+    return document.querySelectorAll('.footer-tags a').length *
+  }) - Canceled. *
 -The main goal of the application is to add Udemy free courses, based on coupons, automatically to specific accounts. *
 -The application will be separated to 2 main parts: *
 1. Get courses URLs with coupons. *
@@ -403,4 +408,4 @@ Udemy URL: https://www.udemy.com/course/time-management-for-professionals/?coupo
 -Validate that https://www.udemy.com/ is online. *
 -Object - Course: *
 -Id, Price, Name, Type (single/coursesList), Page URL, Udemy URL, Coupon Key, Status. *
--(remove the [100% OFF] in the start if exists) *
+-(remove the [100% OFF] in the start if exists) *  

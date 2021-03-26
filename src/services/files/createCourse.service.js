@@ -7,7 +7,7 @@ class CreateCourseService {
     constructor() { }
 
     async createCourses() {
-        // create courses.
+        // Create courses.
         const isErrorInARow = await puppeteerService.createCourses();
         if (isErrorInARow) {
             return Status.CREATE_UPDATE_ERROR_IN_A_ROW;

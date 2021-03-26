@@ -11,10 +11,6 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
-17. Accounts re-organization:
-a. Place the "Accounts" directory inside 'C:\Users\Or\Dropbox'.
-b. Refer all the projects to this location.
-c. Make sure that after each path change the project still works.
 
 Complete / canceled tasks:
 ==========================
