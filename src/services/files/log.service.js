@@ -195,7 +195,8 @@ class LogService {
 			applicationService.applicationData.specificCoursesPageNumber : this.emptyValue;
 		const isKeywordsFilter = validationUtils.isExists(applicationService.applicationData.keywordsFilterList);
 		const time = `${applicationService.applicationData.time} [${this.frames[this.i = ++this.i % this.frames.length]}]`;
-		const totalPricePurchased = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalPriceNumber)}`;
+		const totalCoursesPrice = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalCoursesPriceNumber)}`;
+		const totalPurchasedPrice = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalPurchasedPriceNumber)}`;
 		let courseIndex = this.emptyValue;
 		const totalSingleCount = textUtils.getNumberWithCommas(courseService.coursesData.totalSingleCount);
 		const totalCourseListCount = textUtils.getNumberWithCommas(courseService.coursesData.totalCourseListCount);
@@ -275,15 +276,16 @@ class LogService {
 			keysLists: [{
 				'Environment': applicationService.applicationData.environment,
 				'Method': applicationService.applicationData.method,
-				'Specific Page Number': specificPageNumber
+				'Specific Page Number': specificPageNumber,
+				'Session Number': applicationService.applicationData.sessionNumber,
+				'Is Keywords Filter': isKeywordsFilter
 			}, {
 				'Time': time,
-				'Total Price Purchase': totalPricePurchased,
 				'Course': courseIndex,
 				'Courses Count': coursesCount
 			}, {
-				'Session Number': applicationService.applicationData.sessionNumber,
-				'Is Keywords Filter': isKeywordsFilter,
+				'Total Courses Price': totalCoursesPrice,
+				'Total Purchase Price': totalPurchasedPrice,
 				'Pages Count': courseService.coursesData.totalPagesCount,
 				'Status': applicationService.applicationData.status
 			}, {
@@ -346,8 +348,8 @@ class LogService {
 				'Result': resultDetails
 			}],
 			colorsLists: [
+				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
 				[Color.YELLOW, Color.YELLOW],

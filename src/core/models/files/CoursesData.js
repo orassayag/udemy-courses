@@ -5,7 +5,8 @@ class CoursesData {
 	constructor() {
 		this.coursesList = [];
 		this.totalPurchasedCount = 0;
-		this.totalPriceNumber = 0;
+		this.totalCoursesPriceNumber = 0;
+		this.totalPurchasedPriceNumber = 0;
 		this.totalCreateCoursesCount = 0;
 		this.totalPagesCount = 0;
 		this.totalSingleCount = 0;

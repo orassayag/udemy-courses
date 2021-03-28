@@ -159,10 +159,11 @@ class CourseService {
     }
 
     updateCoursePrices(course, originalPrices) {
-        if (originalPrices) {
-            course.priceNumber = originalPrices.priceNumber;
-            course.priceDisplay = originalPrices.priceDisplay;
-            this.coursesData.totalPriceNumber += originalPrices.priceNumber;
+        course.priceNumber = originalPrices.priceNumber;
+        course.priceDisplay = originalPrices.priceDisplay;
+        this.coursesData.totalCoursesPriceNumber += originalPrices.priceNumber;
+        if (course.status === CourseStatus.PURCHASE) {
+            this.coursesData.totalPurchasedPriceNumber += originalPrices.priceNumber;
         }
         return course;
     }

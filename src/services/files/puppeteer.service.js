@@ -412,14 +412,6 @@ class PuppeteerService {
                 });
             }
             this.logSessionStage('PAGE HAS PRICE LABEL 2');
-            // Validate that the course is free.
-            if (coursePriceLabel.indexOf('Free') === -1) {
-                return await this.setCourseStatus({
-                    page: page, course: course, status: CourseStatus.COURSE_PRICE_NOT_FREE,
-                    details: 'The course price is not free. The keyword \'Free\' doesn\'t exists in the price label.', originalPrices: null
-                });
-            }
-            this.logSessionStage('PAGE HAS FREE');
             // Get the course original price.
             let originalPrices = null;
             if (await page.$(domService.courseOriginalPriceDOM)) {
@@ -430,6 +422,14 @@ class PuppeteerService {
                 }
             }
             this.logSessionStage('PAGE PASS ORIGINAL PRICE');
+            // Validate that the course is free.
+            if (coursePriceLabel.indexOf('Free') === -1) {
+                return await this.setCourseStatus({
+                    page: page, course: course, status: CourseStatus.COURSE_PRICE_NOT_FREE,
+                    details: 'The course price is not free. The keyword \'Free\' doesn\'t exists in the price label.', originalPrices: originalPrices
+                });
+            }
+            this.logSessionStage('PAGE HAS A FREE LABEL');
             // Enroll the course and go to the checkout page.
             await this.sleepAction();
             await page.evaluate((courseEnrollButtonDOM) => {
