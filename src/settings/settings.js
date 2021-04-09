@@ -25,7 +25,7 @@ const settings = {
     // RANGE - Range of dates to scan. Example: { from: '2020/12/13', to: '2020/12/14' }.
     // If empty/null/undefined - Will get the current date automatically.
     COURSES_DATES_VALUE: innerSettings.IS_LONG_RUN ? courseUtils.getLongRunTime() :
-        courseUtils.getCourseTime('2021/03/28'),
+        courseUtils.getCourseTime({ from: '2021/03/29', to: '2021/04/04' }),
     // Determine the specific courses page (in the pagination) to crawl. If null,
     // will scan all the courses pages until reaching the maximum number (MAXIMUM_PAGES_NUMBER).
     SPECIFIC_COURSES_PAGE_NUMBER: null,

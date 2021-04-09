@@ -1,5 +1,10 @@
 Complete / canceled tasks:
 ==========================
+-Comments: Change 'validateEnumData' to 'data'. *
+-Change from 'getJsonFileData' to 'getJSONFileData'. *
+-Change the validation on JSON parameters to use 'Object.prototype.hasOwnProperty.call(jsonData, '')'. *
+-Remove the 'await' from 'await fileUtils.createDirectory(value);'. *
+-In settings.js convert utils path to index, and check if it still works. *
 -Rearrange console status log: *
 -Move the 'Session Number' from 'GENERAL2' to 'SETTINGS'. *
 -Move the 'Is Keywords Filter' from 'GENERAL2' to 'SETTINGS'. *

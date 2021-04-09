@@ -4,7 +4,7 @@ class FileService {
 
     constructor() { }
 
-    async getJsonFileData(data) {
+    async getJSONFileData(data) {
         const { environment, path, parameterName, fileExtension } = data;
         const filePath = `${path}account-${textUtils.toLowerCase(environment)}.json`;
         if (!await fileUtils.isPathExists(filePath)) {

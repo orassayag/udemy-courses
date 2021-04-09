@@ -10,12 +10,21 @@ class AccountService {
 
     async initiate(settings) {
         this.accountData = new AccountData(settings);
-        const account = await fileService.getJsonFileData({
+        const account = await fileService.getJSONFileData({
             environment: applicationUtils.getApplicationEnvironment(settings.IS_PRODUCTION_ENVIRONMENT),
             path: this.accountData.accountFilePath,
             parameterName: 'accountFilePath',
             fileExtension: '.json'
         });
+        if (!validationUtils.isExists(account)) {
+            throw new Error('No accounts found in the JSON file (1000035)');
+        }
+        if (!validationUtils.isPropertyExists(account[0], 'email')) {
+            throw new Error('Missing email parameter (1000036)');
+        }
+        if (!validationUtils.isPropertyExists(account[0], 'password')) {
+            throw new Error('Missing password parameter (1000037)');
+        }
         const { email, password } = account[0];
         const validationResult = this.validateAccount({
             email: email,
