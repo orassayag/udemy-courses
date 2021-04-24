@@ -1,4 +1,4 @@
-class PathData {
+class PathDataModel {
 
 	constructor(settings) {
 		// Set the parameters from the settings file.
@@ -7,4 +7,4 @@ class PathData {
 	}
 }
 
-module.exports = PathData;
+module.exports = PathDataModel;

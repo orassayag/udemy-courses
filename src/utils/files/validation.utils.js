@@ -4,6 +4,10 @@ class ValidationUtils {
 
     constructor() { }
 
+    isExists(list) {
+        return list && list.length > 0;
+    }
+
     isValidArray(variable) {
         return Object.prototype.toString.call(variable) === '[object Array]';
     }
@@ -21,39 +25,12 @@ class ValidationUtils {
         return Number(number) > 0;
     }
 
-    isExists(list) {
-        return list && list.length > 0;
-    }
-
     isValidURL(url) {
         return regexUtils.validateURLRegex.test(url);
     }
 
     isValidDate(dateTime) {
         return dateTime instanceof Date;
-    }
-
-    isValidDateFormat(date) {
-        try {
-            const parts = date.split('/');
-            const year = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10);
-            const day = parseInt(parts[2], 10);
-            // Check the ranges of month and year.
-            if (year < 1000 || year > 3000 || month == 0 || month > 12) {
-                return false;
-            }
-            const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            // Adjust for leap years.
-            if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
-                monthLength[1] = 29;
-            }
-            // Check the range of the day.
-            return day > 0 && day <= monthLength[month - 1];
-        }
-        catch {
-            return false;
-        }
     }
 
     // This method validates if a given variable is a valid boolean and returns the result.

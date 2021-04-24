@@ -1,10 +1,10 @@
 const jsdom = require('jsdom');
-const { CourseStatus } = require('../../core/enums');
+const { CourseStatusEnum } = require('../../core/enums');
 const applicationService = require('./application.service');
 const countLimitService = require('./countLimit.service');
 const courseService = require('./course.service');
-const { courseUtils, systemUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 const globalUtils = require('../../utils/files/global.utils');
+const { courseUtils, systemUtils, textUtils, validationUtils } = require('../../utils');
 
 class DomService {
 
@@ -14,10 +14,10 @@ class DomService {
         this.href = 'a';
         this.img = 'img';
         // ===COURSE=== //
-        this.postDOM = '[id^="post-"]';
-        this.singleCourseTitleDOM = 'grid-tit';
-        this.singleCourseDateDOM = 'meta';
-        this.singleCourseUdemyAttributeDOM = 'data-coupon-id';
+        this.postDOM = 'type-product';
+        this.postDOMTitle = 'woocommerce-loop-product__title';
+        this.singleCourseURLDOM = 'woocommerce-LoopProduct-link';
+        this.udemyURLInputName = 'murl';
         this.coursesListTitleDOM = 'course_title';
         this.coursesListContainerDOM = 'amz-deal';
         // ===UDEMY=== //
@@ -42,27 +42,26 @@ class DomService {
     async createSingleCourses(data) {
         let coursesCount = 0;
         try {
-            const { mainContent, pageNumber, indexPageNumber, indexDate } = data;
+            const { mainContent, pageNumber, indexPageNumber } = data;
             const dom = new jsdom.JSDOM(mainContent);
-            const courses = dom.window.document.querySelectorAll(this.postDOM);
+            const courses = dom.window.document.getElementsByClassName(this.postDOM);
             for (let i = 0; i < courses.length; i++) {
-                const course = courses[i];
-                const url = course.getElementsByClassName(this.singleCourseTitleDOM)[0]?.childNodes[0];
-                const date = timeUtils.getDateFromString(course.getElementsByClassName(this.singleCourseDateDOM)[0]?.childNodes[2]?.data?.trim());
+                const courseDataModel = courses[i];
+                const postId = courseDataModel.className.split(' ')[2];
+                const title = courseDataModel.getElementsByClassName(this.postDOMTitle)[0];
+                const url = courseDataModel.getElementsByClassName(this.singleCourseURLDOM)[0];
                 await courseService.createCourse({
-                    postId: parseInt(course.id.split('-')[1]),
+                    postId: parseInt(postId.split('-')[1]),
                     pageNumber: pageNumber,
                     indexPageNumber: indexPageNumber,
                     isFree: null,
                     courseURL: url?.href,
                     udemyURL: null,
                     couponKey: null,
-                    courseURLCourseName: url?.text,
-                    publishDate: date,
-                    indexDate: indexDate,
+                    courseURLCourseName: title?.text,
                     isSingleCourse: true
                 });
-                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutBetweenCoursesCreate);
             }
             coursesCount = courses.length;
             this.validateErrorInARow(false);
@@ -72,7 +71,6 @@ class DomService {
             };
         }
         catch (error) {
-            console.log(error);
             if (this.validateErrorInARow(true)) {
                 return {
                     coursesCount: coursesCount,
@@ -83,37 +81,21 @@ class DomService {
     }
 
     async createCourseFullData(data) {
-        const { course, courseIndex, courseContent } = data;
+        const { courseDataModel, courseIndex, courseContent } = data;
         const coursesLists = [];
         try {
             const dom = new jsdom.JSDOM(courseContent);
-            const urls = dom.window.document.getElementsByTagName(this.href);
-            for (let i = 0; i < urls.length; i++) {
-                const url = urls[i];
-                const isDirectUdemyURL = url.hasAttribute(this.singleCourseUdemyAttributeDOM);
-                const urlHref = url.href;
-                if (!isDirectUdemyURL && urlHref.indexOf(applicationService.applicationData.udemyBaseURL) > -1) {
-                    coursesLists.push({
-                        course: course,
-                        courseIndex: courseIndex,
-                        dom: dom
-                    });
-                    break;
-                }
-                if (isDirectUdemyURL || urlHref.indexOf(applicationService.applicationData.singleCourseInit) > -1) {
-                    if (isDirectUdemyURL || !url.getElementsByTagName(this.img).length) {
-                        const result = courseUtils.createCourseSingleData(urlHref);
-                        await courseService.updateSingleCourseData({
-                            course: course,
-                            courseIndex: courseIndex,
-                            udemyURL: result.udemyURL,
-                            udemyURLCompare: textUtils.toLowerCaseTrim(result.udemyURL),
-                            couponKey: result.couponKey
-                        });
-                        await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesUpdate);
-                        break;
-                    }
-                }
+            const urls = dom.window.document.getElementsByName(this.udemyURLInputName);
+            if (validationUtils.isExists(urls)) {
+                const result = courseUtils.createCourseSingleData(urls[0].value);
+                await courseService.updateSingleCourseData({
+                    courseDataModel: courseDataModel,
+                    courseIndex: courseIndex,
+                    udemyURL: result.udemyURL,
+                    udemyURLCompare: textUtils.toLowerCaseTrim(result.udemyURL),
+                    couponKey: result.couponKey
+                });
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutBetweenCoursesUpdate);
             }
             if (validationUtils.isExists(coursesLists)) {
                 await this.createCoursesList(coursesLists);
@@ -121,7 +103,7 @@ class DomService {
             return this.validateErrorInARow(false);
         }
         catch (error) {
-            courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
+            courseService.coursesDataModel.coursesList[courseIndex] = await this.setCourseError(error, courseDataModel);
             if (this.validateErrorInARow(true)) {
                 return true;
             }
@@ -129,7 +111,7 @@ class DomService {
     }
 
     async createCoursesListWithNames(data) {
-        const { course, courseIndex, date, coursesDOMList } = data;
+        const { courseDataModel, courseIndex, coursesDOMList } = data;
         try {
             for (let i = 0; i < coursesDOMList.length; i++) {
                 const innerCourse = coursesDOMList[i];
@@ -140,27 +122,25 @@ class DomService {
                 }
                 const couponKey = courseUtils.getCourseCoupon(udemyURL);
                 await courseService.createCourse({
-                    postId: course.postId,
-                    pageNumber: course.pageNumber,
-                    indexPageNumber: course.indexPageNumber,
+                    postId: courseDataModel.postId,
+                    pageNumber: courseDataModel.pageNumber,
+                    indexPageNumber: courseDataModel.indexPageNumber,
                     isFree: validationUtils.isExists(couponKey),
-                    courseURL: course.courseURL,
+                    courseURL: courseDataModel.courseURL,
                     udemyURL: udemyURL,
                     udemyURLCompare: textUtils.toLowerCaseTrim(udemyURL),
                     couponKey: courseUtils.getCourseCoupon(udemyURL),
                     courseURLCourseName: url?.text,
-                    publishDate: date,
-                    indexDate: course.indexDate,
                     isSingleCourse: false
                 });
-                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutBetweenCoursesCreate);
                 if (this.validateErrorInARow(false)) {
                     return true;
                 }
             }
         }
         catch (error) {
-            courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
+            courseService.coursesDataModel.coursesList[courseIndex] = await this.setCourseError(error, courseDataModel);
             if (this.validateErrorInARow(true)) {
                 return true;
             }
@@ -168,7 +148,7 @@ class DomService {
     }
 
     async createCoursesListWithoutNames(data) {
-        const { course, courseIndex, date, courseURLsList } = data;
+        const { courseDataModel, courseIndex, courseURLsList } = data;
         try {
             for (let i = 0; i < courseURLsList.length; i++) {
                 const udemyURL = courseURLsList[i]?.href;
@@ -177,27 +157,25 @@ class DomService {
                 }
                 const couponKey = courseUtils.getCourseCoupon(udemyURL);
                 await courseService.createCourse({
-                    postId: course.postId,
-                    pageNumber: course.pageNumber,
-                    indexPageNumber: course.indexPageNumber,
+                    postId: courseDataModel.postId,
+                    pageNumber: courseDataModel.pageNumber,
+                    indexPageNumber: courseDataModel.indexPageNumber,
                     isFree: validationUtils.isExists(couponKey),
-                    courseURL: course.courseURL,
+                    courseURL: courseDataModel.courseURL,
                     udemyURL: udemyURL,
                     udemyURLCompare: textUtils.toLowerCaseTrim(udemyURL),
                     couponKey: courseUtils.getCourseCoupon(udemyURL),
                     courseURLCourseName: null,
-                    publishDate: date,
-                    indexDate: course.indexDate,
                     isSingleCourse: false
                 });
-                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutBetweenCoursesCreate);
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutBetweenCoursesCreate);
                 if (this.validateErrorInARow(false)) {
                     return true;
                 }
             }
         }
         catch (error) {
-            courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
+            courseService.coursesDataModel.coursesList[courseIndex] = await this.setCourseError(error, courseDataModel);
             if (this.validateErrorInARow(true)) {
                 return true;
             }
@@ -207,15 +185,13 @@ class DomService {
     async createCoursesList(coursesLists) {
         let isErrorInARow = false;
         for (let i = 0; i < coursesLists.length; i++) {
-            const { course, courseIndex, dom } = coursesLists[i];
+            const { courseDataModel, courseIndex, dom } = coursesLists[i];
             try {
-                const date = timeUtils.getDateFromString(dom.window.document.getElementsByClassName(this.singleCourseDateDOM)[0]?.childNodes[2]?.data?.trim());
                 const coursesDOMList = dom.window.document.getElementsByClassName(this.coursesListContainerDOM);
                 if (validationUtils.isExists(coursesDOMList)) {
                     if (await this.createCoursesListWithNames({
-                        course: course,
+                        courseDataModel: courseDataModel,
                         courseIndex: courseIndex,
-                        date: date,
                         coursesDOMList: coursesDOMList
                     })) {
                         isErrorInARow = true;
@@ -224,9 +200,8 @@ class DomService {
                 }
                 else {
                     if (await this.createCoursesListWithoutNames({
-                        course: course,
+                        courseDataModel: courseDataModel,
                         courseIndex: courseIndex,
-                        date: date,
                         courseURLsList: dom.window.document.getElementsByTagName(this.href)
                     })) {
                         isErrorInARow = true;
@@ -234,13 +209,13 @@ class DomService {
                     }
                 }
                 await courseService.updateCoursesListCourseData({
-                    course: course,
+                    courseDataModel: courseDataModel,
                     courseIndex: courseIndex
                 });
                 return isErrorInARow ? isErrorInARow : this.validateErrorInARow(false);
             }
             catch (error) {
-                courseService.coursesData.coursesList[courseIndex] = await this.setCourseError(error, course);
+                courseService.coursesDataModel.coursesList[courseIndex] = await this.setCourseError(error, courseDataModel);
                 if (this.validateErrorInARow(true)) {
                     return true;
                 }
@@ -251,7 +226,7 @@ class DomService {
     validateErrorInARow(isError) {
         if (isError) {
             this.createUpdateErrorsInARowCount++;
-            return this.createUpdateErrorsInARowCount >= countLimitService.countLimitData.maximumCreateUpdateErrorInARowCount;
+            return this.createUpdateErrorsInARowCount >= countLimitService.countLimitDataModel.maximumCreateUpdateErrorInARowCount;
         }
         else {
             this.createUpdateErrorsInARowCount = 0;
@@ -259,15 +234,15 @@ class DomService {
         return false;
     }
 
-    async setCourseError(error, course) {
+    async setCourseError(error, courseDataModel) {
         return await courseService.updateCourseStatus({
-            course: course, status: CourseStatus.CREATE_UPDATE_ERROR,
+            courseDataModel: courseDataModel, status: CourseStatusEnum.CREATE_UPDATE_ERROR,
             details: `Unexpected error occurred during the create update process. More details: ${systemUtils.getErrorDetails(error)}`
         });
     }
 
     isValidateUdemyURL(udemyURL) {
-        return udemyURL && udemyURL.indexOf(applicationService.applicationData.udemyBaseURL) > -1;
+        return udemyURL && udemyURL.indexOf(applicationService.applicationDataModel.udemyBaseURL) > -1;
     }
 }
 

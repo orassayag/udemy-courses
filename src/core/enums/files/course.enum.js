@@ -1,7 +1,7 @@
 const enumUtils = require('../enum.utils');
 const textUtils = require('../text.utils');
 
-const CourseStatus = enumUtils.createEnum([
+const CourseStatusEnum = enumUtils.createEnum([
     ['CREATE', 'create'],
     ['PURCHASE', 'purchase'],
     ['FAIL', 'fail'],
@@ -25,13 +25,13 @@ const CourseStatus = enumUtils.createEnum([
     ['PURCHASE_ERROR', 'purchaseError']
 ]);
 
-const CourseStatusLog = enumUtils.createEnum(Object.keys(CourseStatus).map(k => {
-    return [CourseStatus[k], textUtils.replaceCharacter(k, '_', ' ')];
+const CourseStatusLogEnum = enumUtils.createEnum(Object.keys(CourseStatusEnum).map(k => {
+    return [CourseStatusEnum[k], textUtils.replaceCharacter(k, '_', ' ')];
 }));
 
-const CourseType = enumUtils.createEnum([
+const CourseTypeEnum = enumUtils.createEnum([
     ['SINGLE', 'SINGLE'],
     ['COURSES_LIST', 'COURSES LIST']
 ]);
 
-module.exports = { CourseStatus, CourseStatusLog, CourseType };
+module.exports = { CourseStatusEnum, CourseStatusLogEnum, CourseTypeEnum };

@@ -1,5 +1,6 @@
-const { LogData } = require('../../core/models');
-const { CourseStatusLog, CourseStatus, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
+const { LogDataModel } = require('../../core/models');
+const { CourseStatusLogEnum, CourseStatusEnum, ColorEnum, MethodEnum, ModeEnum,
+	PlaceholderEnum, StatusIconEnum } = require('../../core/enums');
 const accountService = require('./account.service');
 const applicationService = require('./application.service');
 const countLimitService = require('./countLimit.service');
@@ -13,7 +14,7 @@ class LogService {
 
 	constructor() {
 		this.isLogProgress = null;
-		this.logData = null;
+		this.logDataModel = null;
 		this.logInterval = null;
 		// ===PATH=== //
 		this.baseSessionPath = null;
@@ -32,14 +33,14 @@ class LogService {
 	}
 
 	initiate(settings) {
-		this.logData = new LogData(settings);
+		this.logDataModel = new LogDataModel(settings);
 		// Check if any logs active.
-		this.isLogs = applicationService.applicationData.mode === Mode.STANDARD &&
-			(this.logData.isLogCreateCoursesMethodValid || this.logData.isLogCreateCoursesMethodInvalid ||
-				this.logData.isLogUpdateCoursesMethodValid || this.logData.isLogUpdateCoursesMethodInvalid ||
-				this.logData.isLogPurchaseCoursesMethodValid || this.logData.isLogPurchaseCoursesMethodInvalid);
+		this.isLogs = applicationService.applicationDataModel.mode === ModeEnum.STANDARD &&
+			(this.logDataModel.isLogCreateCoursesMethodValid || this.logDataModel.isLogCreateCoursesMethodInvalid ||
+				this.logDataModel.isLogUpdateCoursesMethodValid || this.logDataModel.isLogUpdateCoursesMethodInvalid ||
+				this.logDataModel.isLogPurchaseCoursesMethodValid || this.logDataModel.isLogPurchaseCoursesMethodInvalid);
 		this.initiateDirectories();
-		this.isLogProgress = applicationService.applicationData.mode === Mode.STANDARD;
+		this.isLogProgress = applicationService.applicationDataModel.mode === ModeEnum.STANDARD;
 	}
 
 	initiateDirectories() {
@@ -47,25 +48,25 @@ class LogService {
 			return;
 		}
 		// ===PATH=== //
-		this.baseSessionPath = pathService.pathData.distPath;
+		this.baseSessionPath = pathService.pathDataModel.distPath;
 		this.createSessionDirectory();
-		if (this.logData.isLogCreateCoursesMethodValid) {
-			this.createCoursesValidPath = this.createFilePath(`create_courses_method_valid_${Placeholder.DATE}`);
+		if (this.logDataModel.isLogCreateCoursesMethodValid) {
+			this.createCoursesValidPath = this.createFilePath(`create_courses_method_valid_${PlaceholderEnum.DATE}`);
 		}
-		if (this.logData.isLogCreateCoursesMethodInvalid) {
-			this.createCoursesInvalidPath = this.createFilePath(`create_courses_method_invalid_${Placeholder.DATE}`);
+		if (this.logDataModel.isLogCreateCoursesMethodInvalid) {
+			this.createCoursesInvalidPath = this.createFilePath(`create_courses_method_invalid_${PlaceholderEnum.DATE}`);
 		}
-		if (this.logData.isLogUpdateCoursesMethodValid) {
-			this.updateCoursesValidPath = this.createFilePath(`update_courses_method_valid_${Placeholder.DATE}`);
+		if (this.logDataModel.isLogUpdateCoursesMethodValid) {
+			this.updateCoursesValidPath = this.createFilePath(`update_courses_method_valid_${PlaceholderEnum.DATE}`);
 		}
-		if (this.logData.isLogUpdateCoursesMethodInvalid) {
-			this.updateCoursesInvalidPath = this.createFilePath(`update_courses_method_invalid_${Placeholder.DATE}`);
+		if (this.logDataModel.isLogUpdateCoursesMethodInvalid) {
+			this.updateCoursesInvalidPath = this.createFilePath(`update_courses_method_invalid_${PlaceholderEnum.DATE}`);
 		}
-		if (this.logData.isLogPurchaseCoursesMethodValid) {
-			this.purchaseCoursesValidPath = this.createFilePath(`purchase_courses_method_valid_${Placeholder.DATE}`);
+		if (this.logDataModel.isLogPurchaseCoursesMethodValid) {
+			this.purchaseCoursesValidPath = this.createFilePath(`purchase_courses_method_valid_${PlaceholderEnum.DATE}`);
 		}
-		if (this.logData.isLogPurchaseCoursesMethodInvalid) {
-			this.purchaseCoursesInvalidPath = this.createFilePath(`purchase_courses_method_invalid_${Placeholder.DATE}`);
+		if (this.logDataModel.isLogPurchaseCoursesMethodInvalid) {
+			this.purchaseCoursesInvalidPath = this.createFilePath(`purchase_courses_method_invalid_${PlaceholderEnum.DATE}`);
 		}
 	}
 
@@ -80,47 +81,50 @@ class LogService {
 	createSessionDirectory() {
 		this.sessionDirectoryPath = pathUtils.getJoinPath({
 			targetPath: this.baseSessionPath,
-			targetName: `${this.getNextDirectoryIndex()}_${applicationService.applicationData.logDateTime}-${textUtils.getEmailLocalPart(accountService.accountData.email)}`
+			targetName: `${this.getNextDirectoryIndex()}_${applicationService.applicationDataModel.logDateTime}-${textUtils.getEmailLocalPart(accountService.accountDataModel.email)}`
 		});
 		fileUtils.createDirectory(this.sessionDirectoryPath);
 	}
 
 	createFilePath(fileName) {
 		return pathUtils.getJoinPath({
-			targetPath: this.sessionDirectoryPath ? this.sessionDirectoryPath : pathService.pathData.distPath,
-			targetName: `${fileName.replace(Placeholder.DATE, applicationService.applicationData.logDateTime)}.txt`
+			targetPath: this.sessionDirectoryPath ? this.sessionDirectoryPath : pathService.pathDataModel.distPath,
+			targetName: `${fileName.replace(PlaceholderEnum.DATE, applicationService.applicationDataModel.logDateTime)}.txt`
 		});
 	}
 
-	async logCourse(course) {
+	async logCourse(courseDataModel) {
 		if (!this.isLogs) {
 			return;
 		}
 		let path = null;
 		let isValid = null;
-		switch (applicationService.applicationData.method) {
-			case Method.CREATE_COURSES:
-				isValid = course.status === CourseStatus.CREATE;
-				path = isValid ? (this.logData.isLogCreateCoursesMethodValid ? this.createCoursesValidPath : null) :
-					(this.logData.isLogCreateCoursesMethodInvalid ? this.createCoursesInvalidPath : null);
+		switch (applicationService.applicationDataModel.method) {
+			case MethodEnum.CREATE_COURSES: {
+				isValid = courseDataModel.status === CourseStatusEnum.CREATE;
+				path = isValid ? (this.logDataModel.isLogCreateCoursesMethodValid ? this.createCoursesValidPath : null) :
+					(this.logDataModel.isLogCreateCoursesMethodInvalid ? this.createCoursesInvalidPath : null);
 				break;
-			case Method.UPDATE_COURSES:
-				isValid = course.status === CourseStatus.CREATE;
-				path = isValid ? (this.logData.isLogUpdateCoursesMethodValid ? this.updateCoursesValidPath : null) :
-					(this.logData.isLogUpdateCoursesMethodInvalid ? this.updateCoursesInvalidPath : null);
+			}
+			case MethodEnum.UPDATE_COURSES: {
+				isValid = courseDataModel.status === CourseStatusEnum.CREATE;
+				path = isValid ? (this.logDataModel.isLogUpdateCoursesMethodValid ? this.updateCoursesValidPath : null) :
+					(this.logDataModel.isLogUpdateCoursesMethodInvalid ? this.updateCoursesInvalidPath : null);
 				break;
-			case Method.PURCHASE_COURSES:
-				isValid = course.status === CourseStatus.PURCHASE;
-				path = isValid ? (this.logData.isLogPurchaseCoursesMethodValid ? this.purchaseCoursesValidPath : null) :
-					(this.logData.isLogPurchaseCoursesMethodInvalid ? this.purchaseCoursesInvalidPath : null);
+			}
+			case MethodEnum.PURCHASE_COURSES: {
+				isValid = courseDataModel.status === CourseStatusEnum.PURCHASE;
+				path = isValid ? (this.logDataModel.isLogPurchaseCoursesMethodValid ? this.purchaseCoursesValidPath : null) :
+					(this.logDataModel.isLogPurchaseCoursesMethodInvalid ? this.purchaseCoursesInvalidPath : null);
 				break;
+			}
 		}
 		if (!path) {
 			return;
 		}
 		// Log the course.
 		const message = this.createCourseTemplate({
-			course: course,
+			courseDataModel: courseDataModel,
 			isLog: true
 		});
 		await fileUtils.appendFile({
@@ -138,29 +142,29 @@ class LogService {
 		if (name === this.emptyValue && udemyURLCourseName) {
 			name = udemyURLCourseName;
 		}
-		return isLog ? name : textUtils.cutText({ text: name, count: countLimitService.countLimitData.maximumCourseNameCharactersDisplayCount });
+		return isLog ? name : textUtils.cutText({ text: name, count: countLimitService.countLimitDataModel.maximumCourseNameCharactersDisplayCount });
 	}
 
 	createCourseTemplate(data) {
-		const { course, isLog } = data;
-		const { id, postId, creationDateTime, pageNumber, indexPageNumber, publishDate, priceNumber, priceDisplay, courseURLCourseName,
-			udemyURLCourseName, type, isFree, courseURL, udemyURL, couponKey, status, resultDateTime, resultDetails } = course;
+		const { courseDataModel, isLog } = data;
+		const { id, postId, creationDateTime, pageNumber, indexPageNumber, priceNumber, priceDisplay, courseURLCourseName,
+			udemyURLCourseName, type, isFree, courseURL, udemyURL, couponKey, status, resultDateTime, resultDetails } = courseDataModel;
 		const time = timeUtils.getFullTime(resultDateTime);
 		const displayCreationDateTime = timeUtils.getFullDateTemplate(creationDateTime);
 		const displayPriceNumber = priceNumber ? priceNumber : this.emptyValue;
 		const displayPriceDisplay = priceDisplay ? priceDisplay : this.emptyValue;
-		const displayStatus = CourseStatusLog[status];
+		const displayStatus = CourseStatusLogEnum[status];
 		const name = this.getCourseName({
 			courseURLCourseName: courseURLCourseName,
 			udemyURLCourseName: udemyURLCourseName,
 			isLog: isLog
 		});
-		const displayCourseURL = textUtils.cutText({ text: courseURL, count: countLimitService.countLimitData.maximumURLCharactersDisplayCount });
-		const displayUdemyURL = udemyURL ? textUtils.cutText({ text: udemyURL, count: countLimitService.countLimitData.maximumURLCharactersDisplayCount }) : this.emptyValue;
+		const displayCourseURL = textUtils.cutText({ text: courseURL, count: countLimitService.countLimitDataModel.maximumURLCharactersDisplayCount });
+		const displayUdemyURL = udemyURL ? textUtils.cutText({ text: udemyURL, count: countLimitService.countLimitDataModel.maximumURLCharactersDisplayCount }) : this.emptyValue;
 		const displayResultDetails = resultDetails.join('\n');
 		const lines = [];
 		lines.push(`Time: ${time} | Id: ${id} | Post Id: ${postId ? postId : this.emptyValue} | Creation Date Time: ${displayCreationDateTime}`);
-		lines.push(`Publish Date: ${publishDate} | Price Number: ${displayPriceNumber} | Price Display: ${displayPriceDisplay} | Coupon Key: ${couponKey}`);
+		lines.push(`Price Number: ${displayPriceNumber} | Price Display: ${displayPriceDisplay} | Coupon Key: ${couponKey}`);
 		lines.push(`Status: ${displayStatus} | Page Number: ${pageNumber} | Index Page Number: ${indexPageNumber} | Type: ${type} | Is Free: ${isFree}`);
 		lines.push(`Name: ${name}`);
 		lines.push(`Course URL: ${displayCourseURL}`);
@@ -174,53 +178,53 @@ class LogService {
 		// Start the process for the first interval round.
 		this.logInterval = setInterval(() => {
 			// Update the current time of the process.
-			applicationService.applicationData.time = timeUtils.getDifferenceTimeBetweenDates({
-				startDateTime: applicationService.applicationData.startDateTime,
-				endDateTime: new Date()
+			applicationService.applicationDataModel.time = timeUtils.getDifferenceTimeBetweenDates({
+				startDateTime: applicationService.applicationDataModel.startDateTime,
+				endDateTime: timeUtils.getCurrentDate()
 			});
 			// Log the status console each interval round.
 			this.logProgress();
-		}, countLimitService.countLimitData.millisecondsIntervalCount);
+		}, countLimitService.countLimitDataModel.millisecondsIntervalCount);
 	}
 
 	getCurrentIndex(isPurchase) {
-		const totalCount = isPurchase ? courseService.coursesData.coursesList.length : courseService.coursesData.totalCreateCoursesCount;
-		const coursePosition = textUtils.getNumberOfNumber({ number1: courseService.coursesData.courseIndex, number2: totalCount });
-		const coursePercentage = textUtils.calculatePercentageDisplay({ partialValue: courseService.coursesData.courseIndex, totalValue: totalCount });
+		const totalCount = isPurchase ? courseService.coursesDataModel.coursesList.length : courseService.coursesDataModel.totalCreateCoursesCount;
+		const coursePosition = textUtils.getNumberOfNumber({ number1: courseService.coursesDataModel.courseIndex, number2: totalCount });
+		const coursePercentage = textUtils.calculatePercentageDisplay({ partialValue: courseService.coursesDataModel.courseIndex, totalValue: totalCount });
 		return `${coursePosition} (${coursePercentage})`;
 	}
 
 	logProgress() {
-		const specificPageNumber = applicationService.applicationData.specificCoursesPageNumber ?
-			applicationService.applicationData.specificCoursesPageNumber : this.emptyValue;
-		const isKeywordsFilter = validationUtils.isExists(applicationService.applicationData.keywordsFilterList);
-		const time = `${applicationService.applicationData.time} [${this.frames[this.i = ++this.i % this.frames.length]}]`;
-		const totalCoursesPrice = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalCoursesPriceNumber)}`;
-		const totalPurchasedPrice = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesData.totalPurchasedPriceNumber)}`;
+		const specificPageNumber = applicationService.applicationDataModel.specificCoursesPageNumber ?
+			applicationService.applicationDataModel.specificCoursesPageNumber : this.emptyValue;
+		const isKeywordsFilter = validationUtils.isExists(applicationService.applicationDataModel.keywordsFilterList);
+		const time = `${applicationService.applicationDataModel.time} [${this.frames[this.i = ++this.i % this.frames.length]}]`;
+		const totalCoursesPrice = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesDataModel.totalCoursesPriceNumber)}`;
+		const totalPurchasedPrice = `₪${textUtils.getNumber2CharactersAfterDot(courseService.coursesDataModel.totalPurchasePriceNumber)}`;
 		let courseIndex = this.emptyValue;
-		const totalSingleCount = textUtils.getNumberWithCommas(courseService.coursesData.totalSingleCount);
-		const totalCourseListCount = textUtils.getNumberWithCommas(courseService.coursesData.totalCourseListCount);
-		const coursesCount = `${textUtils.getNumberWithCommas(courseService.coursesData.coursesList.length)} (Single: ${totalSingleCount} / Course List: ${totalCourseListCount})`;
-		switch (applicationService.applicationData.method) {
-			case Method.CREATE_COURSES:
-				courseIndex = courseService.coursesData.coursesList.length;
+		const totalSingleCount = textUtils.getNumberWithCommas(courseService.coursesDataModel.totalSingleCount);
+		const totalCourseListCount = textUtils.getNumberWithCommas(courseService.coursesDataModel.totalCourseListCount);
+		const coursesCount = `${textUtils.getNumberWithCommas(courseService.coursesDataModel.coursesList.length)} (Single: ${totalSingleCount} / Course List: ${totalCourseListCount})`;
+		switch (applicationService.applicationDataModel.method) {
+			case MethodEnum.CREATE_COURSES: {
+				courseIndex = courseService.coursesDataModel.coursesList.length;
 				break;
-			case Method.UPDATE_COURSES:
+			}
+			case MethodEnum.UPDATE_COURSES: {
 				courseIndex = this.getCurrentIndex(false);
 				break;
-			case Method.PURCHASE_COURSES:
+			}
+			case MethodEnum.PURCHASE_COURSES: {
 				courseIndex = this.getCurrentIndex(true);
 				break;
+			}
 		}
-		let dates = textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length);
-		const purchaseCount = `${StatusIcon.V}  ${textUtils.getNumberWithCommas(courseService.coursesData.purchaseCount)}`;
-		const failCount = `${StatusIcon.X}  ${textUtils.getNumberWithCommas(courseService.coursesData.failCount)}`;
-		const coursesCurrentDate = applicationService.applicationData.coursesCurrentDate ? applicationService.applicationData.coursesCurrentDate : this.emptyValue;
+		const purchaseCount = `${StatusIconEnum.V}  ${textUtils.getNumberWithCommas(courseService.coursesDataModel.purchaseCount)}`;
+		const failCount = `${StatusIconEnum.X}  ${textUtils.getNumberWithCommas(courseService.coursesDataModel.failCount)}`;
 		let creationDateTime = this.emptyValue;
 		let id = this.emptyValue;
 		let postId = this.emptyValue;
 		let status = this.emptyValue;
-		let publishDate = this.emptyValue;
 		let pageNumber = this.emptyValue;
 		let indexPageNumber = this.emptyValue;
 		let isFree = this.emptyValue;
@@ -232,52 +236,51 @@ class LogService {
 		let udemyURL = this.emptyValue;
 		let resultDateTime = this.emptyValue;
 		let resultDetails = this.emptyValue;
-		if (courseService.coursesData.course) {
-			creationDateTime = timeUtils.getFullDateTemplate(courseService.coursesData.course.creationDateTime);
-			id = courseService.coursesData.course.id;
-			postId = courseService.coursesData.course.postId ? courseService.coursesData.course.postId : this.emptyValue;
-			status = CourseStatusLog[courseService.coursesData.course.status];
-			publishDate = courseService.coursesData.course.publishDate;
-			pageNumber = courseService.coursesData.course.pageNumber;
-			indexPageNumber = courseService.coursesData.course.indexPageNumber;
-			isFree = courseService.coursesData.course.isFree !== null ? courseService.coursesData.course.isFree : this.emptyValue;
-			priceDisplay = courseService.coursesData.course.priceDisplay ? courseService.coursesData.course.priceDisplay : this.emptyValue;
-			couponKey = courseService.coursesData.course.couponKey ? courseService.coursesData.course.couponKey : this.emptyValue;
-			type = courseService.coursesData.course.type;
+		if (courseService.coursesDataModel.courseDataModel) {
+			creationDateTime = timeUtils.getFullDateTemplate(courseService.coursesDataModel.courseDataModel.creationDateTime);
+			id = courseService.coursesDataModel.courseDataModel.id;
+			postId = courseService.coursesDataModel.courseDataModel.postId ? courseService.coursesDataModel.courseDataModel.postId : this.emptyValue;
+			status = CourseStatusLogEnum[courseService.coursesDataModel.courseDataModel.status];
+			pageNumber = courseService.coursesDataModel.courseDataModel.pageNumber;
+			indexPageNumber = courseService.coursesDataModel.courseDataModel.indexPageNumber;
+			isFree = courseService.coursesDataModel.courseDataModel.isFree !== null ? courseService.coursesDataModel.courseDataModel.isFree : this.emptyValue;
+			priceDisplay = courseService.coursesDataModel.courseDataModel.priceDisplay ? courseService.coursesDataModel.courseDataModel.priceDisplay : this.emptyValue;
+			couponKey = courseService.coursesDataModel.courseDataModel.couponKey ? courseService.coursesDataModel.courseDataModel.couponKey : this.emptyValue;
+			type = courseService.coursesDataModel.courseDataModel.type;
 			name = this.getCourseName({
-				courseURLCourseName: courseService.coursesData.course.courseURLCourseName,
-				udemyURLCourseName: courseService.coursesData.course.udemyURLCourseName,
+				courseURLCourseName: courseService.coursesDataModel.courseDataModel.courseURLCourseName,
+				udemyURLCourseName: courseService.coursesDataModel.courseDataModel.udemyURLCourseName,
 				isLog: false
 			});
-			courseURL = textUtils.cutText({ text: courseService.coursesData.course.courseURL, count: countLimitService.countLimitData.maximumURLCharactersDisplayCount });
-			udemyURL = courseService.coursesData.course.udemyURL ? textUtils.cutText({
-				text: courseService.coursesData.course.udemyURL,
-				count: countLimitService.countLimitData.maximumURLCharactersDisplayCount
+			courseURL = textUtils.cutText({ text: courseService.coursesDataModel.courseDataModel.courseURL, count: countLimitService.countLimitDataModel.maximumURLCharactersDisplayCount });
+			udemyURL = courseService.coursesDataModel.courseDataModel.udemyURL ? textUtils.cutText({
+				text: courseService.coursesDataModel.courseDataModel.udemyURL,
+				count: countLimitService.countLimitDataModel.maximumURLCharactersDisplayCount
 			}) : this.emptyValue;
-			resultDateTime = courseService.coursesData.course.resultDateTime ?
-				timeUtils.getFullDateTemplate(courseService.coursesData.course.resultDateTime) : this.emptyValue;
-			resultDetails = validationUtils.isExists(courseService.coursesData.course.resultDetails) ?
+			resultDateTime = courseService.coursesDataModel.courseDataModel.resultDateTime ?
+				timeUtils.getFullDateTemplate(courseService.coursesDataModel.courseDataModel.resultDateTime) : this.emptyValue;
+			resultDetails = validationUtils.isExists(courseService.coursesDataModel.courseDataModel.resultDetails) ?
 				textUtils.cutText({
-					text: courseService.coursesData.course.resultDetails.join(' '),
-					count: countLimitService.countLimitData.maximumResultCharactersDisplayCount
+					text: courseService.coursesDataModel.courseDataModel.resultDetails.join(' '),
+					count: countLimitService.countLimitDataModel.maximumResultCharactersDisplayCount
 				}) : this.emptyValue;
-			dates = `${textUtils.getNumberWithCommas(courseService.coursesData.course.indexDate + 1)}/${textUtils.getNumberWithCommas(applicationService.applicationData.coursesDatesValue.length)}`;
 		}
 		if (!this.isLogProgress) {
 			return;
 		}
 		logUtils.logProgress({
-			titlesList: ['SETTINGS', 'GENERAL1', 'GENERAL2', 'DATES', 'ACCOUNT', 'PROCESS1', 'PROCESS2',
+			titlesList: ['SETTINGS', 'GENERAL1', 'GENERAL2', 'ACCOUNT', 'PROCESS1', 'PROCESS2',
 				'PROCESS3', 'PROCESS4', 'DATA1', 'DATA2', 'DATA3', 'ERRORS', 'NAME', 'COURSE URL',
 				'UDEMY URL', 'RESULT'],
-			colorsTitlesList: [Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE,
-			Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE,
-			Color.BLUE, Color.BLUE, Color.BLUE],
+			colorsTitlesList: [ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE,
+			ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE, ColorEnum.BLUE,
+			ColorEnum.BLUE, ColorEnum.BLUE],
 			keysLists: [{
-				'Environment': applicationService.applicationData.environment,
-				'Method': applicationService.applicationData.method,
+				'Environment': applicationService.applicationDataModel.environment,
+				'Method': applicationService.applicationDataModel.method,
+				'Pages Count': applicationService.applicationDataModel.pagesCount,
 				'Specific Page Number': specificPageNumber,
-				'Session Number': applicationService.applicationData.sessionNumber,
+				'Session Number': applicationService.applicationDataModel.sessionNumber,
 				'Is Keywords Filter': isKeywordsFilter
 			}, {
 				'Time': time,
@@ -286,47 +289,41 @@ class LogService {
 			}, {
 				'Total Courses Price': totalCoursesPrice,
 				'Total Purchase Price': totalPurchasedPrice,
-				'Pages Count': courseService.coursesData.totalPagesCount,
-				'Status': applicationService.applicationData.status
+				'Pages Count': courseService.coursesDataModel.totalPagesCount,
+				'Status': applicationService.applicationDataModel.status
 			}, {
-				'Type': applicationService.applicationData.coursesDatesType,
-				'Value': applicationService.applicationData.coursesDatesDisplayValue,
-				'Dates': dates,
-				'Current Date': coursesCurrentDate
-			}, {
-				'Email': accountService.accountData.email,
-				'Password': accountService.accountData.asterixsPassword
+				'Email': accountService.accountDataModel.email,
+				'Password': accountService.accountDataModel.asterixsPassword
 			}, {
 				'Purchase': purchaseCount,
 				'Fail': failCount,
-				'Filter': courseService.coursesData.filterCount,
-				'Missing Field': courseService.coursesData.missingFieldCount,
-				'Unexpected Field': courseService.coursesData.unexpectedFieldCount,
-				'Duplicate': courseService.coursesData.duplicateCount
+				'Filter': courseService.coursesDataModel.filterCount,
+				'Missing Field': courseService.coursesDataModel.missingFieldCount,
+				'Unexpected Field': courseService.coursesDataModel.unexpectedFieldCount,
+				'Duplicate': courseService.coursesDataModel.duplicateCount
 			}, {
-				'Create Update Error': courseService.coursesData.createUpdateErrorCount,
-				'Empty URL': courseService.coursesData.emptyURLCount,
-				'Invalid URL': courseService.coursesData.invalidURLCount,
-				'Not Exists': courseService.coursesData.notExistsCount,
-				'Page Not Found': courseService.coursesData.pageNotFoundCount,
-				'Limit Access': courseService.coursesData.limitAccessCount
+				'Create Update Error': courseService.coursesDataModel.createUpdateErrorCount,
+				'Empty URL': courseService.coursesDataModel.emptyURLCount,
+				'Invalid URL': courseService.coursesDataModel.invalidURLCount,
+				'Not Exists': courseService.coursesDataModel.notExistsCount,
+				'Page Not Found': courseService.coursesDataModel.pageNotFoundCount,
+				'Limit Access': courseService.coursesDataModel.limitAccessCount
 			}, {
-				'Suggestions List': courseService.coursesData.suggestionsListCount,
-				'Private': courseService.coursesData.privateCount,
-				'Already Purchase': courseService.coursesData.alreadyPurchaseCount,
-				'Course Price Not Free': courseService.coursesData.coursePriceNotFreeCount
+				'Suggestions List': courseService.coursesDataModel.suggestionsListCount,
+				'Private': courseService.coursesDataModel.privateCount,
+				'Already Purchase': courseService.coursesDataModel.alreadyPurchaseCount,
+				'Course Price Not Free': courseService.coursesDataModel.coursePriceNotFreeCount
 			}, {
-				'Enroll Not Exists': courseService.coursesData.enrollNotExistsCount,
-				'Checkout Price Not Exists': courseService.coursesData.checkoutPriceNotExistsCount,
-				'Checkout Price Not Free': courseService.coursesData.checkoutPriceNotFreeCount,
-				'Purchase Error': courseService.coursesData.purchaseErrorCount
+				'Enroll Not Exists': courseService.coursesDataModel.enrollNotExistsCount,
+				'Checkout Price Not Exists': courseService.coursesDataModel.checkoutPriceNotExistsCount,
+				'Checkout Price Not Free': courseService.coursesDataModel.checkoutPriceNotFreeCount,
+				'Purchase Error': courseService.coursesDataModel.purchaseErrorCount
 			}, {
 				'Creation': creationDateTime,
 				'Id': id,
 				'Post Id': postId,
 				'Status': status
 			}, {
-				'Publish Date': publishDate,
 				'Page Number': pageNumber,
 				'Index Page Number': indexPageNumber
 			}, {
@@ -348,24 +345,23 @@ class LogService {
 				'Result': resultDetails
 			}],
 			colorsLists: [
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW],
-				[Color.GREEN, Color.RED, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
-				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
-				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
-				[Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW],
-				[Color.RED, Color.RED],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.GREEN, ColorEnum.RED, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN],
+				[ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN],
+				[ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN],
+				[ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.RED, ColorEnum.RED],
 				[], [], [],
-				[Color.CYAN, Color.CYAN]
+				[ColorEnum.CYAN, ColorEnum.CYAN]
 			],
 			nonNumericKeys: { 'Id': 'Id', 'Post Id': 'Post Id' },
-			statusColor: Color.CYAN
+			statusColor: ColorEnum.CYAN
 		});
 	}
 
@@ -375,38 +371,18 @@ class LogService {
 		}
 	}
 
-	getCourseTime(title, coursesDatesValue) {
-		let value = '';
-		switch (textUtils.getVariableType(coursesDatesValue)) {
-			case 'string': {
-				value = coursesDatesValue;
-				break;
-			}
-			case 'array': {
-				value = coursesDatesValue.slice(0, 3).join(' ');
-				break;
-			}
-			case 'object': {
-				value = `${coursesDatesValue.from} - ${coursesDatesValue.to}`;
-				break;
-			}
-		}
-		return this.createLineTemplate(title, value);
-	}
-
 	createLineTemplate(title, value) {
-		return textUtils.addBreakLine(`${logUtils.logColor(`${title}:`, Color.MAGENTA)} ${value}`);
+		return textUtils.addBreakLine(`${logUtils.logColor(`${title}:`, ColorEnum.MAGENTA)} ${value}`);
 	}
 
 	createConfirmSettingsTemplate(settings) {
 		const parameters = ['MODE', 'IS_PRODUCTION_ENVIRONMENT', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
-			'SPECIFIC_COURSES_PAGE_NUMBER', 'KEYWORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
+			'PAGES_COUNT', 'SPECIFIC_COURSES_PAGE_NUMBER', 'KEYWORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
 			'IS_UPDATE_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_CREATE_COURSES_METHOD_VALID',
 			'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID', 'IS_LOG_UPDATE_COURSES_METHOD_INVALID',
 			'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_ONLY',
-			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MAXIMUM_PAGES_NUMBER'];
-		let settingsText = this.getCourseTime('COURSES_DATES_VALUE', settings['COURSES_DATES_VALUE']);
-		settingsText += this.createLineTemplate('EMAIL', accountService.accountData.email);
+			'MAXIMUM_COURSES_PURCHASE_COUNT'];
+		let settingsText = this.createLineTemplate('EMAIL', accountService.accountDataModel.email);
 		settingsText += Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
 			.map(k => this.createLineTemplate(k, settings[k])).join('');
 		settingsText = textUtils.removeLastCharacters({

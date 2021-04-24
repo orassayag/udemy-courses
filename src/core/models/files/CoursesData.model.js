@@ -1,19 +1,19 @@
-const { CourseStatus } = require('../../enums');
+const { CourseStatusEnum } = require('../../enums');
 
-class CoursesData {
+class CoursesDataModel {
 
 	constructor() {
 		this.coursesList = [];
 		this.totalPurchasedCount = 0;
 		this.totalCoursesPriceNumber = 0;
-		this.totalPurchasedPriceNumber = 0;
+		this.totalPurchasePriceNumber = 0;
 		this.totalCreateCoursesCount = 0;
 		this.totalPagesCount = 0;
 		this.totalSingleCount = 0;
 		this.totalCourseListCount = 0;
 		this.courseIndex = null;
-		this.course = null;
-		const keysList = Object.values(CourseStatus);
+		this.courseDataModel = null;
+		const keysList = Object.values(CourseStatusEnum);
 		for (let i = 0; i < keysList.length; i++) {
 			this[`${keysList[i]}Count`] = 0;
 		}
@@ -34,4 +34,4 @@ class CoursesData {
 	}
 }
 
-module.exports = CoursesData;
+module.exports = CoursesDataModel;

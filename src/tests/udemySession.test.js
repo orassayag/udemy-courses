@@ -9,7 +9,7 @@ const urls = [
 
 (async () => {
     if (!validationUtils.isExists(urls)) {
-        throw new Error('No urls exists to run a session');
+        throw new Error('No URLs exists to run a session');
     }
     await new PurchaseLogic().run(urls);
 })();

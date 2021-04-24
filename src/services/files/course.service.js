@@ -1,263 +1,204 @@
-const { CourseData, CoursesData, CoursesDatesResult } = require('../../core/models');
-const { CoursesDatesType, CourseStatus, CourseType, Status } = require('../../core/enums');
+const { CourseDataModel, CoursesDataModel, ValidateFieldsResultModel } = require('../../core/models');
+const { CourseStatusEnum, CourseTypeEnum, StatusEnum } = require('../../core/enums');
 const applicationService = require('./application.service');
-const countLimitService = require('./countLimit.service');
 const { courseUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 
 class CourseService {
 
     constructor() {
-        this.coursesData = new CoursesData();
+        this.coursesDataModel = new CoursesDataModel();
         this.lastCourseId = 1;
         this.logCourse = null;
     }
 
     initiate(logCourse) {
-        if (validationUtils.isExists(applicationService.applicationData.keywordsFilterList)) {
-            for (let i = 0; i < applicationService.applicationData.keywordsFilterList.length; i++) {
-                applicationService.applicationData.keywordsFilterList[i] = textUtils.toLowerCaseTrim(applicationService.applicationData.keywordsFilterList[i]);
+        if (validationUtils.isExists(applicationService.applicationDataModel.keywordsFilterList)) {
+            for (let i = 0; i < applicationService.applicationDataModel.keywordsFilterList.length; i++) {
+                applicationService.applicationDataModel.keywordsFilterList[i] = textUtils.toLowerCaseTrim(applicationService.applicationDataModel.keywordsFilterList[i]);
             }
         }
         this.logCourse = logCourse;
-    }
-
-    updateCoursesDatesResult(coursesDatesResult, coursesDatesType) {
-        coursesDatesResult.coursesDatesType = coursesDatesType;
-        coursesDatesResult.coursesDatesValue = [...new Set(coursesDatesResult.coursesDatesValue)];
-        const dates = coursesDatesResult.coursesDatesValue.slice(0, countLimitService.countLimitData.maximumCoursesDatesDisplayCount);
-        coursesDatesResult.coursesDatesDisplayValue = dates.join(' | ');
-        coursesDatesResult.coursesDatesLogName = textUtils.replaceCharacter(dates.join('-'), '/', '');
-        return coursesDatesResult;
-    }
-
-    validateCoursesDatesValue(coursesDatesValue) {
-        const errorBaseTemplate = 'Invalid COURSES_DATES_VALUE parameter was found:';
-        let coursesDatesResult = new CoursesDatesResult();
-        switch (textUtils.getVariableType(coursesDatesValue)) {
-            case 'string': {
-                if (!validationUtils.isValidDateFormat(coursesDatesValue)) {
-                    coursesDatesResult.coursesError = `${errorBaseTemplate} Expected a date (yyyy/mm/dd) but received: ${coursesDatesValue} (1000006)`;
-                    return coursesDatesResult;
-                }
-                coursesDatesResult.coursesDatesType = CoursesDatesType.SINGLE;
-                coursesDatesResult.coursesDatesValue = [coursesDatesValue];
-                coursesDatesResult.coursesDatesDisplayValue = coursesDatesValue;
-                coursesDatesResult.coursesDatesLogName = timeUtils.getDateNoSpacesFromString(coursesDatesValue);
-                break;
-            }
-            case 'array': {
-                coursesDatesResult.coursesDatesValue = [];
-                for (let i = 0; i < coursesDatesValue.length; i++) {
-                    const coursesDate = coursesDatesValue[i];
-                    if (validationUtils.isValidDateFormat(coursesDate)) {
-                        coursesDatesResult.coursesDatesValue.push(coursesDate);
-                    }
-                }
-                if (!validationUtils.isExists(coursesDatesResult.coursesDatesValue)) {
-                    coursesDatesResult.coursesError = `${errorBaseTemplate} Array is empty or contains invalid dates: ${coursesDatesValue} (1000007)`;
-                    return coursesDatesResult;
-                }
-                coursesDatesResult = this.updateCoursesDatesResult(coursesDatesResult, CoursesDatesType.ARRAY);
-                break;
-            }
-            case 'object': {
-                coursesDatesResult.coursesDatesValue = timeUtils.getAllDatesBetweenDates({
-                    startDateTime: coursesDatesValue.from,
-                    endDateTime: coursesDatesValue.to
-                });
-                if (!validationUtils.isExists(coursesDatesResult.coursesDatesValue)) {
-                    coursesDatesResult.coursesError = `${errorBaseTemplate} Object is empty or contains invalid dates: ${coursesDatesValue} (1000008)`;
-                    return coursesDatesResult;
-                }
-                coursesDatesResult = this.updateCoursesDatesResult(coursesDatesResult, CoursesDatesType.RANGE);
-                break;
-            }
-        }
-        if (!coursesDatesResult.coursesDatesType) {
-            coursesDatesResult.coursesError = `${errorBaseTemplate} Expected a string, array, or object. Received: ${coursesDatesValue} (1000009)`;
-            return coursesDatesResult;
-        }
-        return coursesDatesResult;
     }
 
     getUdemyCourseName(udemyURL) {
         if (!udemyURL) {
             return null;
         }
-        udemyURL = udemyURL.replace(applicationService.applicationData.udemyCourseURL, '');
+        udemyURL = udemyURL.replace(applicationService.applicationDataModel.udemyCourseURL, '');
         udemyURL = udemyURL.slice(0, udemyURL.indexOf('/'));
         return textUtils.getCapitalEachWordFromURL(udemyURL);
     }
 
-    async validateUdemyURL(course) {
-        const { udemyURL } = course;
+    async validateUdemyURL(courseDataModel) {
+        const { udemyURL } = courseDataModel;
         if (!udemyURL) {
-            return course;
+            return courseDataModel;
         }
-        if (udemyURL.indexOf(applicationService.applicationData.udemyBaseURL) === -1) {
-            course = await this.updateCourseStatus({
-                course: course,
-                status: CourseStatus.INVALID_URL,
+        if (udemyURL.indexOf(applicationService.applicationDataModel.udemyBaseURL) === -1) {
+            courseDataModel = await this.updateCourseStatus({
+                courseDataModel: courseDataModel,
+                status: CourseStatusEnum.INVALID_URL,
                 details: 'The Udemy URL is invalid.'
             });
         }
-        return course;
+        return courseDataModel;
     }
 
-    async createCourse(course) {
-        course.id = this.lastCourseId;
-        if (course.isSingleCourse) {
-            this.coursesData.totalSingleCount++;
+    async createCourse(courseDataModel) {
+        courseDataModel.id = this.lastCourseId;
+        if (courseDataModel.isSingleCourse) {
+            this.coursesDataModel.totalSingleCount++;
         }
         else {
-            this.coursesData.totalCourseListCount++;
+            this.coursesDataModel.totalCourseListCount++;
         }
-        course = new CourseData(course);
-        course.udemyURLCourseName = this.getUdemyCourseName(course.udemyURL);
-        course = await this.validateUdemyURL(course);
-        this.coursesData.coursesList.push(course);
+        courseDataModel = new CourseDataModel(courseDataModel);
+        courseDataModel.udemyURLCourseName = this.getUdemyCourseName(courseDataModel.udemyURL);
+        courseDataModel = await this.validateUdemyURL(courseDataModel);
+        this.coursesDataModel.coursesList.push(courseDataModel);
         this.lastCourseId++;
-        this.coursesData.course = course;
-        await this.logCourse(course);
+        this.coursesDataModel.courseDataModel = courseDataModel;
+        await this.logCourse(courseDataModel);
     }
 
     async updateSingleCourseData(data) {
         const { courseIndex, udemyURL, udemyURLCompare, couponKey } = data;
-        let { course } = data;
-        course.udemyURL = udemyURL;
-        course.udemyURLCompare = udemyURLCompare;
-        course.udemyURLCourseName = this.getUdemyCourseName(udemyURL);
-        course.couponKey = couponKey;
-        course.isFree = validationUtils.isExists(couponKey);
-        course = await this.validateUdemyURL(course);
-        this.coursesData.coursesList[courseIndex] = course;
-        this.coursesData.course = course;
-        await this.logCourse(course);
+        let { courseDataModel } = data;
+        courseDataModel.udemyURL = udemyURL;
+        courseDataModel.udemyURLCompare = udemyURLCompare;
+        courseDataModel.udemyURLCourseName = this.getUdemyCourseName(udemyURL);
+        courseDataModel.couponKey = couponKey;
+        courseDataModel.isFree = validationUtils.isExists(couponKey);
+        courseDataModel = await this.validateUdemyURL(courseDataModel);
+        this.coursesDataModel.coursesList[courseIndex] = courseDataModel;
+        this.coursesDataModel.courseDataModel = courseDataModel;
+        await this.logCourse(courseDataModel);
     }
 
     async updateCoursesListCourseData(data) {
-        const { course, courseIndex } = data;
-        course.isFree = false;
-        this.coursesData.coursesList[courseIndex] = course;
-        this.coursesData.course = course;
-        await this.logCourse(course);
+        const { courseDataModel, courseIndex } = data;
+        courseDataModel.isFree = false;
+        this.coursesDataModel.coursesList[courseIndex] = courseDataModel;
+        this.coursesDataModel.courseDataModel = courseDataModel;
+        await this.logCourse(courseDataModel);
     }
 
     async updateCourseStatus(data) {
-        const { course, status, details } = data;
-        const originalStatus = course.status;
-        course.status = status;
-        course.resultDateTime = new Date();
-        course.resultDetails.push(details);
-        if (originalStatus !== CourseStatus.CREATE) {
-            this.coursesData.updateCount(false, originalStatus, 1);
+        const { courseDataModel, status, details } = data;
+        const originalStatus = courseDataModel.status;
+        courseDataModel.status = status;
+        courseDataModel.resultDateTime = timeUtils.getCurrentDate();
+        courseDataModel.resultDetails.push(details);
+        if (originalStatus !== CourseStatusEnum.CREATE) {
+            this.coursesDataModel.updateCount(false, originalStatus, 1);
         }
-        this.coursesData.updateCount(true, status, 1);
-        this.coursesData.course = course;
-        await this.logCourse(course);
-        return course;
+        this.coursesDataModel.updateCount(true, status, 1);
+        this.coursesDataModel.courseDataModel = courseDataModel;
+        await this.logCourse(courseDataModel);
+        return courseDataModel;
     }
 
-    updateCoursePrices(course, originalPrices) {
-        course.priceNumber = originalPrices.priceNumber;
-        course.priceDisplay = originalPrices.priceDisplay;
-        this.coursesData.totalCoursesPriceNumber += originalPrices.priceNumber;
-        if (course.status === CourseStatus.PURCHASE) {
-            this.coursesData.totalPurchasedPriceNumber += originalPrices.priceNumber;
+    updateCoursePrices(data) {
+        const { courseDataModel, originalPrices, status } = data;
+        courseDataModel.priceNumber = originalPrices.priceNumber;
+        courseDataModel.priceDisplay = originalPrices.priceDisplay;
+        this.coursesDataModel.totalCoursesPriceNumber += originalPrices.priceNumber;
+        if (status === CourseStatusEnum.PURCHASE) {
+            this.coursesDataModel.totalPurchasePriceNumber += originalPrices.priceNumber;
         }
-        return course;
+        return courseDataModel;
     }
 
     async finalizeCreateUpdateCourses() {
         // Validate any courses that exist to purchase.
-        if (!validationUtils.isExists(this.coursesData.coursesList)) {
-            return Status.NO_COURSES_EXISTS;
+        if (!validationUtils.isExists(this.coursesDataModel.coursesList)) {
+            return StatusEnum.NO_COURSES_EXISTS;
         }
-        for (let i = 0; i < this.coursesData.coursesList.length; i++) {
-            const course = this.coursesData.coursesList[i];
+        for (let i = 0; i < this.coursesDataModel.coursesList.length; i++) {
+            const courseDataModel = this.coursesDataModel.coursesList[i];
             // Validate all fields.
-            let scanFieldsResult = this.validateFields(course);
+            let scanFieldsResult = this.validateFields(courseDataModel);
             if (scanFieldsResult) {
-                this.coursesData.coursesList[i] = await this.updateCourseStatus({
-                    course: course,
+                this.coursesDataModel.coursesList[i] = await this.updateCourseStatus({
+                    courseDataModel: courseDataModel,
                     status: scanFieldsResult.status,
                     details: scanFieldsResult.details
                 });
             }
-            if (validationUtils.isExists(applicationService.applicationData.keywordsFilterList)) {
-                if (this.filter(course)) {
-                    this.coursesData.coursesList[i] = await this.updateCourseStatus({
-                        course: course,
-                        status: CourseStatus.FILTER,
-                        details: 'The course has been filtered since no entered keywords have been found to match to the course name.'
+            if (validationUtils.isExists(applicationService.applicationDataModel.keywordsFilterList)) {
+                if (this.filter(courseDataModel)) {
+                    this.coursesDataModel.coursesList[i] = await this.updateCourseStatus({
+                        courseDataModel: courseDataModel,
+                        status: CourseStatusEnum.FILTER,
+                        details: 'The course has been filtered since no entered keywords have been found to match the course name.'
                     });
                 }
             }
             // Compare courses and detect duplicates.
-            await this.compareCourses(course);
+            await this.compareCourses(courseDataModel);
         }
         // Validate that there are any courses to purchase.
-        if (!validationUtils.isExists(this.coursesData.coursesList.filter(c => c.status === CourseStatus.CREATE))) {
-            return Status.NO_VALID_COURSES_EXISTS;
+        if (!validationUtils.isExists(this.coursesDataModel.coursesList.filter(c => c.status === CourseStatusEnum.CREATE))) {
+            return StatusEnum.NO_VALID_COURSES_EXISTS;
         }
     }
 
-    validateFields(course) {
+    validateFields(courseDataModel) {
         // Validate all expected fields.
         let scanFieldsResult = this.scanFields({
-            course: course,
-            keysList: ['id', 'creationDateTime', 'pageNumber', 'publishDate', 'type', 'isFree', 'courseURL', 'status'],
+            courseDataModel: courseDataModel,
+            keysList: ['id', 'creationDateTime', 'pageNumber', 'type', 'isFree', 'courseURL', 'status'],
             isFilledExpected: true
         });
-        if (!scanFieldsResult) {
+        if (scanFieldsResult) {
             return scanFieldsResult;
         }
         // Validate all unexpected fields.
         scanFieldsResult = this.scanFields({
-            course: course,
-            keysList: ['priceNumber', 'priceDisplay', 'resultDateTime', 'resultDetails'],
+            courseDataModel: courseDataModel,
+            keysList: ['priceNumber', 'priceDisplay', 'resultDateTime'],
             isFilledExpected: false
         });
-        if (!scanFieldsResult) {
+        if (scanFieldsResult) {
             return scanFieldsResult;
         }
         // Validate Udemy URL.
-        const { type, isFree, udemyURL, couponKey, status } = course;
+        const { type, isFree, udemyURL, couponKey, status } = courseDataModel;
         if (udemyURL) {
-            if (udemyURL.indexOf(applicationService.applicationData.udemyBaseURL) === -1) {
-                return {
-                    status: CourseStatus.INVALID,
+            if (udemyURL.indexOf(applicationService.applicationDataModel.udemyBaseURL) === -1) {
+                return new ValidateFieldsResultModel({
+                    status: CourseStatusEnum.INVALID,
                     details: 'Field udemyURL does not match as Udemy website.'
-                };
+                });
             }
         }
-        else if (type === CourseType.SINGLE && status === CourseStatus.CREATE) {
-            return {
-                status: CourseStatus.INVALID,
+        else if (type === CourseTypeEnum.SINGLE && status === CourseStatusEnum.CREATE) {
+            return new ValidateFieldsResultModel({
+                status: CourseStatusEnum.INVALID,
                 details: 'Field udemyURL is empty and the course is not in the type of COURSES_LIST.'
-            };
+            });
         }
         // Validate free course coupon or free course originally.
         if (isFree && !couponKey) {
-            return {
-                status: CourseStatus.INVALID,
+            return new ValidateFieldsResultModel({
+                status: CourseStatusEnum.INVALID,
                 details: 'Field isFree set to true, but couponKey field is not empty.'
-            };
+            });
         }
         return null;
     }
 
-    filter(course) {
-        const { udemyURLCompare, status } = course;
-        if (!udemyURLCompare || status !== CourseStatus.CREATE) {
+    filter(courseDataModel) {
+        const { udemyURLCompare, status } = courseDataModel;
+        if (!udemyURLCompare || status !== CourseStatusEnum.CREATE) {
             return true;
         }
-        const udemyKeywords = courseUtils.getUdemyURLKeywords(udemyURLCompare, applicationService.applicationData.udemyBaseURL);
+        const udemyKeywords = courseUtils.getUdemyURLKeywords(udemyURLCompare, applicationService.applicationDataModel.udemyBaseURL);
         if (!validationUtils.isExists(udemyKeywords)) {
             return true;
         }
-        for (let i = 0; i < applicationService.applicationData.keywordsFilterList.length; i++) {
-            const keyword = applicationService.applicationData.keywordsFilterList[i];
+        for (let i = 0; i < applicationService.applicationDataModel.keywordsFilterList.length; i++) {
+            const keyword = applicationService.applicationDataModel.keywordsFilterList[i];
             for (let y = 0; y < udemyKeywords.length; y++) {
                 if (keyword === udemyKeywords[y]) {
                     return false;
@@ -268,15 +209,15 @@ class CourseService {
     }
 
     scanFields(data) {
-        const { course, keysList, isFilledExpected } = data;
+        const { courseDataModel, keysList, isFilledExpected } = data;
         let scanFieldsResult = null;
         for (let i = 0; i < keysList.length; i++) {
             const key = keysList[i];
-            const value = course[key];
+            const value = courseDataModel[key];
             if (isFilledExpected) {
                 if (!value) {
                     scanFieldsResult = {
-                        status: CourseStatus.MISSING_FIELD,
+                        status: CourseStatusEnum.MISSING_FIELD,
                         details: `Field ${key} should not be empty, but does not contain any value.`
                     };
                     break;
@@ -285,7 +226,7 @@ class CourseService {
             else {
                 if (value) {
                     scanFieldsResult = {
-                        status: CourseStatus.UNEXPECTED_FIELD,
+                        status: CourseStatusEnum.UNEXPECTED_FIELD,
                         details: `Field ${key} should be empty, but found the value ${value}.`
                     };
                     break;
@@ -295,20 +236,20 @@ class CourseService {
         return scanFieldsResult;
     }
 
-    async compareCourses(course) {
+    async compareCourses(courseDataModel) {
         // Check if duplicate courses exist, not to enter Udemy course page several times.
-        if (course.status !== CourseStatus.CREATE) {
+        if (courseDataModel.status !== CourseStatusEnum.CREATE) {
             return;
         }
-        for (let i = 0; i < this.coursesData.coursesList.length; i++) {
-            const currentCourse = this.coursesData.coursesList[i];
-            if (course.id === currentCourse.id || currentCourse.status !== CourseStatus.CREATE) {
+        for (let i = 0; i < this.coursesDataModel.coursesList.length; i++) {
+            const currentCourse = this.coursesDataModel.coursesList[i];
+            if (courseDataModel.id === currentCourse.id || currentCourse.status !== CourseStatusEnum.CREATE) {
                 continue;
             }
-            if (course.udemyURLCompare === currentCourse.udemyURLCompare) {
-                this.coursesData.coursesList[i] = await this.updateCourseStatus({
-                    course: currentCourse,
-                    status: CourseStatus.DUPLICATE,
+            if (courseDataModel.udemyURLCompare === currentCourse.udemyURLCompare) {
+                this.coursesDataModel.coursesList[i] = await this.updateCourseStatus({
+                    courseDataModel: currentCourse,
+                    status: CourseStatusEnum.DUPLICATE,
                     details: 'This course repeats multiple times in this session and should be purchased.'
                 });
             }
@@ -318,7 +259,7 @@ class CourseService {
     createSessionCourses(urls) {
         for (let i = 0; i < urls.length; i++) {
             const url = urls[i];
-            this.coursesData.coursesList.push(new CourseData({
+            this.coursesDataModel.coursesList.push(new CourseDataModel({
                 id: this.lastCourseId,
                 postId: null,
                 pageNumber: 1,
@@ -329,7 +270,6 @@ class CourseService {
                 udemyURLCompare: textUtils.toLowerCaseTrim(url),
                 couponKey: null,
                 courseURLCourseName: null,
-                publishDate: null,
                 isSingleCourse: true
             }));
             this.lastCourseId++;

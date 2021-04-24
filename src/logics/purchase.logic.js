@@ -2,9 +2,9 @@ const settings = require('../settings/settings');
 const { accountService, applicationService, confirmationService, countLimitService,
     courseService, createCourseService, logService, pathService, puppeteerService,
     purchaseCourseService, updateCourseService, validationService } = require('../services');
-const { Color, Method, Mode, Status } = require('../core/enums');
-const { logUtils, systemUtils, validationUtils } = require('../utils');
+const { ColorEnum, MethodEnum, ModeEnum, StatusEnum } = require('../core/enums');
 const globalUtils = require('../utils/files/global.utils');
+const { logUtils, systemUtils, timeUtils, validationUtils } = require('../utils');
 
 class PurchaseLogic {
 
@@ -24,12 +24,11 @@ class PurchaseLogic {
     }
 
     initiate() {
-        this.updateStatus('INITIATE THE SERVICES', Status.INITIATE);
+        this.updateStatus('INITIATE THE SERVICES', StatusEnum.INITIATE);
         countLimitService.initiate(settings);
         applicationService.initiate({
             settings: settings,
-            coursesDatesResult: this.validateCoursesDatesValue(settings.COURSES_DATES_VALUE),
-            status: Status.INITIATE
+            status: StatusEnum.INITIATE
         });
         pathService.initiate(settings);
         puppeteerService.initiate();
@@ -37,19 +36,11 @@ class PurchaseLogic {
         courseService.initiate(logService.logCourse.bind(logService));
     }
 
-    validateCoursesDatesValue(coursesDatesValue) {
-        const coursesDatesResult = courseService.validateCoursesDatesValue(coursesDatesValue);
-        if (coursesDatesResult.coursesError) {
-            throw new Error(coursesDatesResult.coursesError);
-        }
-        return coursesDatesResult;
-    }
-
     async validateGeneralSettings() {
-        this.updateStatus('VALIDATE GENERAL SETTINGS', Status.VALIDATE);
+        this.updateStatus('VALIDATE GENERAL SETTINGS', StatusEnum.VALIDATE);
         // Validate methods.
-        if (!applicationService.applicationData.isCreateCoursesMethodActive) {
-            this.exit(Status.INVALID_METHOD, Color.RED);
+        if (!applicationService.applicationDataModel.isCreateCoursesMethodActive) {
+            await this.exit(StatusEnum.INVALID_METHOD, ColorEnum.RED);
         }
         // Validate that the internet connection works.
         await validationService.validateURLs();
@@ -57,69 +48,69 @@ class PurchaseLogic {
 
     async startSession(urls) {
         // Initiate.
-        if (applicationService.applicationData.mode === Mode.SESSION) {
+        if (applicationService.applicationDataModel.mode === ModeEnum.SESSION) {
             if (!validationUtils.isExists(urls)) {
-                await this.exit(Status.FINISH, Color.GREEN);
+                await this.exit(StatusEnum.FINISH, ColorEnum.GREEN);
             }
             createCourseService.createSessionCourses(urls);
             const purchaseCoursesResult = await purchaseCourseService.purchaseCourses();
             if (purchaseCoursesResult) {
-                await this.exit(purchaseCoursesResult, Color.RED);
+                await this.exit(purchaseCoursesResult, ColorEnum.RED);
             }
-            await this.exit(Status.FINISH, Color.GREEN);
+            await this.exit(StatusEnum.FINISH, ColorEnum.GREEN);
         }
         else {
-            applicationService.applicationData.startDateTime = new Date();
+            applicationService.applicationDataModel.startDateTime = timeUtils.getCurrentDate();
             logService.startLogProgress();
-            if (applicationService.applicationData.isCreateCoursesMethodActive) {
-                this.setApplicationMethod(Method.CREATE_COURSES);
+            if (applicationService.applicationDataModel.isCreateCoursesMethodActive) {
+                this.setApplicationMethod(MethodEnum.CREATE_COURSES);
                 const createCoursesResult = await createCourseService.createCourses();
                 if (createCoursesResult) {
-                    await this.exit(createCoursesResult, Color.RED);
+                    await this.exit(createCoursesResult, ColorEnum.RED);
                 }
             }
-            if (applicationService.applicationData.isUpdateCoursesMethodActive) {
-                this.setApplicationMethod(Method.UPDATE_COURSES);
+            if (applicationService.applicationDataModel.isUpdateCoursesMethodActive) {
+                this.setApplicationMethod(MethodEnum.UPDATE_COURSES);
                 const updateCoursesResult = await updateCourseService.updateCourses();
                 if (updateCoursesResult) {
-                    await this.exit(updateCoursesResult, Color.RED);
+                    await this.exit(updateCoursesResult, ColorEnum.RED);
                 }
             }
-            if (applicationService.applicationData.isPurchaseCoursesMethodActive) {
-                this.setApplicationMethod(Method.PURCHASE_COURSES);
+            if (applicationService.applicationDataModel.isPurchaseCoursesMethodActive) {
+                this.setApplicationMethod(MethodEnum.PURCHASE_COURSES);
                 const purchaseCoursesResult = await purchaseCourseService.purchaseCourses();
                 if (purchaseCoursesResult) {
-                    await this.exit(purchaseCoursesResult, Color.RED);
+                    await this.exit(purchaseCoursesResult, ColorEnum.RED);
                 }
             }
         }
-        await this.exit(Status.FINISH, Color.GREEN);
+        await this.exit(StatusEnum.FINISH, ColorEnum.GREEN);
     }
 
     setApplicationMethod(method) {
-        applicationService.applicationData.method = method;
-        courseService.coursesData.courseIndex = 0;
+        applicationService.applicationDataModel.method = method;
+        courseService.coursesDataModel.courseIndex = 0;
     }
 
     // Let the user confirm all the IMPORTANT settings before the process starts.
     async confirm() {
         if (!await confirmationService.confirm(settings)) {
-            this.exit(Status.ABORT_BY_THE_USER, Color.RED);
+            await this.exit(StatusEnum.ABORT_BY_THE_USER, ColorEnum.RED);
         }
     }
 
     updateStatus(text, status) {
         logUtils.logMagentaStatus(text);
-        if (applicationService.applicationData) {
-            applicationService.applicationData.status = status;
+        if (applicationService.applicationDataModel) {
+            applicationService.applicationDataModel.status = status;
         }
     }
 
     async exit(status, color) {
         if (applicationService.applicationData) {
-            applicationService.applicationData.status = status;
+            applicationService.applicationDataModel.status = status;
             if (countLimitService.countLimitData) {
-                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutExitApplication);
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutExitApplication);
             }
             logService.close();
         }

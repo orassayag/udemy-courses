@@ -1,7 +1,7 @@
 const settings = require('../../settings/settings');
-const { Mode, ScriptType } = require('../../core/enums');
-const { fileUtils, pathUtils, validationUtils } = require('../../utils');
+const { ModeEnum, ScriptTypeEnum } = require('../../core/enums');
 const globalUtils = require('../../utils/files/global.utils');
+const { fileUtils, pathUtils, validationUtils } = require('../../utils');
 
 class InitiateService {
 
@@ -45,17 +45,17 @@ class InitiateService {
 
 	validateScriptType() {
 		if (!this.scriptType || !validationUtils.isValidEnum({
-			enum: ScriptType,
+			enum: ScriptTypeEnum,
 			value: this.scriptType
 		})) {
-			throw new Error('Invalid or no ScriptType parameter was found (1000014)');
+			throw new Error('Invalid or no ScriptType parameter was found (1000013)');
 		}
 	}
 
 	validateSettings() {
 		// Validate the settings object existence.
 		if (!settings) {
-			throw new Error('Invalid or no settings object was found (1000015)');
+			throw new Error('Invalid or no settings object was found (1000014)');
 		}
 		this.validatePositiveNumbers();
 		this.validateStrings();
@@ -70,7 +70,7 @@ class InitiateService {
 			DIST_PATH, NODE_MODULES_PATH, PACKAGE_JSON_PATH, PACKAGE_LOCK_JSON_PATH } = settings;
 		// ===DYNAMIC PATH=== //
 		settings.APPLICATION_PATH = pathUtils.getJoinPath({ targetPath: OUTER_APPLICATION_PATH, targetName: APPLICATION_PATH });
-		if (this.scriptType === ScriptType.BACKUP) {
+		if (this.scriptType === ScriptTypeEnum.BACKUP) {
 			settings.BACKUPS_PATH = pathUtils.getJoinPath({ targetPath: OUTER_APPLICATION_PATH, targetName: BACKUPS_PATH });
 		}
 		settings.DIST_PATH = pathUtils.getJoinPath({ targetPath: INNER_APPLICATION_PATH, targetName: DIST_PATH });
@@ -81,26 +81,28 @@ class InitiateService {
 
 	validatePositiveNumbers() {
 		[
+			// ===GENERAL=== //
+			'PAGES_COUNT',
 			// ===COUNT & LIMIT=== //
-			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT', 'MAXIMUM_PAGES_NUMBER', 'MAXIMUM_SESSIONS_COUNT',
-			'MILLISECONDS_INTERVAL_COUNT', 'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_CREATE', 'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_MAIN_PAGES',
+			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT', 'MAXIMUM_SESSIONS_COUNT', 'MILLISECONDS_INTERVAL_COUNT',
+			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_CREATE', 'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_MAIN_PAGES',
 			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_UPDATE', 'MAXIMUM_COURSE_NAME_CHARACTERS_DISPLAY_COUNT', 'MAXIMUM_URL_CHARACTERS_DISPLAY_COUNT',
 			'MAXIMUM_RESULT_CHARACTERS_DISPLAY_COUNT', 'MILLISECONDS_TIMEOUT_UDEMY_ACTIONS', 'MAXIMUM_UDEMY_LOGIN_ATTEMPTS_COUNT',
 			'MILLISECONDS_TIMEOUT_BETWEEN_COURSES_PURCHASE', 'MILLISECONDS_TIMEOUT_UDEMY_PAGE_LOAD', 'MAXIMUM_CREATE_UPDATE_ERROR_IN_A_ROW_COUNT',
 			'MAXIMUM_PURCHASE_ERROR_IN_A_ROW_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION', 'MAXIMUM_URL_VALIDATION_COUNT',
-			'MILLISECONDS_TIMEOUT_URL_VALIDATION', 'MAXIMUM_COURSES_DATES_DISPLAY_COUNT',
+			'MILLISECONDS_TIMEOUT_URL_VALIDATION',
 			// ===BACKUP=== //
 			'MILLISECONDS_DELAY_VERIFY_BACKUP_COUNT', 'BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT'
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isPositiveNumber(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Expected a number but received: ${value} (1000016)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a number but received: ${value} (1000015)`);
 			}
 		});
 	}
 
 	validateStrings() {
-		const keys = this.scriptType === ScriptType.BACKUP ? ['BACKUPS_PATH'] : [];
+		const keys = this.scriptType === ScriptTypeEnum.BACKUP ? ['BACKUPS_PATH'] : [];
 		[
 			...keys,
 			// ===GENERAL=== //
@@ -113,7 +115,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isExists(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Expected a string but received: ${value} (1000017)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a string but received: ${value} (1000016)`);
 			}
 		});
 	}
@@ -125,20 +127,11 @@ class InitiateService {
 			'IS_PURCHASE_COURSES_METHOD_ACTIVE',
 			// ===LOG=== //
 			'IS_LOG_CREATE_COURSES_METHOD_VALID', 'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID',
-			'IS_LOG_UPDATE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID',
-			// ===INNER SETTINGS=== //
-			'INNER_SETTINGS.IS_LONG_RUN'
+			'IS_LOG_UPDATE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID'
 		].map(key => {
-			let value = null;
-			if (key.indexOf('.') === -1) {
-				value = settings[key];
-			}
-			else {
-				const split = key.split('.');
-				value = settings[split[0]][split[1]];
-			}
+			const value = settings[key];
 			if (!validationUtils.isValidBoolean(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Expected a boolean but received: ${value} (1000018)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a boolean but received: ${value} (1000017)`);
 			}
 		});
 	}
@@ -152,7 +145,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidArray(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Expected a array but received: ${value} (1000019)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a array but received: ${value} (1000018)`);
 			}
 		});
 	}
@@ -161,10 +154,10 @@ class InitiateService {
 		const { MODE } = settings;
 		// ===GENERAL=== //
 		if (!validationUtils.isValidEnum({
-			enum: Mode,
+			enum: ModeEnum,
 			value: MODE
 		})) {
-			throw new Error('Invalid or no MODE parameter was found (1000020)');
+			throw new Error('Invalid or no MODE parameter was found (1000019)');
 		}
 	}
 
@@ -173,7 +166,7 @@ class InitiateService {
 		['INNER_SETTINGS'].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isObject(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Expected a number but received: ${value} (1000021)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a number but received: ${value} (1000020)`);
 			}
 		});
 	}
@@ -185,17 +178,13 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidURL(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Expected a URL but received: ${value} (1000022)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a URL but received: ${value} (1000021)`);
 			}
 		});
-		const { COURSES_DATES_VALUE } = settings;
-		if (!COURSES_DATES_VALUE) {
-			throw new Error(`Missing COURSES_DATES_VALUE parameter: ${COURSES_DATES_VALUE} (1000023)`);
-		}
 	}
 
 	validateDirectories() {
-		const keys = this.scriptType === ScriptType.BACKUP ? ['BACKUPS_PATH'] : [];
+		const keys = this.scriptType === ScriptTypeEnum.BACKUP ? ['BACKUPS_PATH'] : [];
 		[
 			...keys,
 			// ===ROOT PATH=== //
@@ -217,7 +206,7 @@ class InitiateService {
 			const value = settings[key];
 			// Verify that the paths are of directory and not a file.
 			if (!fileUtils.isDirectoryPath(value)) {
-				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000024)`);
+				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000022)`);
 			}
 		});
 	}

@@ -1,5 +1,107 @@
 Complete / canceled tasks:
 ==========================
+===Second Pahse==== *
+-Update packages + Recreate package-lock.json. *
+-Add 'Status.VALIDATE' to the Status enum. *
+-Clear unused enums and make sure all in used really exists. *
+-Remove the 'destination' parameter in the 'filterDirectories' method + Verify that backup still works. *
+-Due to the break changes of log-update packages, there is a need to use a postinstall script to fix the direct file: *
+1. Remove the 'wrap-ansi', 'slice-ansi', 'cli-cursor', 'ansi-escapes' packages from the 'package.json' file. *
+2. Delete the 'log-update' directory. *
+3. Install the original 'log-update' package. *
+4. Change in the 'log.utils' file to use the 'require('log-update');' syntax. *
+5. Add the postinstall script, add the 'script/initiate.js' file. *
+6. Add the 'INITIATE' key/value to the ScriptType enum. *
+7. Add the 'postinstall' script to the 'package.json file'. *
+8. Run in the terminal 'npm i' + Recreate the 'package-lock.json' file. *
+9. Format the 2 files. *
+10. Make sure all work as expected. *
+-Rename and check: countLimitService.countLimitDataModel.millisecondsSendEmailDelayCount. *
+-Take the latest settings from '.vscode/settings.json' and implement them. *
+-Check and reset the '.vscode/settings.json' by 'C:/Or/Web/auto-packages-updater/auto-packages-updater/.vscode/settings.json' +
+Format all documents and re-add 'cSpell.words' all the words + add the 'cSpell.ignorePaths'. *
+-Change the 'SystemUtils' functions to be like the standard, take them from the empty-directories project. *
+-Convert all 'new Date()' to be from the timeUtils. Change in all places. Take the updated version of the function from 'event-dates-calendar' project.
+-All time logic is in place + Take the 'getCurrentDate' function from the 'event-dates-calendar' project. *
+-In validation file path (probably a JSON file) there is a 'Expected a number' comment, need to fix it *
+(take the comment from the auto-packages-updater project). *
+-Check 'validateFields' function - The following logic needs to be fixed to be exists instead of not exists:
+if (!scanFieldsResult) { *
+   return scanFieldsResult; *
+} *
+-Convert 'removeLastCharacter' to use 'removeLastCharacters'. *
+-Make sure that all places 'this.exit' function - Need to be 'await this.exit'. *
+-Make sure to have space between /* cSpell:disable */ in the 'INSTRUCTIONS.md' file. *
+-Make sure to fix the grammar mistake in the 'enum.utils.js' file (an enum-like object). *
+-In the 'README.md' file, fix in all places to 'In the terminal'. *
+-Search for 'async ' and create a list of functions/methods, and make sure that all calls have await. *
+-Scan all files for spell mistakes with the 'files-spell-checker' project. *
+-In the 'package.json' file change to 'private: false'. *
+-Convert in all places from all versions of canceled keyword to 'Canceled' keyword. *
+-Change in all places that globalUtils will be on top. *
+-Fixed bug of not logging the course price to log TXT file. *
+-Change all (where it's possible) from 'console.log' to 'logUtils.log'. *
+-Add in all places 'name.model' to all models. *
+-Check that in all places the name of the file includes the name of tha parent directory. For example: name.model inside 'models' directory. *
+-Don't forget to do the same rename logic for all the enums in the project. *
+-Change in all places the config from 'misc/backup' to 'misc/backups' directory. *
+-Copy the '.eslintignore' file from the 'udemy-courses' project. *
+-Make sure all switch-case have curly braces. *
+-Remove code comments to a backup TXT file. *
+-Remove the duplicate empty lines: \n\s*\n\s*\n *
+-Remove the first empty line: ^(?<![\s])\n *
+-Remove the last empty line: \n\s*$(?!\n) *
+-Detect all comments without a dot at the end: ^// .*(?<!\.)$ *
+-Format all documents. *
+-Verify all works well. *
+-Fix TXT files spell mistakes via Gmail. *
+-Fix TXT files spell mistakes via Gmail (Also, convert '_' to ' ' in all places when checking).
+-Bring back the production environment in settings.js to true. *
+-Delete all the development dist files. *
+-Move all complete tasks from here to complete_tasks.txt. *
+-Upload to GitHub. *
+-Backup to iOmega. *
+===First Pahse==== *
+-The current structure of the coupon website is expired and the application no longer works. *
+-The new logic will include: *
+1. No more need for dates, only pages number, the latest pages numbers (30-40 pages a day). *
+2. Static pages to scan, such as: https://idownloadcoupon.com/best-free-online-courses-last-24-hours/ - Canceled. *
+3. All the DOM logic stays the same - Recheck it. *
+4. Verify all works. *
+-Update packages + Recreate package-lock.json. *
+-Remove code comments to a backup TXT file. *
+-Convert " to ' in the relevant places. *
+-Remove all 'debugger' keywords. *
+-Recheck error numbers in error_index.txt. *
+-Check 'let' needs to be converted to 'const'. *
+-Check places to change from simple parameters with dynamic objects to classes. *
+-Make sure all comments '//' have: 1. space 2. ends with a dot.
+-Make sure 'id' => 'Id', 'url' => 'URL', 'api' => 'API'. *
+-Make sure spaces in all files between bottom, need to fix cases like this: *
+} *
+module.exports *
+} *
+export default *
+-Change all '.length > 0' to 'isExists'. *
+-Remove duplicate import/require (convert to index.js if possible). *
+-Sort alphabetically all the imports/requires by https://alphabetizer.flap.tv/. *
+-Sort alphabetically all the imports/requires: external packages, settings, (containers, components, store, assert) data, models, enums, services, utils. *
+-File extensions should be upper case: JSON, TXT, etc. *
+-Remove the space lines inside methods and functions. *
+-Remove the duplicate empty lines: \n\s*\n\s*\n *
+-Remove the first empty line: ^(?<![\s])\n *
+-Remove the last empty line: \n\s*$(?!\n) *
+-Detect all comments without a dot at the end: ^// .*(?<!\.)$ *
+-Make sure all switch-case have curly braces. *
+-Clear unused enums and make sure all in used really exists. *
+-Search for 'async ' and create a list of functions/methods, and make sure that all calls have await. *
+-Scan all files for spell mistakes with the 'files-spell-checker' project. *
+-Change the 'INSTRUCTIONS.md' example of the console line status. *
+-Change in all places the instructions - No longer dates - but pages count. *
+-Do all the 'ToDo' tasks. *
+-Format all documents. *
+-Verify all works well. *
+-Move all complete tasks from here to complete_tasks.txt. *
 -Comments: Change 'validateEnumData' to 'data'. *
 -Change from 'getJsonFileData' to 'getJSONFileData'. *
 -Change the validation on JSON parameters to use 'Object.prototype.hasOwnProperty.call(jsonData, '')'. *
@@ -88,7 +190,7 @@ sources *
 13. Change all function names that return true/false to 'isValidXXX' in validationUtils. *
 14. In all places change to use isExists instead of .length > 0 or .length <= 0. *
 15. Copy the logic of retry on check internet connection in all relevant projects (like in the udemy courses project). *
-16. Add to 'INSTRUCTIONS.md' how the console log should be (take the specific sentence from another project). *
+16. Add to 'INSTRUCTIONS.md' file how the console log should be (take the specific sentence from another project). *
 18. Place this in all 'ToDo' documents of all the projects. *
 -Bring back production to true in settings.js. *
 -Remove all comments. *
@@ -106,7 +208,7 @@ sources *
 -Fix 'Dates: /8 ' - Not working as expected. *
 -Add inner settings for long run - Take the current day - 1 day (add inner settings validations like in crawler project). *
 -Check exceeded course's logic - Maximum limit per day. If 2 days, maximum X 2. *
--In the line of 'this.coursesData.coursesList.map(c => c.status === CourseStatus.CREATE).length <= 0)' - *
+-In the line of 'this.coursesDataModel.coursesList.map(c => c.status === CourseStatus.CREATE).length <= 0)' - *
  Change it to filter (like in 'spam-revenge' project) + use isExists instead of .length <= 0. *
 -In all places change to use isExists instead of .length > 0 or .length <= 0. *
 -Update packages. *
@@ -158,7 +260,7 @@ limit access and URL not exists): https://www.udemy.com/course/local-lead-genera
 -Format all files. *
 -Upload to GitHub. *
 -Move all complete tasks from here to complete_tasks.txt. *
--Fix bug with taking no udemy URL - canceled. *
+-Fix bug with taking no udemy URL - Canceled. *
 -Make sure all comments end with . *
 -Update puppeteer package again + verify all works good. *
 -Rewrite error numbers. *
@@ -196,14 +298,14 @@ export default *
 [DATE] Type: SINGLE/ARRAY/RANGE | Value: #value from settings.js# | dates count: 23 | Current Date: 24/01/2021 *
 -Add retry on courses that failed to be purchased or got 'purchase error', with new status of *
 'RETRY'. In the and take all the retries status courses and retry to purchase each of them (maximum tries 5 from settings.js). *
--Add another logic of take dates according to the missing on misc directory until now - canceled. *
+-Add another logic of take dates according to the missing on misc directory until now - Canceled. *
 -Add logic that if [NAME] does not exist - Take the name from udemy URL course (split the `-` and Capital each word). *
 -Fix bug of not waiting for courses lists to finish when scanning courses. *
 -Add the maximum pages that exist in the session to the console status. *
 -Update packages + Re-create package-lock.json. *
 -Fix the status on the console line: Status: PURCHASE many times is actually ALREADY_PURCHASE. Fix all statuses. *
 -Change the log file names with the word '-method' in the end. *
--Add another log file for purchased courses only - canceled - Already exists. *
+-Add another log file for purchased courses only - Canceled - Already exists. *
 -Add the mode parameter from the settings.js file + add 'SILENT' mode. *
 -Fix Publish Date: 2021/001/09 | *
 -Add retry on validate the coupons URL, take a number from settings.js and delay from settings.js. *
@@ -220,7 +322,7 @@ to solve issues of hand while not in focus. *
 -Take backup.logic.js file from 'mbox-crawler' project. *
 -Change all places from 'exports = {' to 'module.exports = {'. *
 -Change all places from '../settings' to '../settings/settings'. *
--Fix issue that script not working anymore - canceled. *
+-Fix issue that script not working anymore - Canceled. *
 -Fix unneeded formats with: "formatFiles.excludePattern": "**'/node_modules,**'/.vscode,**'/dist/'**,**'/.chrome,**'/misc". *
 -Add 'Complete + canceled tasks: *
 ==========================' to complete_tasks.txt. *
@@ -240,7 +342,7 @@ to solve issues of hand while not in focus. *
 -Fix all spell mistakes in all TXT files. *
 -Remove all unused files, functions, and variables. *
 -Rewrite error numbers. *
-  -Remove all 'debugger' keywords. *  
+-Remove all 'debugger' keywords. *  
 -Make sure all comments end with . *
 -Format all files. *
 -Move all completed tasks to complete tasks text file. *

@@ -1,7 +1,7 @@
 {
   "name": "udemy-courses",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "description": "A Node.js + Puppeteer.js application to get Udemy courses links from a coupon site, and purchase the FREE ONLY courses (by the coupon) on Udemy site.",
   "keywords": [
     "links",
@@ -36,6 +36,7 @@
     "start": "node src/scripts/purchase.script.js",
     "sand": "node src/tests/sandBox.test.js",
     "session": "node src/tests/udemySession.test.js",
+    "postinstall": "node src/scripts/initiate.script.js",
     "stop": "taskkill -f -im node.exe"
   },
   "browserslist": [
@@ -45,20 +46,17 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "ansi-escapes": "^4.3.2",
     "babel-eslint": "^10.1.0",
-    "cli-cursor": "^3.1.0",
-    "eslint": "^7.24.0",
+    "eslint": "^7.25.0",
     "fs-extra": "^9.1.0",
     "is-reachable": "^5.0.0",
-    "jsdom": "^16.5.2",
+    "jsdom": "^16.5.3",
+    "log-update": "^4.0.0",
     "lorem-ipsum": "^2.0.3",
-    "puppeteer": "^8.0.0",
+    "puppeteer": "^9.0.0",
     "puppeteer-extra": "^3.1.18",
     "puppeteer-extra-plugin-stealth": "^2.7.6",
     "random-useragent": "^0.5.0",
-    "slice-ansi": "^4.0.0",
-    "tree-kill": "^1.2.2",
-    "wrap-ansi": "^7.0.0"
+    "tree-kill": "^1.2.2"
   }
 }

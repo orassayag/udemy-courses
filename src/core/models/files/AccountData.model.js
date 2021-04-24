@@ -1,6 +1,7 @@
-class AccountData {
+class AccountDataModel {
 
     constructor(settings) {
+        // Set the parameters from the settings file.
         const { ACCOUNT_FILE_PATH } = settings;
         this.accountFilePath = ACCOUNT_FILE_PATH;
         this.email = null;
@@ -9,4 +10,4 @@ class AccountData {
     }
 }
 
-module.exports = AccountData;
+module.exports = AccountDataModel;

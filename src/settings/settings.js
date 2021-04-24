@@ -1,33 +1,19 @@
-const { Mode } = require('../core/enums');
-const { courseUtils, pathUtils } = require('../utils');
-
-const innerSettings = {
-    // ===FLAG=== //
-    // Determine if to run for a long time. Settings this to true, will set automatically
-    // the COURSES_DATES_VALUE to the current date subtract one day.
-    IS_LONG_RUN: false
-};
+const { ModeEnum } = require('../core/enums');
+const { pathUtils } = require('../utils');
 
 const settings = {
     // ===GENERAL=== //
     // Determine the mode of the application. STANDARD/SESSION/SILENT.
-    MODE: Mode.STANDARD,
+    MODE: ModeEnum.STANDARD,
     // Determine the URL of the courses to get the courses URLs from.
     COURSES_BASE_URL: 'https://www.idownloadcoupon.com',
     // Determine the URL of Udemy site to purchase the courses by the URLs.
     UDEMY_BASE_URL: 'https://www.udemy.com',
     // Determine if the init of the link to the single course on Udemy.
     SINGLE_COURSE_INIT: 'https://click.linksynergy.com/deeplink?',
-    // Determine the courses date value. The options are: single date, array of dates,
-    // or range of dates, and the daily limit will be on each date.
-    // SINGLE - Single date to scan, the default is the current date. If not, use 'yyyy/mm/dd' format. Example: '2020/12/13'.
-    // ARRAY - List of dates to scan. Example: ['2020/12/13', '2020/12/14'].
-    // RANGE - Range of dates to scan. Example: { from: '2020/12/13', to: '2020/12/14' }.
-    // If empty/null/undefined - Will get the current date automatically.
-    COURSES_DATES_VALUE: innerSettings.IS_LONG_RUN ? courseUtils.getLongRunTime() :
-        courseUtils.getCourseTime({ from: '2021/03/29', to: '2021/04/04' }),
-    // Determine the specific courses page (in the pagination) to crawl. If null,
-    // will scan all the courses pages until reaching the maximum number (MAXIMUM_PAGES_NUMBER).
+    // Determine the maximum number of pages to search for courses page's links.
+    PAGES_COUNT: 40,
+    // Determine the specific courses page (in the pagination) to crawl.
     SPECIFIC_COURSES_PAGE_NUMBER: null,
     // Determine which courses to purchase that contain the specific keywords.
     // If empty, will purchase all courses available.
@@ -58,12 +44,10 @@ const settings = {
     IS_LOG_PURCHASE_COURSES_METHOD_INVALID: true,
 
     // ===COUNT & LIMIT=== //
-    // Determine the maximum courses count to purchase per date.
+    // Determine the maximum courses count to purchase.
     MAXIMUM_COURSES_PURCHASE_COUNT: 3000,
     // Determine the milliseconds count timeout to wait for an answer to get to the page or engine source.
     MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT: 60000,
-    // Determine the maximum number of pagination for courses on the main page of the courses URL.
-    MAXIMUM_PAGES_NUMBER: 20,
     // Determine the maximum sessions counts to run in order to retry purchase failed courses.
     MAXIMUM_SESSIONS_COUNT: 5,
     // Determine how much milliseconds interval to calculate the time of the
@@ -99,8 +83,6 @@ const settings = {
     MAXIMUM_URL_VALIDATION_COUNT: 5,
     // Determine the milliseconds count timeout to wait between URL validation retry.
     MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
-    // Determine the maximum courses dates count to display the course date value console status.
-    MAXIMUM_COURSES_DATES_DISPLAY_COUNT: 3,
 
     // ===ROOT PATH=== //
     // Determine the application name used for some of the calculated paths.
@@ -161,11 +143,7 @@ const settings = {
     // Determine the number of times in loop to check for version of a backup.
     // For example, if a backup name 'test-test-test-1' exists, it will check for 'test-test-test-2',
     // and so on, until the current maximum number.
-    BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT: 50,
-
-    // ===INNER SETTINGS=== //
-    // A copy of all the inner settings declared on top in order to do validation.
-    INNER_SETTINGS: innerSettings
+    BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT: 50
 };
 
 module.exports = settings;

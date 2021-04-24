@@ -1,9 +1,9 @@
-const { CourseStatus, CourseStatusLog, CourseType } = require('./files/course.enum');
-const { Placeholder } = require('./files/placeholder.enum');
-const { CoursesDatesType, Environment, Method, Mode, ScriptType, Status } = require('./files/system.enum');
-const { StatusIcon, Color, ColorCode } = require('./files/text.enum');
+const { CourseStatusEnum, CourseStatusLogEnum, CourseTypeEnum } = require('./files/course.enum');
+const { PlaceholderEnum } = require('./files/placeholder.enum');
+const { EnvironmentEnum, MethodEnum, ModeEnum, ScriptTypeEnum, StatusEnum } = require('./files/system.enum');
+const { StatusIconEnum, ColorEnum, ColorCodeEnum } = require('./files/text.enum');
 
 module.exports = {
-    Color, ColorCode, CourseStatus, CourseStatusLog, CourseType, CoursesDatesType,
-    Environment, Method, Mode, Placeholder, ScriptType, Status, StatusIcon
+    ColorEnum, ColorCodeEnum, CourseStatusEnum, CourseStatusLogEnum, CourseTypeEnum, EnvironmentEnum,
+    MethodEnum, ModeEnum, PlaceholderEnum, ScriptTypeEnum, StatusEnum, StatusIconEnum
 };

@@ -3,21 +3,27 @@ const validationUtils = require('./validation.utils');
 
 class TimeUtils {
 
-    constructor() {
-        this.shortMonths = {
-            'jan': '1', 'feb': '2', 'mar': '3', 'apr': '4', 'may': '5', 'jun': '6',
-            'jul': '7', 'aug': '8', 'sep': '9', 'oct': '10', 'nov': '11', 'dec': '12'
-        };
+    constructor() { }
+
+    getCurrentDate(value) {
+        return value ? validationUtils.isValidArray(value) ? new Date(...value) : new Date(value) : new Date();
     }
 
     getFullTime() {
-        const date = new Date();
+        const date = this.getCurrentDate();
         return `${this.getHours(date)}:${this.getMinutes(date)}:${this.getSeconds(date)}`;
     }
 
     getDateNoSpaces() {
-        const date = new Date();
+        const date = this.getCurrentDate();
         return [this.getDay(date), this.getMonth(date), this.getYear(date)].join('');
+    }
+
+    getFullDateTemplate(date) {
+        if (!date) {
+            date = this.getCurrentDate();
+        }
+        return `${[this.getDay(date), this.getMonth(date), this.getYear(date)].join('/')} ${[this.getHours(date), this.getMinutes(date), this.getSeconds(date)].join(':')}`;
     }
 
     getDateNoSpacesFromString(date) {
@@ -25,31 +31,8 @@ class TimeUtils {
     }
 
     getFullDateNoSpaces() {
-        const date = new Date();
+        const date = this.getCurrentDate();
         return `${[this.getYear(date), this.getMonth(date), this.getDay(date)].join('')}_${[this.getHours(date), this.getMinutes(date), this.getSeconds(date)].join('')}`;
-    }
-
-    getCommasDate(date) {
-        if (!date) {
-            date = new Date();
-        }
-        return `${[this.getYear(date), this.getMonth(date), this.getDay(date)].join('/')}`;
-    }
-
-    // Format yyyy-mm-dd. Example: 8 Dec , 2020.
-    getDateFromString(date) {
-        if (!date) {
-            return date;
-        }
-        const split = date.split(' ');
-        return `${split[3]}/${textUtils.addLeadingZero(this.shortMonths[textUtils.toLowerCase(split[1])])}/${textUtils.addLeadingZero(split[0])}`;
-    }
-
-    getFullDateTemplate(date) {
-        if (!date) {
-            date = new Date();
-        }
-        return `${[this.getDay(date), this.getMonth(date), this.getYear(date)].join('/')} ${[this.getHours(date), this.getMinutes(date), this.getSeconds(date)].join(':')}`;
     }
 
     getSeconds(date) {
@@ -98,38 +81,6 @@ class TimeUtils {
         // In theory the modulus is not required.
         const seconds = textUtils.getFloorPositiveNumber(delta % 60);
         return `${days}.${hours}:${minutes}:${seconds}`;
-    }
-
-    getDateObjFromString(date) {
-        const parts = date.split('/');
-        try {
-            // Format: yyyy/mm/dd.
-            date = new Date(parts[0], parts[1] - 1, parts[2]);
-        }
-        catch {
-            date = null;
-        }
-        return date;
-    }
-
-    getAllDatesBetweenDates(data) {
-        let { startDateTime, endDateTime } = data;
-        if (!startDateTime || !endDateTime) {
-            return null;
-        }
-        startDateTime = this.getDateObjFromString(startDateTime);
-        endDateTime = this.getDateObjFromString(endDateTime);
-        if (!startDateTime || !endDateTime) {
-            return null;
-        }
-        if (startDateTime > endDateTime) {
-            return null;
-        }
-        const list = [];
-        for (const dt = new Date(startDateTime); dt <= endDateTime; dt.setDate(dt.getDate() + 1)) {
-            list.push(this.getCommasDate(new Date(dt)));
-        }
-        return list;
     }
 }
 
