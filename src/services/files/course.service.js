@@ -68,7 +68,7 @@ class CourseService {
         courseDataModel.udemyURLCompare = udemyURLCompare;
         courseDataModel.udemyURLCourseName = this.getUdemyCourseName(udemyURL);
         courseDataModel.couponKey = couponKey;
-        courseDataModel.isFree = validationUtils.isExists(couponKey);
+        courseDataModel.isFree = !validationUtils.isEmpty(couponKey);
         courseDataModel = await this.validateUdemyURL(courseDataModel);
         this.coursesDataModel.coursesList[courseIndex] = courseDataModel;
         this.coursesDataModel.courseDataModel = courseDataModel;
@@ -215,7 +215,7 @@ class CourseService {
             const key = keysList[i];
             const value = courseDataModel[key];
             if (isFilledExpected) {
-                if (!value) {
+                if (validationUtils.isEmpty(value)) {
                     scanFieldsResult = {
                         status: CourseStatusEnum.MISSING_FIELD,
                         details: `Field ${key} should not be empty, but does not contain any value.`
@@ -224,7 +224,7 @@ class CourseService {
                 }
             }
             else {
-                if (value) {
+                if (!validationUtils.isEmpty(value)) {
                     scanFieldsResult = {
                         status: CourseStatusEnum.UNEXPECTED_FIELD,
                         details: `Field ${key} should be empty, but found the value ${value}.`

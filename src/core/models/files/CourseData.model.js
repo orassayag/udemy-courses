@@ -3,9 +3,9 @@ const { timeUtils } = require('../../../utils');
 
 class CourseDataModel {
 
-    constructor(course) {
+    constructor(data) {
         const { id, postId, pageNumber, indexPageNumber, isFree, courseURL, udemyURL,
-            udemyURLCompare, couponKey, courseURLCourseName, isSingleCourse } = course;
+            udemyURLCompare, couponKey, courseURLCourseName, isSingleCourse } = data;
         this.id = id;
         this.postId = postId;
         this.creationDateTime = timeUtils.getCurrentDate();

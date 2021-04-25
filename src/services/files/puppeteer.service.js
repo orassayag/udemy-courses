@@ -255,7 +255,7 @@ class PuppeteerService {
             if (!courseDataModel || !courseDataModel.status) {
                 continue;
             }
-            // Validate course status.
+            // Validate the course status.
             switch (courseDataModel.status) {
                 case CourseStatusEnum.CREATE:
                 case CourseStatusEnum.PURCHASE_ERROR:
@@ -265,7 +265,7 @@ class PuppeteerService {
                 }
                 default: { continue; }
             }
-            // Validate course URL.
+            // Validate the course URL.
             if (!courseDataModel.udemyURL) {
                 courseService.coursesDataModel.coursesList[i] = await courseService.updateCourseStatus({
                     courseDataModel: courseDataModel,
@@ -274,7 +274,7 @@ class PuppeteerService {
                 });
                 continue;
             }
-            // Validate that page exists.
+            // Validate that the page exists.
             if (!page) {
                 crawlResultModel.page = page;
                 crawlResultModel.browser = browser;

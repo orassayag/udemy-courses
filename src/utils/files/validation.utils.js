@@ -8,6 +8,10 @@ class ValidationUtils {
         return list && list.length > 0;
     }
 
+    isEmpty(value) {
+        return value === null || typeof value === 'undefined' || value.length === 0;
+    }
+
     isValidArray(variable) {
         return Object.prototype.toString.call(variable) === '[object Array]';
     }

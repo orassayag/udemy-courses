@@ -1,5 +1,6 @@
 Complete / canceled tasks:
 ==========================
+-Fixed bug with 'missing field' issue in several courses. *
 ===Second Pahse==== *
 -Update packages + Recreate package-lock.json. *
 -Add 'Status.VALIDATE' to the Status enum. *
