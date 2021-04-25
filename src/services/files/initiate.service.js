@@ -48,7 +48,7 @@ class InitiateService {
 			enum: ScriptTypeEnum,
 			value: this.scriptType
 		})) {
-			throw new Error('Invalid or no ScriptType parameter was found (1000013)');
+			throw new Error('Invalid or no ScriptTypeEnum parameter was found (1000013)');
 		}
 	}
 

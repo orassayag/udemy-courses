@@ -1,5 +1,11 @@
 Complete / canceled tasks:
 ==========================
+-Review all enum and model renames. *
+-Add to the 'package.json' file (below the 'description' field) the 'repository' field: *
+"repository": { *
+  "type": "git", *
+  "url": "git://github.com/username/repository.git" *
+} *
 -Fixed bug with 'missing field' issue in several courses. *
 ===Second Pahse==== *
 -Update packages + Recreate package-lock.json. *

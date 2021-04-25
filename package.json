@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": false,
   "description": "A Node.js + Puppeteer.js application to get Udemy courses links from a coupon site, and purchase the FREE ONLY courses (by the coupon) on Udemy site.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/orassayag/udemy-courses.git"
+  },
   "keywords": [
     "links",
     "udemy",

@@ -107,9 +107,9 @@ class PurchaseLogic {
     }
 
     async exit(status, color) {
-        if (applicationService.applicationData) {
+        if (applicationService.applicationDataModel) {
             applicationService.applicationDataModel.status = status;
-            if (countLimitService.countLimitData) {
+            if (countLimitService.countLimitDataModel) {
                 await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutExitApplication);
             }
             logService.close();
