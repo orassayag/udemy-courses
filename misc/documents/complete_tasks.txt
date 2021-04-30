@@ -1,5 +1,7 @@
 Complete / canceled tasks:
 ==========================
+-Update packages + Recreate package-lock.json. *
+-Fix bug at 'Path not exists: ${filePath} ${filePath} (1000009)'. *
 -Review all enum and model renames. *
 -Add to the 'package.json' file (below the 'description' field) the 'repository' field: *
 "repository": { *

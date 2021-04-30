@@ -8,7 +8,7 @@ class FileService {
         const { environment, path, parameterName, fileExtension } = data;
         const filePath = `${path}account-${textUtils.toLowerCase(environment)}.json`;
         if (!await fileUtils.isPathExists(filePath)) {
-            throw new Error(`Path not exists: ${filePath} ${filePath} (1000009)`);
+            throw new Error(`Path not exists: ${filePath} (1000009)`);
         }
         if (!fileUtils.isFilePath(filePath)) {
             throw new Error(`The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000010)`);
