@@ -11,6 +11,8 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
+-Fix the bug with 'Is Free' property - Currently not working correct.
+-Add language propery - auto detect the language by the course name.
 
 Complete / canceled tasks:
 ==========================
