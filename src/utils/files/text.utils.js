@@ -176,6 +176,13 @@ class TextUtils {
         }
         return text.replace(regexUtils.createRegex(origin, 'g'), target);
     }
+
+    clearBreakLines(text) {
+        if (!text) {
+            return '';
+        }
+        return text.replace(regexUtils.clearBreakLines, '');
+    }
 }
 
 module.exports = new TextUtils();

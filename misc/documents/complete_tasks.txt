@@ -1,6 +1,18 @@
 Complete / canceled tasks:
 ==========================
 -Update packages + Recreate package-lock.json. *
+-Fix the bug with 'Is Free' property - Currently not working correctly. *
+-Add language property - Auto detect the language by the course name - Check if it can take the language name from the Udemy course page. *
+-Refactor log service code. *
+-Remove code comments to a backup TXT file. *
+-Change back to 'true' in the production settings. *
+-Format all documents. *
+-Verify all works well. *
+-Clear the 'dist' files. *
+-Move all complete tasks from here to complete_tasks.txt. *
+-Upload to GitHub. *
+-Backup to iOmega. *
+-Update packages + Recreate package-lock.json. *
 -Fix bug at 'Path not exists: ${filePath} ${filePath} (1000009)'. *
 -Review all enum and model renames. *
 -Add to the 'package.json' file (below the 'description' field) the 'repository' field: *

@@ -148,7 +148,8 @@ class LogService {
 	createCourseTemplate(data) {
 		const { courseDataModel, isLog } = data;
 		const { id, postId, creationDateTime, pageNumber, indexPageNumber, priceNumber, priceDisplay, courseURLCourseName,
-			udemyURLCourseName, type, isFree, courseURL, udemyURL, couponKey, status, resultDateTime, resultDetails } = courseDataModel;
+			udemyURLCourseName, type, isFree, languageName, courseURL, udemyURL, couponKey, status, resultDateTime,
+			resultDetails } = courseDataModel;
 		const time = timeUtils.getFullTime(resultDateTime);
 		const displayCreationDateTime = timeUtils.getFullDateTemplate(creationDateTime);
 		const displayPriceNumber = priceNumber ? priceNumber : this.emptyValue;
@@ -164,7 +165,7 @@ class LogService {
 		const displayResultDetails = resultDetails.join('\n');
 		const lines = [];
 		lines.push(`Time: ${time} | Id: ${id} | Post Id: ${postId ? postId : this.emptyValue} | Creation Date Time: ${displayCreationDateTime}`);
-		lines.push(`Price Number: ${displayPriceNumber} | Price Display: ${displayPriceDisplay} | Coupon Key: ${couponKey}`);
+		lines.push(`Price Number: ${displayPriceNumber} | Price Display: ${displayPriceDisplay} | Coupon Key: ${couponKey} | Language: ${languageName}`);
 		lines.push(`Status: ${displayStatus} | Page Number: ${pageNumber} | Index Page Number: ${indexPageNumber} | Type: ${type} | Is Free: ${isFree}`);
 		lines.push(`Name: ${name}`);
 		lines.push(`Course URL: ${displayCourseURL}`);
@@ -192,6 +193,10 @@ class LogService {
 		const coursePosition = textUtils.getNumberOfNumber({ number1: courseService.coursesDataModel.courseIndex, number2: totalCount });
 		const coursePercentage = textUtils.calculatePercentageDisplay({ partialValue: courseService.coursesDataModel.courseIndex, totalValue: totalCount });
 		return `${coursePosition} (${coursePercentage})`;
+	}
+
+	getValueOrEmpty(fieldName) {
+		return courseService.coursesDataModel.courseDataModel[fieldName] ? courseService.coursesDataModel.courseDataModel[fieldName] : this.emptyValue;
 	}
 
 	logProgress() {
@@ -228,6 +233,7 @@ class LogService {
 		let pageNumber = this.emptyValue;
 		let indexPageNumber = this.emptyValue;
 		let isFree = this.emptyValue;
+		let languageName = this.emptyValue;
 		let priceDisplay = this.emptyValue;
 		let couponKey = this.emptyValue;
 		let type = this.emptyValue;
@@ -239,13 +245,14 @@ class LogService {
 		if (courseService.coursesDataModel.courseDataModel) {
 			creationDateTime = timeUtils.getFullDateTemplate(courseService.coursesDataModel.courseDataModel.creationDateTime);
 			id = courseService.coursesDataModel.courseDataModel.id;
-			postId = courseService.coursesDataModel.courseDataModel.postId ? courseService.coursesDataModel.courseDataModel.postId : this.emptyValue;
+			postId = this.getValueOrEmpty('postId');
 			status = CourseStatusLogEnum[courseService.coursesDataModel.courseDataModel.status];
 			pageNumber = courseService.coursesDataModel.courseDataModel.pageNumber;
 			indexPageNumber = courseService.coursesDataModel.courseDataModel.indexPageNumber;
 			isFree = courseService.coursesDataModel.courseDataModel.isFree !== null ? courseService.coursesDataModel.courseDataModel.isFree : this.emptyValue;
-			priceDisplay = courseService.coursesDataModel.courseDataModel.priceDisplay ? courseService.coursesDataModel.courseDataModel.priceDisplay : this.emptyValue;
-			couponKey = courseService.coursesDataModel.courseDataModel.couponKey ? courseService.coursesDataModel.courseDataModel.couponKey : this.emptyValue;
+			languageName = this.getValueOrEmpty('languageName');
+			priceDisplay = this.getValueOrEmpty('priceDisplay');
+			couponKey = this.getValueOrEmpty('couponKey');
 			type = courseService.coursesDataModel.courseDataModel.type;
 			name = this.getCourseName({
 				courseURLCourseName: courseService.coursesDataModel.courseDataModel.courseURLCourseName,
@@ -330,7 +337,8 @@ class LogService {
 				'Is Free': isFree,
 				'Price Display': priceDisplay,
 				'Coupon Key': couponKey,
-				'Type': type
+				'Type': type,
+				'Language': languageName
 			}, {
 				'Create Update Error In A Row': domService.createUpdateErrorsInARowCount,
 				'Purchase Error In A Row': puppeteerService.purchaseErrorInARowCount
@@ -355,7 +363,7 @@ class LogService {
 				[ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN, ColorEnum.CYAN],
 				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
 				[ColorEnum.YELLOW, ColorEnum.YELLOW],
-				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
+				[ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW, ColorEnum.YELLOW],
 				[ColorEnum.RED, ColorEnum.RED],
 				[], [], [],
 				[ColorEnum.CYAN, ColorEnum.CYAN]

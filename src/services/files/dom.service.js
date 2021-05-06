@@ -34,6 +34,7 @@ class DomService {
         this.courseIsPrivateDOM = '.udi-lock';
         this.courseOriginalPriceDOM = '[data-purpose="course-old-price-text"]';
         this.courseEnrollButtonDOM = '[data-purpose="buy-this-course-button"]';
+        this.courseLanguageLabelDOM = '[data-purpose="lead-course-locale"]';
         this.checkoutPriceDOM = '[data-purpose="total-price"]';
         this.purchaseButtonDOM = '.btn-block';
         this.purchaseSuccessDOM = '.alert-success';
@@ -120,12 +121,10 @@ class DomService {
                 if (!this.isValidateUdemyURL(udemyURL)) {
                     continue;
                 }
-                const couponKey = courseUtils.getCourseCoupon(udemyURL);
                 await courseService.createCourse({
                     postId: courseDataModel.postId,
                     pageNumber: courseDataModel.pageNumber,
                     indexPageNumber: courseDataModel.indexPageNumber,
-                    isFree: !validationUtils.isEmpty(couponKey),
                     courseURL: courseDataModel.courseURL,
                     udemyURL: udemyURL,
                     udemyURLCompare: textUtils.toLowerCaseTrim(udemyURL),
@@ -155,12 +154,10 @@ class DomService {
                 if (!this.isValidateUdemyURL(udemyURL)) {
                     continue;
                 }
-                const couponKey = courseUtils.getCourseCoupon(udemyURL);
                 await courseService.createCourse({
                     postId: courseDataModel.postId,
                     pageNumber: courseDataModel.pageNumber,
                     indexPageNumber: courseDataModel.indexPageNumber,
-                    isFree: !validationUtils.isEmpty(couponKey),
                     courseURL: courseDataModel.courseURL,
                     udemyURL: udemyURL,
                     udemyURLCompare: textUtils.toLowerCaseTrim(udemyURL),

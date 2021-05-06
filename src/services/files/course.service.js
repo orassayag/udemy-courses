@@ -68,7 +68,6 @@ class CourseService {
         courseDataModel.udemyURLCompare = udemyURLCompare;
         courseDataModel.udemyURLCourseName = this.getUdemyCourseName(udemyURL);
         courseDataModel.couponKey = couponKey;
-        courseDataModel.isFree = !validationUtils.isEmpty(couponKey);
         courseDataModel = await this.validateUdemyURL(courseDataModel);
         this.coursesDataModel.coursesList[courseIndex] = courseDataModel;
         this.coursesDataModel.courseDataModel = courseDataModel;

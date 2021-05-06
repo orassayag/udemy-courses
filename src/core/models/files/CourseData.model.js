@@ -4,7 +4,7 @@ const { timeUtils } = require('../../../utils');
 class CourseDataModel {
 
     constructor(data) {
-        const { id, postId, pageNumber, indexPageNumber, isFree, courseURL, udemyURL,
+        const { id, postId, pageNumber, indexPageNumber, courseURL, udemyURL,
             udemyURLCompare, couponKey, courseURLCourseName, isSingleCourse } = data;
         this.id = id;
         this.postId = postId;
@@ -16,7 +16,8 @@ class CourseDataModel {
         this.courseURLCourseName = courseURLCourseName;
         this.udemyURLCourseName = null;
         this.type = isSingleCourse ? CourseTypeEnum.SINGLE : CourseTypeEnum.COURSES_LIST;
-        this.isFree = isFree;
+        this.isFree = false;
+        this.languageName = null;
         this.courseURL = courseURL;
         this.udemyURL = udemyURL;
         this.udemyURLCompare = udemyURLCompare;

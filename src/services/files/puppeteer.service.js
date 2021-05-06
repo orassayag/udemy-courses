@@ -8,7 +8,7 @@ const countLimitService = require('./countLimit.service');
 const courseService = require('./course.service');
 const domService = require('./dom.service');
 const globalUtils = require('../../utils/files/global.utils');
-const { courseUtils, crawlUtils, logUtils, systemUtils, validationUtils } = require('../../utils');
+const { courseUtils, crawlUtils, logUtils, systemUtils, validationUtils, textUtils } = require('../../utils');
 
 class PuppeteerService {
 
@@ -387,6 +387,12 @@ class PuppeteerService {
                 });
             }
             this.logSessionStage('PAGE HAS ENROLL BUTTON');
+            // Get the course's language.
+            if (await page.$(domService.courseLanguageLabelDOM)) {
+                const languageLabel = await page.$eval(domService.courseLanguageLabelDOM, el => el.textContent);
+                courseDataModel.languageName = textUtils.clearBreakLines(languageLabel);
+            }
+            this.logSessionStage('PAGE HAS LANGUAGE LABEL');
             // Validate that the course is not already purchased.
             if (!await page.$(domService.coursePriceLabelDOM)) {
                 return await this.setCourseStatus({
@@ -431,14 +437,15 @@ class PuppeteerService {
             this.logSessionStage('AFTER CLICK ENROLL BUTTON');
             // Possible that is a course without a checkout page. Validate it.
             if (await page.$(domService.purchaseSuccessDOM)) {
-                // Course has no checkout page and has been purchased.
+                // Course has no checkout page and has been purchased - The course is free.
+                courseDataModel.isFree = true;
                 return await this.setCourseStatus({
                     page: page, courseDataModel: courseDataModel, status: CourseStatusEnum.PURCHASE,
                     details: 'Course has been purchased successfully.', originalPrices: originalPrices
                 });
             }
             this.logSessionStage('PAGE NOT PURCHASED YET');
-            // In the checkout page, Validate that price exists.
+            // In the checkout page, validate that price exists.
             if (!await page.$(domService.checkoutPriceDOM)) {
                 return await this.setCourseStatus({
                     page: page, courseDataModel: courseDataModel, status: CourseStatusEnum.CHECKOUT_PRICE_NOT_EXISTS,
