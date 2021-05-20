@@ -17,13 +17,13 @@ READ THE FOLLOWING SETTINGS BEFORE YOU BEGIN:
 2. Read the full instructions guide in INSTRUCTIONS.md file.
 3. Run the script by 'npm start' and let the magic begin. :)
 
-In terminal: npm start
+In the terminal: npm start
 
 Happy testing! :)
 
 ### Prerequisites
 
-You'll need to install VSCode, Node, and clone the application, run npm i.
+You'll need to install VSCode, Node, and clone the application, and in the terminal run npm i.
 
 ## Built With
 
@@ -43,7 +43,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * Or Assayag <orassayag@gmail.com>
 * GitHub: https://github.com/orassayag
 * StackOverFlow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
-* LinkedIn: https://il.linkedin.com/in/orassayag
+* LinkedIn: https://linkedin.com/in/orassayag
 
 ## License
 

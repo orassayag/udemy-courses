@@ -1,5 +1,7 @@
 Complete / canceled tasks:
 ==========================
+-Fix bug with the result of course purchase: *
+===[RESULT] Time: 08/05/2021 21:53:40 | Result: The Udemy URL is invalid. Field resultDateTime should be empty, but found the value Sat May 08 2021 21:53:40 GMT+0300 (Israel Daylight Time).=== *
 -Update packages + Recreate package-lock.json. *
 -Fix the bug with 'Is Free' property - Currently not working correctly. *
 -Add language property - Auto detect the language by the course name - Check if it can take the language name from the Udemy course page. *

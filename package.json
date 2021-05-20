@@ -51,7 +51,7 @@
   ],
   "dependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.25.0",
+    "eslint": "^7.26.0",
     "fs-extra": "^10.0.0",
     "is-reachable": "^5.0.0",
     "jsdom": "^16.5.3",

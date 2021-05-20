@@ -155,23 +155,14 @@ class CourseService {
         // Validate all unexpected fields.
         scanFieldsResult = this.scanFields({
             courseDataModel: courseDataModel,
-            keysList: ['priceNumber', 'priceDisplay', 'resultDateTime'],
+            keysList: ['priceNumber', 'priceDisplay'],
             isFilledExpected: false
         });
         if (scanFieldsResult) {
             return scanFieldsResult;
         }
-        // Validate Udemy URL.
-        const { type, isFree, udemyURL, couponKey, status } = courseDataModel;
-        if (udemyURL) {
-            if (udemyURL.indexOf(applicationService.applicationDataModel.udemyBaseURL) === -1) {
-                return new ValidateFieldsResultModel({
-                    status: CourseStatusEnum.INVALID,
-                    details: 'Field udemyURL does not match as Udemy website.'
-                });
-            }
-        }
-        else if (type === CourseTypeEnum.SINGLE && status === CourseStatusEnum.CREATE) {
+        const { type, isFree, couponKey, status } = courseDataModel;
+        if (type === CourseTypeEnum.SINGLE && status === CourseStatusEnum.CREATE) {
             return new ValidateFieldsResultModel({
                 status: CourseStatusEnum.INVALID,
                 details: 'Field udemyURL is empty and the course is not in the type of COURSES_LIST.'
