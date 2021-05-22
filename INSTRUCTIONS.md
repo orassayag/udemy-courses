@@ -4,7 +4,7 @@
 FAST & BASIC START.
 ===================
 1. Open the project in IDE (Current to 12/19/2020 I'm using VSCode).
-2. Open the following file in the src/settings/settings.js file.
+2. Open the following file in the 'src/settings/settings.js' file.
 3. Search for the first setting - 'IS_CREATE_COURSES_METHOD_ACTIVE' and 'IS_PURCHASE_COURSES_METHOD_ACTIVE' - Make sure they are set to true.
 4. Next - Time to install the NPM packages. In the terminal run 'npm run i'.
 5. Once finished with the node_modules installation, it's time to set up the pages count.
@@ -14,7 +14,7 @@ FAST & BASIC START.
 9. In the terminal run 'npm start'. If everything goes well, you will start to see the console status line appear.
 10. If you see any error - Need to check what's changed. Current to 12/19/2020, It works fine.
 11. If you see the console status line but the 'Course' is not progressing - Need to check what's wrong.
-12. If no errors and the progress works OK, make sure to check on dist/date of today (Example: 1_20200316_222124)/ That all TXT
+12. If no errors and the progress works OK, make sure to check on dist/date of today (Example: 1_20200316_222124)/ that all TXT
     files created successfully.
 13. Successful running application on production/development should look like this:
 

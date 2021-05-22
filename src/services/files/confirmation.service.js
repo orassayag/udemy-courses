@@ -28,7 +28,7 @@ class ConfirmationService {
                 this.setRawMode(false);
                 reject(false);
             }
-        }).catch(this.setRawMode(false));
+        }).catch();
     }
 }
 
