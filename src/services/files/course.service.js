@@ -1,5 +1,5 @@
 const { CourseDataModel, CoursesDataModel, ValidateFieldsResultModel } = require('../../core/models');
-const { CourseStatusEnum, CourseTypeEnum, StatusEnum } = require('../../core/enums');
+const { CourseStatusEnum, StatusEnum } = require('../../core/enums');
 const applicationService = require('./application.service');
 const { courseUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 
@@ -161,13 +161,7 @@ class CourseService {
         if (scanFieldsResult) {
             return scanFieldsResult;
         }
-        const { type, isFree, couponKey, status } = courseDataModel;
-        if (type === CourseTypeEnum.SINGLE && status === CourseStatusEnum.CREATE) {
-            return new ValidateFieldsResultModel({
-                status: CourseStatusEnum.INVALID,
-                details: 'Field udemyURL is empty and the course is not in the type of COURSES_LIST.'
-            });
-        }
+        const { isFree, couponKey } = courseDataModel;
         // Validate free course coupon or free course originally.
         if (isFree && !couponKey) {
             return new ValidateFieldsResultModel({
