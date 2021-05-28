@@ -87,7 +87,6 @@ class DomService {
         try {
             const dom = new jsdom.JSDOM(courseContent);
             const urls = dom.window.document.getElementsByName(this.udemyURLInputName);
-            debugger;
             if (validationUtils.isExists(urls)) {
                 const result = courseUtils.createCourseSingleData(urls[0].value);
                 await courseService.updateSingleCourseData({
