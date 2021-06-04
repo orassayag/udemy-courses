@@ -14,7 +14,7 @@ FAST & BASIC START.
 9. In the terminal run: 'npm start'. If everything goes well, you will start to see the console status line appear.
 10. If you see any error - Need to check what's changed. Current to 12/19/2020, it works fine.
 11. If you see the console status line but the 'Course' is not progressing - Need to check what's wrong.
-12. If no errors and the progress works OK, make sure to check on dist/date of today (Example: 1_20200316_222124)/ that all TXT
+12. If no errors and the progress works OK, make sure to check on the 'dist/date' direcotry of today (Example: 1_20200316_222124)/ that all TXT
     files created successfully.
 13. Successful running application on production/development should look like this:
 
