@@ -17,7 +17,8 @@ class DomService {
         this.postDOM = 'type-product';
         this.postDOMTitle = 'woocommerce-loop-product__title';
         this.singleCourseURLDOM = 'woocommerce-LoopProduct-link';
-        this.udemyURLInputName = 'ulp';
+        this.udemyURLInputName = 'cart';
+        this.udemyURLAttribute = 'action';
         this.coursesListTitleDOM = 'course_title';
         this.coursesListContainerDOM = 'amz-deal';
         // ===UDEMY=== //
@@ -86,9 +87,9 @@ class DomService {
         const coursesLists = [];
         try {
             const dom = new jsdom.JSDOM(courseContent);
-            const urls = dom.window.document.getElementsByName(this.udemyURLInputName);
+            const urls = dom.window.document.getElementsByClassName(this.udemyURLInputName);
             if (validationUtils.isExists(urls)) {
-                const result = courseUtils.createCourseSingleData(urls[0].value);
+                const result = courseUtils.createCourseSingleData(urls[0].getAttribute(this.udemyURLAttribute));
                 await courseService.updateSingleCourseData({
                     courseDataModel: courseDataModel,
                     courseIndex: courseIndex,

@@ -12,7 +12,7 @@ const settings = {
     // Determine if the init of the link to the single course on Udemy.
     SINGLE_COURSE_INIT: 'https://click.linksynergy.com/deeplink?',
     // Determine the maximum number of pages to search for courses page's links.
-    PAGES_COUNT: 1,
+    PAGES_COUNT: 2,
     // Determine the specific courses page (in the pagination) to crawl.
     SPECIFIC_COURSES_PAGE_NUMBER: null,
     // Determine which courses to purchase that contain the specific keywords.
