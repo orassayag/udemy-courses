@@ -19,7 +19,7 @@ READ THE FOLLOWING SETTINGS BEFORE YOU BEGIN:
 
 In the terminal run: 'npm start'.
 
-Happy testing! :)
+Happy testing! :).
 
 ### Prerequisites
 
@@ -27,8 +27,8 @@ You'll need to install VSCode, Node, and clone the application, and in the termi
 
 ## Built With
 
-* [Node.js](https://nodejs.org/en/) - The web framework used - Server side.
-* [Git](https://git-scm.com/) - Source management.
+* [Node.js](https://nodejs.org/en) - The web framework used - Server side.
+* [Git](https://git-scm.com) - Source management.
 
 ## Contributing
 
