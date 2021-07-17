@@ -1,6 +1,7 @@
 # Udemy Courses
 
-Built in December 2020. A Node.js + Puppeteer.js application to get Udemy courses links from a coupon site, and purchase the FREE ONLY courses (by the coupon) on Udemy site.
+Built in December 2020. A Node.js + Puppeteer.js application to get Udemy courses links from a coupon site,
+and purchase the FREE ONLY courses (by the coupon) on Udemy site.
 
 ## Getting Started
 
