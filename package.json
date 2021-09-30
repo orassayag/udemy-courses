@@ -54,7 +54,7 @@
     "is-reachable": "^5.1.0",
     "jsdom": "^17.0.0",
     "log-update": "^4.0.0",
-    "lorem-ipsum": "^2.0.3",
+    "lorem-ipsum": "^2.0.4",
     "puppeteer": "^10.4.0",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.8.1",
