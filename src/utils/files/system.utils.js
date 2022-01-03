@@ -1,5 +1,5 @@
-const kill = require('tree-kill');
-const logUtils = require('./log.utils');
+import kill from 'tree-kill';
+import logUtils from './log.utils';
 
 class SystemUtils {
 
@@ -41,4 +41,4 @@ class SystemUtils {
     }
 }
 
-module.exports = new SystemUtils();
+export default new SystemUtils();

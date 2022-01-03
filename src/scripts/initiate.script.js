@@ -1,7 +1,8 @@
-const fs = require('fs-extra');
-const path = require('path');
-const errorScript = require('./error.script');
-require('../services/files/initiate.service').initiate('initiate');
+import fs from 'fs-extra';
+import path from 'path';
+import errorScript from './error.script';
+import initiateService from '../services/files/initiate.service';
+initiateService.initiate('initiate');
 
 (async () => {
     // Since the log-update NPM package doesn't have the option to change the number of columns dynamically, and the default value is 80,

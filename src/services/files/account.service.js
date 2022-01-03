@@ -1,6 +1,6 @@
-const { AccountDataModel } = require('../../core/models');
-const fileService = require('./file.service');
-const { applicationUtils, textUtils, validationUtils } = require('../../utils');
+import { AccountDataModel } from '../../core/models';
+import fileService from './file.service';
+import { applicationUtils, textUtils, validationUtils } from '../../utils';
 
 class AccountService {
 
@@ -55,4 +55,4 @@ class AccountService {
     }
 }
 
-module.exports = new AccountService();
+export default new AccountService();

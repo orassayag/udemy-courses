@@ -10,4 +10,4 @@ class AccountDataModel {
     }
 }
 
-module.exports = AccountDataModel;
+export default AccountDataModel;

@@ -1,5 +1,5 @@
-const enumUtils = require('../enum.utils');
-const textUtils = require('../text.utils');
+import enumUtils from '../enum.utils';
+import textUtils from '../text.utils';
 
 const CourseStatusEnum = enumUtils.createEnum([
     ['CREATE', 'create'],
@@ -34,4 +34,4 @@ const CourseTypeEnum = enumUtils.createEnum([
     ['COURSES_LIST', 'COURSES LIST']
 ]);
 
-module.exports = { CourseStatusEnum, CourseStatusLogEnum, CourseTypeEnum };
+export { CourseStatusEnum, CourseStatusLogEnum, CourseTypeEnum };

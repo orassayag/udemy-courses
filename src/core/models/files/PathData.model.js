@@ -7,4 +7,4 @@ class PathDataModel {
 	}
 }
 
-module.exports = PathDataModel;
+export default PathDataModel;

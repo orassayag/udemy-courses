@@ -1,4 +1,4 @@
-const { ColorCodeEnum } = require('../../core/enums');
+import { ColorCodeEnum } from '../../core/enums';
 
 class ColorUtils {
 
@@ -13,4 +13,4 @@ class ColorUtils {
     }
 }
 
-module.exports = new ColorUtils();
+export default new ColorUtils();

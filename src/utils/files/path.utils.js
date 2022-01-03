@@ -1,4 +1,4 @@
-const path = require('path');
+import path from 'path';
 
 class PathUtils {
 
@@ -30,4 +30,4 @@ class PathUtils {
     }
 }
 
-module.exports = new PathUtils();
+export default new PathUtils();

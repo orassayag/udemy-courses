@@ -1,4 +1,4 @@
-const puppeteerService = require('./puppeteer.service');
+import puppeteerService from './puppeteer.service';
 
 class PurchaseCourseService {
 
@@ -10,4 +10,4 @@ class PurchaseCourseService {
     }
 }
 
-module.exports = new PurchaseCourseService();
+export default new PurchaseCourseService();

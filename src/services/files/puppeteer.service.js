@@ -1,14 +1,14 @@
-const puppeteerExtra = require('puppeteer-extra');
-const pluginStealth = require('puppeteer-extra-plugin-stealth');
-const { CrawlResultModel } = require('../../core/models');
-const { ColorEnum, CourseStatusEnum, ModeEnum, StatusEnum } = require('../../core/enums');
-const accountService = require('./account.service');
-const applicationService = require('./application.service');
-const countLimitService = require('./countLimit.service');
-const courseService = require('./course.service');
-const domService = require('./dom.service');
-const globalUtils = require('../../utils/files/global.utils');
-const { courseUtils, crawlUtils, logUtils, systemUtils, validationUtils, textUtils } = require('../../utils');
+import puppeteerExtra from 'puppeteer-extra';
+import pluginStealth from 'puppeteer-extra-plugin-stealth';
+import { CrawlResultModel } from '../../core/models';
+import { ColorEnum, CourseStatusEnum, ModeEnum, StatusEnum } from '../../core/enums';
+import accountService from './account.service';
+import applicationService from './application.service';
+import countLimitService from './countLimit.service';
+import courseService from './course.service';
+import domService from './dom.service';
+import globalUtils from '../../utils/files/global.utils';
+import { courseUtils, crawlUtils, logUtils, systemUtils, validationUtils, textUtils } from '../../utils';
 
 class PuppeteerService {
 
@@ -608,4 +608,4 @@ class PuppeteerService {
     }
 }
 
-module.exports = new PuppeteerService();
+export default new PuppeteerService();

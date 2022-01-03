@@ -1,6 +1,6 @@
-const readline = require('readline');
-const logService = require('./log.service');
-const { logUtils } = require('../../utils');
+import readline from 'readline';
+import logService from './log.service';
+import { logUtils } from '../../utils';
 
 class ConfirmationService {
 
@@ -32,4 +32,4 @@ class ConfirmationService {
     }
 }
 
-module.exports = new ConfirmationService();
+export default new ConfirmationService();

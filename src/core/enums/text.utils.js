@@ -8,4 +8,4 @@ class TextUtils {
     }
 }
 
-module.exports = new TextUtils();
+export default new TextUtils();

@@ -7,4 +7,4 @@ class CrawlResultModel {
     }
 }
 
-module.exports = CrawlResultModel;
+export default CrawlResultModel;

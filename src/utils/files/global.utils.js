@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+import fs from 'fs-extra';
 
 class GlobalUtils {
 
@@ -38,4 +38,4 @@ class GlobalUtils {
     }
 }
 
-module.exports = new GlobalUtils();
+export default new GlobalUtils();

@@ -9,4 +9,4 @@ class BackupDirectoryModel {
 	}
 }
 
-module.exports = BackupDirectoryModel;
+export default BackupDirectoryModel;

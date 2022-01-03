@@ -1,4 +1,4 @@
-const enumUtils = require('../enum.utils');
+import enumUtils from '../enum.utils';
 
 // This enum defines the possible status icons.
 const StatusIconEnum = enumUtils.createEnum([
@@ -45,4 +45,4 @@ const ColorCodeEnum = enumUtils.createEnum([
     ['BgWhite', '\x1b[47m']
 ]);
 
-module.exports = { StatusIconEnum, ColorEnum, ColorCodeEnum };
+export { StatusIconEnum, ColorEnum, ColorCodeEnum };

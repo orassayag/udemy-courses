@@ -1,4 +1,5 @@
-require('../services/files/initiate.service').initiate('test');
+import initiateService from '../services/files/initiate.service';
+initiateService.initiate('test');
 
 (() => {
 })();

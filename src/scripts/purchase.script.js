@@ -1,6 +1,8 @@
-const errorScript = require('./error.script');
-require('../services/files/initiate.service').initiate('purchase');
-const PurchaseLogic = require('../logics/purchase.logic');
+import errorScript from './error.script';
+import initiateService from '../services/files/initiate.service';
+import PurchaseLogic from '../logics/purchase.logic';
+initiateService.initiate('purchase');
+
 try {
     new PurchaseLogic().run();
 }

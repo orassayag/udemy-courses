@@ -1,4 +1,4 @@
-const randomUseragent = require('random-useragent');
+import randomUseragent from 'random-useragent';
 
 class CrawlUtils {
 
@@ -9,4 +9,4 @@ class CrawlUtils {
     }
 }
 
-module.exports = new CrawlUtils();
+export default new CrawlUtils();

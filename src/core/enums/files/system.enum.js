@@ -1,4 +1,4 @@
-const enumUtils = require('../enum.utils');
+import enumUtils from '../enum.utils';
 
 const EnvironmentEnum = enumUtils.createEnum([
     ['PRODUCTION', 'PRODUCTION'],
@@ -48,4 +48,4 @@ const StatusEnum = enumUtils.createEnum([
     ['FINISH', 'FINISH']
 ]);
 
-module.exports = { EnvironmentEnum, MethodEnum, ModeEnum, ScriptTypeEnum, StatusEnum };
+export { EnvironmentEnum, MethodEnum, ModeEnum, ScriptTypeEnum, StatusEnum };

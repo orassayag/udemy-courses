@@ -1,5 +1,9 @@
-const { ModeEnum } = require('../core/enums');
-const { pathUtils } = require('../utils');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { ModeEnum } from '../core/enums';
+import { pathUtils } from '../utils';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const settings = {
     // ===GENERAL=== //
@@ -146,4 +150,4 @@ const settings = {
     BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT: 50
 };
 
-module.exports = settings;
+export default settings;

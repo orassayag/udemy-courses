@@ -1,5 +1,5 @@
-const textUtils = require('./text.utils');
-const validationUtils = require('./validation.utils');
+import textUtils from './text.utils';
+import validationUtils from './validation.utils';
 
 class TimeUtils {
 
@@ -84,4 +84,4 @@ class TimeUtils {
     }
 }
 
-module.exports = new TimeUtils();
+export default new TimeUtils();

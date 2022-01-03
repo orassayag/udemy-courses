@@ -1,7 +1,7 @@
-const { CourseDataModel, CoursesDataModel, ValidateFieldsResultModel } = require('../../core/models');
-const { CourseStatusEnum, StatusEnum } = require('../../core/enums');
-const applicationService = require('./application.service');
-const { courseUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
+import { CourseDataModel, CoursesDataModel, ValidateFieldsResultModel } from '../../core/models';
+import { CourseStatusEnum, StatusEnum } from '../../core/enums';
+import applicationService from './application.service';
+import { courseUtils, textUtils, timeUtils, validationUtils } from '../../utils';
 
 class CourseService {
 
@@ -261,4 +261,4 @@ class CourseService {
     }
 }
 
-module.exports = new CourseService();
+export default new CourseService();

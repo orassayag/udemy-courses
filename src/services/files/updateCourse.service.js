@@ -1,6 +1,6 @@
-const { StatusEnum } = require('../../core/enums');
-const courseService = require('./course.service');
-const puppeteerService = require('./puppeteer.service');
+import { StatusEnum } from '../../core/enums';
+import courseService from './course.service';
+import puppeteerService from './puppeteer.service';
 
 class UpdateCourseService {
 
@@ -16,4 +16,4 @@ class UpdateCourseService {
     }
 }
 
-module.exports = new UpdateCourseService();
+export default new UpdateCourseService();

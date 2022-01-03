@@ -1,5 +1,5 @@
-const { CourseStatusEnum, CourseTypeEnum } = require('../../enums');
-const { timeUtils } = require('../../../utils');
+import { CourseStatusEnum, CourseTypeEnum } from '../../enums';
+import { timeUtils } from '../../../utils';
 
 class CourseDataModel {
 
@@ -28,4 +28,4 @@ class CourseDataModel {
     }
 }
 
-module.exports = CourseDataModel;
+export default CourseDataModel;

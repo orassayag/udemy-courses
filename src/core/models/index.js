@@ -1,16 +1,16 @@
-const AccountDataModel = require('./files/AccountData.model');
-const ApplicationDataModel = require('./files/ApplicationData.model');
-const BackupDataModel = require('./files/BackupData.model');
-const BackupDirectoryModel = require('./files/BackupDirectory.model');
-const CountLimitDataModel = require('./files/CountLimitData.model');
-const CourseDataModel = require('./files/CourseData.model');
-const CoursesDataModel = require('./files/CoursesData.model');
-const CrawlResultModel = require('./files/CrawlResult.model');
-const LogDataModel = require('./files/LogData.model');
-const PathDataModel = require('./files/PathData.model');
-const ValidateFieldsResultModel = require('./files/ValidateFieldsResult.model');
+import AccountDataModel from './files/AccountData.model';
+import ApplicationDataModel from './files/ApplicationData.model';
+import BackupDataModel from './files/BackupData.model';
+import BackupDirectoryModel from './files/BackupDirectory.model';
+import CountLimitDataModel from './files/CountLimitData.model';
+import CourseDataModel from './files/CourseData.model';
+import CoursesDataModel from './files/CoursesData.model';
+import CrawlResultModel from './files/CrawlResult.model';
+import LogDataModel from './files/LogData.model';
+import PathDataModel from './files/PathData.model';
+import ValidateFieldsResultModel from './files/ValidateFieldsResult.model';
 
-module.exports = {
+export {
     AccountDataModel, ApplicationDataModel, BackupDataModel, BackupDirectoryModel, CountLimitDataModel, CourseDataModel,
     CoursesDataModel, CrawlResultModel, LogDataModel, PathDataModel, ValidateFieldsResultModel
 };

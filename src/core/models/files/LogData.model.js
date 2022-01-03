@@ -13,4 +13,4 @@ class LogDataModel {
 	}
 }
 
-module.exports = LogDataModel;
+export default LogDataModel;

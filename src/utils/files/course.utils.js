@@ -1,4 +1,4 @@
-const textUtils = require('./text.utils');
+import textUtils from './text.utils';
 
 class CourseUtils {
 
@@ -42,4 +42,4 @@ class CourseUtils {
     }
 }
 
-module.exports = new CourseUtils();
+export default new CourseUtils();

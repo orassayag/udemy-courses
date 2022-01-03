@@ -1,14 +1,16 @@
-const { LogDataModel } = require('../../core/models');
-const { CourseStatusLogEnum, CourseStatusEnum, ColorEnum, MethodEnum, ModeEnum,
-	PlaceholderEnum, StatusIconEnum } = require('../../core/enums');
-const accountService = require('./account.service');
-const applicationService = require('./application.service');
-const countLimitService = require('./countLimit.service');
-const courseService = require('./course.service');
-const domService = require('./dom.service');
-const pathService = require('./path.service');
-const puppeteerService = require('./puppeteer.service');
-const { fileUtils, logUtils, pathUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
+import { LogDataModel } from '../../core/models';
+import {
+	CourseStatusLogEnum, CourseStatusEnum, ColorEnum, MethodEnum, ModeEnum,
+	PlaceholderEnum, StatusIconEnum
+} from '../../core/enums';
+import accountService from './account.service';
+import applicationService from './application.service';
+import countLimitService from './countLimit.service';
+import courseService from './course.service';
+import domService from './dom.service';
+import pathService from './path.service';
+import puppeteerService from './puppeteer.service';
+import { fileUtils, logUtils, pathUtils, textUtils, timeUtils, validationUtils } from '../../utils';
 
 class LogService {
 
@@ -404,4 +406,4 @@ OK to run? (y = yes)`;
 	}
 }
 
-module.exports = new LogService();
+export default new LogService();

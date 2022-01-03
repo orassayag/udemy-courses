@@ -14,4 +14,4 @@ class RegexUtils {
 	}
 }
 
-module.exports = new RegexUtils();
+export default new RegexUtils();

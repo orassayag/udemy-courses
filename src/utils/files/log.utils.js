@@ -1,8 +1,8 @@
-const logUpdate = require('log-update');
-const { ColorEnum } = require('../../core/enums');
-const colorUtils = require('./color.utils');
-const textUtils = require('./text.utils');
-const validationUtils = require('./validation.utils');
+import logUpdate from 'log-update';
+import { ColorEnum } from '../../core/enums';
+import colorUtils from './color.utils';
+import textUtils from './text.utils';
+import validationUtils from './validation.utils';
 
 class LogUtils {
 
@@ -84,4 +84,4 @@ class LogUtils {
     }
 }
 
-module.exports = new LogUtils();
+export default new LogUtils();

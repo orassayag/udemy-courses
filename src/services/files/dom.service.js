@@ -1,10 +1,10 @@
-const jsdom = require('jsdom');
-const { CourseStatusEnum } = require('../../core/enums');
-const applicationService = require('./application.service');
-const countLimitService = require('./countLimit.service');
-const courseService = require('./course.service');
-const globalUtils = require('../../utils/files/global.utils');
-const { courseUtils, systemUtils, textUtils, validationUtils } = require('../../utils');
+import jsdom from 'jsdom';
+import { CourseStatusEnum } from '../../core/enums';
+import applicationService from './application.service';
+import countLimitService from './countLimit.service';
+import courseService from './course.service';
+import globalUtils from '../../utils/files/global.utils';
+import { courseUtils, systemUtils, textUtils, validationUtils } from '../../utils';
 
 class DomService {
 
@@ -244,4 +244,4 @@ class DomService {
     }
 }
 
-module.exports = new DomService();
+export default new DomService();

@@ -1,6 +1,6 @@
-const colorUtils = require('./color.utils');
-const regexUtils = require('./regex.utils');
-const validationUtils = require('./validation.utils');
+import colorUtils from './color.utils';
+import regexUtils from './regex.utils';
+import validationUtils from './validation.utils';
 
 class TextUtils {
 
@@ -185,4 +185,4 @@ class TextUtils {
     }
 }
 
-module.exports = new TextUtils();
+export default new TextUtils();

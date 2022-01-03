@@ -1,5 +1,5 @@
-const fs = require('fs-extra');
-const pathUtils = require('./path.utils');
+import fs from 'fs-extra';
+import pathUtils from './path.utils';
 
 class FileUtils {
 
@@ -80,4 +80,4 @@ class FileUtils {
     }
 }
 
-module.exports = new FileUtils();
+export default new FileUtils();

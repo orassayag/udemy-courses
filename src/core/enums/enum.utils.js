@@ -14,4 +14,4 @@ class EnumUtils {
     }
 }
 
-module.exports = new EnumUtils();
+export default new EnumUtils();

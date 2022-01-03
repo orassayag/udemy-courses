@@ -1,4 +1,4 @@
-const { EnvironmentEnum } = require('../../core/enums');
+import { EnvironmentEnum } from '../../core/enums';
 
 class ApplicationUtils {
 
@@ -9,4 +9,4 @@ class ApplicationUtils {
     }
 }
 
-module.exports = new ApplicationUtils();
+export default new ApplicationUtils();

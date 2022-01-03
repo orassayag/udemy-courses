@@ -1,6 +1,7 @@
-require('../services/files/initiate.service').initiate('test');
-const PurchaseLogic = require('../logics/purchase.logic');
-const { validationUtils } = require('../utils');
+import initiateService from '../services/files/initiate.service';
+import PurchaseLogic from '../logics/purchase.logic';
+import { validationUtils } from '../utils';
+initiateService.initiate('test');
 
 const urls = [
     // Example:

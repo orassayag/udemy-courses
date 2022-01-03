@@ -1,10 +1,12 @@
-const settings = require('../settings/settings');
-const { accountService, applicationService, confirmationService, countLimitService,
+import settings from '../settings/settings';
+import {
+    accountService, applicationService, confirmationService, countLimitService,
     courseService, createCourseService, logService, pathService, puppeteerService,
-    purchaseCourseService, updateCourseService, validationService } = require('../services');
-const { ColorEnum, MethodEnum, ModeEnum, StatusEnum } = require('../core/enums');
-const globalUtils = require('../utils/files/global.utils');
-const { logUtils, systemUtils, timeUtils, validationUtils } = require('../utils');
+    purchaseCourseService, updateCourseService, validationService
+} from '../services';
+import { ColorEnum, MethodEnum, ModeEnum, StatusEnum } from '../core/enums';
+import globalUtils from '../utils/files/global.utils';
+import { logUtils, systemUtils, timeUtils, validationUtils } from '../utils';
 
 class PurchaseLogic {
 
@@ -118,4 +120,4 @@ class PurchaseLogic {
     }
 }
 
-module.exports = PurchaseLogic;
+export default PurchaseLogic;

@@ -7,4 +7,4 @@ class ValidateFieldsResultModel {
     }
 }
 
-module.exports = ValidateFieldsResultModel;
+export default ValidateFieldsResultModel;

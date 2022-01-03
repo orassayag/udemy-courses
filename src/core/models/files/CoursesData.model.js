@@ -1,4 +1,4 @@
-const { CourseStatusEnum } = require('../../enums');
+import { CourseStatusEnum } from '../../enums';
 
 class CoursesDataModel {
 
@@ -34,4 +34,4 @@ class CoursesDataModel {
 	}
 }
 
-module.exports = CoursesDataModel;
+export default CoursesDataModel;

@@ -1,7 +1,7 @@
-const isReachable = require('is-reachable');
-const applicationService = require('./application.service');
-const countLimitService = require('./countLimit.service');
-const globalUtils = require('../../utils/files/global.utils');
+import isReachable from 'is-reachable';
+import applicationService from './application.service';
+import countLimitService from './countLimit.service';
+import globalUtils from '../../utils/files/global.utils';
 
 class ValidationService {
 
@@ -35,4 +35,4 @@ class ValidationService {
     }
 }
 
-module.exports = new ValidationService();
+export default new ValidationService();
