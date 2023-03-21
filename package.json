@@ -48,7 +48,7 @@
     "stop": "taskkill -f -im node.exe"
   },
   "dependencies": {
-    "fs-extra": "^11.1.0",
+    "fs-extra": "^11.1.1",
     "is-reachable": "^5.2.1",
     "jsdom": "^21.1.1",
     "log-update": "^5.0.1",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",
-    "@types/node": "^18.15.3",
+    "@types/node": "^18.15.5",
     "eslint": "^8.36.0"
   }
 }
