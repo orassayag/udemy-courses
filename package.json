@@ -53,7 +53,7 @@
     "jsdom": "^22.1.0",
     "log-update": "^5.0.1",
     "lorem-ipsum": "^2.0.8",
-    "puppeteer": "^20.5.0",
+    "puppeteer": "^20.6.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "random-useragent": "^0.5.0",
