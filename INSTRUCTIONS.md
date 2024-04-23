@@ -3,6 +3,7 @@
 ===================
 FAST & BASIC START.
 ===================
+
 1. Open the project in IDE (Current to 12/19/2020 I'm using VSCode).
 2. Open the following file in the 'src/settings/settings.js' file.
 3. Search for the first setting - 'IS_CREATE_COURSES_METHOD_ACTIVE' and 'IS_PURCHASE_COURSES_METHOD_ACTIVE' - Make sure they are set to true.
@@ -14,13 +15,13 @@ FAST & BASIC START.
 9. In the terminal run: 'npm start'. If everything goes well, you will start to see the console status line appear.
 10. If you see any error - Need to check what's changed. Current to 12/19/2020, it works fine.
 11. If you see the console status line but the 'Course' is not progressing - Need to check what's wrong.
-12. If no errors and the progress works OK, make sure to check on the 'dist/date' direcotry of today (Example: 1_20200316_222124)/ that all TXT
-    files created successfully.
+12. If no errors and the progress works OK, make sure to check on the 'dist/date' directory of today (Example: 1_20200316_222124)/ that all TXT
+        files created successfully.
 13. Successful running application on production/development should look like this:
 
-/* cSpell:disable */
+/_ cSpell:disable _/
 ===IMPORTANT SETTINGS===
-EMAIL: ***********@gmail.com
+EMAIL: ****\*\*\*****@gmail.com
 MODE: STANDARD
 COURSES_BASE_URL: https://www.idownloadcoupon.com
 UDEMY_BASE_URL: https://www.udemy.com
@@ -47,7 +48,7 @@ y
 ===[SETTINGS] Environment: DEVELOPMENT | Method: PURCHASE COURSES | Pages Count: 1 | Specific Page Number: ## | Session Number: 5 | Is Keywords Filter: false===
 ===[GENERAL1] Time: 00.00:04:24 [-] | Course: 9/9 (100.00%) | Courses Count: 9 (Single: 9 / Course List: 0)===
 ===[GENERAL2] Total Courses Price: ₪959.60 | Total Purchase Price: ₪959.60 | Pages Count: 1 | Status: FINISH===
-===[ACCOUNT] Email: ***********@gmail.com | Password: *******************===
+===[ACCOUNT] Email: ****\*\*\*****@gmail.com | Password: ********\*\*\*********===
 ===[PROCESS1] Purchase: ✅  8 | Fail: ❌  0 | Filter: 0 | Missing Field: 0 | Unexpected Field: 0 | Duplicate: 0===
 ===[PROCESS2] Create Update Error: 0 | Empty URL: 0 | Invalid URL: 0 | Not Exists: 0 | Page Not Found: 0 | Limit Access: 0===
 ===[PROCESS3] Suggestions List: 0 | Private: 0 | Already Purchase: 0 | Course Price Not Free: 0===
@@ -64,8 +65,8 @@ y
 
 ## Author
 
-* **Or Assayag** - *Initial work* - [orassayag](https://github.com/orassayag)
-* Or Assayag <orassayag@gmail.com>
-* GitHub: https://github.com/orassayag
-* StackOverFlow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
-* LinkedIn: https://linkedin.com/in/orassayag
+- **Or Assayag** - _Initial work_ - [orassayag](https://github.com/orassayag)
+- Or Assayag <orassayag@gmail.com>
+- GitHub: https://github.com/orassayag
+- StackOverFlow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
+- LinkedIn: https://linkedin.com/in/orassayag

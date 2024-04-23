@@ -1,12 +1,13 @@
-import { EnvironmentEnum } from '../../core/enums';
+import { EnvironmentEnum } from '../../core/enums/index.js';
 
 class ApplicationUtils {
+  constructor() {}
 
-    constructor() { }
-
-    getApplicationEnvironment(isProductionEnvironment) {
-        return isProductionEnvironment ? EnvironmentEnum.PRODUCTION : EnvironmentEnum.DEVELOPMENT;
-    }
+  getApplicationEnvironment(isProductionEnvironment) {
+    return isProductionEnvironment
+      ? EnvironmentEnum.PRODUCTION
+      : EnvironmentEnum.DEVELOPMENT;
+  }
 }
 
 export default new ApplicationUtils();

@@ -1,14 +1,13 @@
-import { ApplicationDataModel } from '../../core/models';
+import { ApplicationDataModel } from '../../core/models/index.js';
 
 class ApplicationService {
+  constructor() {
+    this.applicationDataModel = null;
+  }
 
-    constructor() {
-        this.applicationDataModel = null;
-    }
-
-    initiate(data) {
-        this.applicationDataModel = new ApplicationDataModel(data);
-    }
+  initiate(data) {
+    this.applicationDataModel = new ApplicationDataModel(data);
+  }
 }
 
 export default new ApplicationService();

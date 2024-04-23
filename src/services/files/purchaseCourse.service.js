@@ -1,13 +1,12 @@
-import puppeteerService from './puppeteer.service';
+import puppeteerService from './puppeteer.service.js';
 
 class PurchaseCourseService {
+  constructor() {}
 
-    constructor() { }
-
-    async purchaseCourses() {
-        // Purchase courses.
-        return await puppeteerService.purchaseCourses();
-    }
+  async purchaseCourses() {
+    // Purchase courses.
+    return await puppeteerService.purchaseCourses();
+  }
 }
 
 export default new PurchaseCourseService();

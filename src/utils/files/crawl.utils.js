@@ -1,12 +1,11 @@
 import randomUseragent from 'random-useragent';
 
 class CrawlUtils {
+  constructor() {}
 
-    constructor() { }
-
-    getRandomUserAgent() {
-        return randomUseragent.getRandom();
-    }
+  getRandomUserAgent() {
+    return randomUseragent.getRandom();
+  }
 }
 
 export default new CrawlUtils();

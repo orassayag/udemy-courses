@@ -1,10 +1,9 @@
 class PathDataModel {
-
-	constructor(settings) {
-		// Set the parameters from the settings file.
-		const { DIST_PATH } = settings;
-		this.distPath = DIST_PATH;
-	}
+  constructor(settings) {
+    // Set the parameters from the settings file.
+    const { DIST_PATH } = settings;
+    this.distPath = DIST_PATH;
+  }
 }
 
 export default PathDataModel;
