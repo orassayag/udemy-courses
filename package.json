@@ -50,7 +50,7 @@
   "dependencies": {
     "fs-extra": "^11.3.0",
     "is-reachable": "^5.2.1",
-    "jsdom": "^26.0.0",
+    "jsdom": "^26.1.0",
     "log-update": "^6.1.0",
     "lorem-ipsum": "^2.0.8",
     "puppeteer": "^24.6.1",
