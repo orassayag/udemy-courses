@@ -50,7 +50,7 @@
   "dependencies": {
     "fs-extra": "^11.3.2",
     "is-reachable": "^6.0.0",
-    "jsdom": "^27.0.1",
+    "jsdom": "^27.1.0",
     "log-update": "^7.0.1",
     "lorem-ipsum": "^2.0.8",
     "puppeteer": "^24.27.0",
@@ -60,6 +60,6 @@
     "tree-kill": "^1.2.2"
   },
   "devDependencies": {
-    "eslint": "^9.38.0"
+    "eslint": "^9.39.0"
   }
 }
