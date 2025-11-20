@@ -51,7 +51,7 @@
     "fs-extra": "^11.3.2",
     "is-reachable": "^6.0.0",
     "jsdom": "^27.2.0",
-    "log-update": "^7.0.1",
+    "log-update": "^7.0.2",
     "lorem-ipsum": "^2.0.8",
     "puppeteer": "^24.30.0",
     "puppeteer-extra": "^3.3.6",
