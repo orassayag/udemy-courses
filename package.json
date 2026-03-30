@@ -2,18 +2,25 @@
   "name": "udemy-courses",
   "version": "1.0.0",
   "private": false,
-  "description": "A Node.js + Puppeteer.js application to get Udemy courses links from a coupon site, and purchase the FREE ONLY courses (by the coupon) on Udemy site.",
+  "description": "A Node.js + Puppeteer.js automation tool that automatically discovers and enrolls in free Udemy courses using coupon codes from coupon websites.",
   "repository": {
     "type": "git",
     "url": "git://github.com/orassayag/udemy-courses.git"
   },
   "keywords": [
-    "links",
     "udemy",
+    "automation",
+    "puppeteer",
+    "web-scraping",
     "coupons",
-    "courses"
+    "courses",
+    "free-courses",
+    "education",
+    "auto-enroll",
+    "learning",
+    "nodejs"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "author": "Or Assayag <orassayag@gmail.com>",
   "contributors": [
     {
@@ -50,16 +57,16 @@
   "dependencies": {
     "fs-extra": "^11.3.4",
     "is-reachable": "^6.1.0",
-    "jsdom": "^29.0.1",
+    "jsdom": "^28.1.0",
     "log-update": "^7.2.0",
     "lorem-ipsum": "^2.0.8",
-    "puppeteer": "^24.40.0",
+    "puppeteer": "^24.37.5",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "random-useragent": "^0.5.0",
     "tree-kill": "^1.2.2"
   },
   "devDependencies": {
-    "eslint": "^10.1.0"
+    "eslint": "^10.0.2"
   }
 }
