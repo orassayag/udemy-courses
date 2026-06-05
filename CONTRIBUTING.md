@@ -9,6 +9,7 @@ Everyone is welcome to contribute to this project. Contributing doesn't just mea
 ### Reporting Issues
 
 If you find a bug or have a feature request:
+
 1. Check if the issue already exists in the [GitHub Issues](https://github.com/orassayag/udemy-courses/issues)
 2. If not, create a new issue with:
    - Clear title and description
@@ -32,11 +33,13 @@ If you find a bug or have a feature request:
 ### Code Style Guidelines
 
 This project uses:
+
 - **JavaScript (ES6+)** with ES modules
 - **ESLint** for code quality
 - **jsbeautify** for code formatting
 
 Before submitting:
+
 ```bash
 # Install dependencies
 npm install
@@ -63,6 +66,7 @@ npm run session
 ### Adding New Features
 
 When adding new features:
+
 1. Add configuration options to `src/settings/settings.js`
 2. Create or update services in `src/services/files/`
 3. Update models in `src/core/models/` if needed
@@ -80,6 +84,7 @@ When adding new features:
 ### Testing Checklist
 
 Before submitting a PR:
+
 - [ ] Code follows existing patterns and style
 - [ ] All settings in `settings.js` work correctly
 - [ ] Tested in both development and production environments
@@ -93,9 +98,9 @@ Before submitting a PR:
 
 Please feel free to contact me with any question, comment, pull-request, issue, or any other thing you have in mind.
 
-* Or Assayag <orassayag@gmail.com>
-* GitHub: https://github.com/orassayag
-* StackOverflow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
-* LinkedIn: https://linkedin.com/in/orassayag
+- Or Assayag <orassayag@gmail.com>
+- GitHub: https://github.com/orassayag
+- StackOverflow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
+- LinkedIn: https://linkedin.com/in/orassayag
 
 Thank you for contributing! 🙏

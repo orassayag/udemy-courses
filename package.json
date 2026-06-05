@@ -2,11 +2,7 @@
   "name": "udemy-courses",
   "version": "1.0.0",
   "private": false,
-  "description": "A Node.js + Puppeteer.js automation tool that automatically discovers and enrolls in free Udemy courses using coupon codes from coupon websites.",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/orassayag/udemy-courses.git"
-  },
+  "description": "A Node.js + Puppeteer.js automation tool that discovers and enrolls in free Udemy courses using coupon codes from coupon sites. This JavaScript app scrapes course deals, validates coupons on Udemy, filters truly free offers, and automates enrollment to help grow your learning library efficiently",
   "keywords": [
     "udemy",
     "automation",
@@ -20,8 +16,24 @@
     "learning",
     "nodejs"
   ],
+  "homepage": "https://github.com/orassayag/udemy-courses#readme",
+  "bugs": {
+    "url": "https://github.com/orassayag/udemy-courses/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/orassayag/udemy-courses.git"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/orassayag"
+  },
   "license": "MIT",
-  "author": "Or Assayag <orassayag@gmail.com>",
+  "author": {
+    "name": "Or Assayag",
+    "email": "orassayag@gmail.com",
+    "url": "https://github.com/orassayag"
+  },
   "contributors": [
     {
       "name": "Or Assayag",
@@ -30,28 +42,36 @@
     }
   ],
   "type": "module",
-  "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
-  },
   "main": "src/scripts/purchase.script.js",
   "files": [
+    ".github",
+    ".vscode",
+    "dist",
+    "misc",
     "src",
     ".eslintignore",
     ".eslintrc",
     ".gitignore",
     ".jsbeautifyrc",
     ".npmignore",
+    ".prettierrc",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
     "INSTRUCTIONS.md",
+    "knip.json",
+    "LICENSE",
     "package-lock.json",
     "package.json",
-    "README.md"
+    "README.md",
+    "SECURITY.md"
   ],
   "scripts": {
     "backup": "node --es-module-specifier-resolution=node src/scripts/backup.script.js",
-    "start": "node --es-module-specifier-resolution=node src/scripts/purchase.script.js",
+    "postinstall": "node --es-module-specifier-resolution=node src/scripts/initiate.script.js",
     "sand": "node --es-module-specifier-resolution=node src/tests/sandBox.test.js",
     "session": "node --es-module-specifier-resolution=node src/tests/udemySession.test.js",
-    "postinstall": "node --es-module-specifier-resolution=node src/scripts/initiate.script.js",
+    "start": "node --es-module-specifier-resolution=node src/scripts/purchase.script.js",
     "stop": "taskkill -f -im node.exe"
   },
   "dependencies": {
@@ -59,7 +79,6 @@
     "is-reachable": "^6.1.0",
     "jsdom": "^28.1.0",
     "log-update": "^7.2.0",
-    "lorem-ipsum": "^2.0.8",
     "puppeteer": "^24.37.5",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
@@ -68,5 +87,8 @@
   },
   "devDependencies": {
     "eslint": "^10.0.2"
+  },
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   }
 }

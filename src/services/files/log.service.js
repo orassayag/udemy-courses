@@ -146,8 +146,8 @@ class LogService {
             ? this.createCoursesValidPath
             : null
           : this.logDataModel.isLogCreateCoursesMethodInvalid
-          ? this.createCoursesInvalidPath
-          : null;
+            ? this.createCoursesInvalidPath
+            : null;
         break;
       }
       case MethodEnum.UPDATE_COURSES: {
@@ -157,8 +157,8 @@ class LogService {
             ? this.updateCoursesValidPath
             : null
           : this.logDataModel.isLogUpdateCoursesMethodInvalid
-          ? this.updateCoursesInvalidPath
-          : null;
+            ? this.updateCoursesInvalidPath
+            : null;
         break;
       }
       case MethodEnum.PURCHASE_COURSES: {
@@ -168,8 +168,8 @@ class LogService {
             ? this.purchaseCoursesValidPath
             : null
           : this.logDataModel.isLogPurchaseCoursesMethodInvalid
-          ? this.purchaseCoursesInvalidPath
-          : null;
+            ? this.purchaseCoursesInvalidPath
+            : null;
         break;
       }
     }

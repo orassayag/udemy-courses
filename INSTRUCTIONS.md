@@ -1,4 +1,51 @@
-# Instructions
+# Setup and Usage Instructions
+
+**Version**: 1.0.0
+**Last Updated**: 2026-06-05
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Initial Setup](#initial-setup)
+3. [Configuration](#configuration)
+4. [Running the Application](#running-the-application)
+5. [Available Commands](#available-commands)
+6. [Quick Start Guide](#quick-start-guide)
+7. [Troubleshooting](#troubleshooting)
+8. [Documentation](#documentation)
+9. [Extending the Application](#extending-the-application)
+
+## Prerequisites
+
+### System Requirements
+
+- **Node.js**: Version 12.20.0, 14.13.1, or 16+ (LTS recommended)
+- **Package Manager**: npm (comes with Node.js)
+- **Operating System**: Windows, macOS, or Linux
+- **Memory**: 4GB RAM minimum (Puppeteer can be memory-intensive)
+- **Disk Space**: 500MB for application, logs, and dependencies
+- **Internet**: Stable connection for scraping and enrollment
+
+### Account Requirements
+
+- Active Udemy account
+- Access to coupon websites (not blocked by firewall)
+
+## Initial Setup
+
+### 1. Install Dependencies
+
+Clone the repository and install the required packages:
+
+```bash
+git clone https://github.com/orassayag/udemy-courses.git
+cd udemy-courses
+npm install
+```
+
+### 2. Configuration Setup
+
+Follow the [Configuration](#configuration) section below to set up your credentials and application behavior.
 
 ## Setup Instructions
 
@@ -28,6 +75,7 @@
 Open `src/settings/settings.js` and configure the following key settings:
 
 #### General Settings
+
 - `MODE`: Application mode - `STANDARD`, `SESSION`, or `SILENT`
 - `COURSES_BASE_URL`: Coupon site URL (default: `https://www.idownloadcoupon.com`)
 - `UDEMY_BASE_URL`: Udemy base URL (default: `https://www.udemy.com`)
@@ -36,19 +84,23 @@ Open `src/settings/settings.js` and configure the following key settings:
 - `KEYWORDS_FILTER_LIST`: Array of keywords to filter courses (empty = all courses)
 
 #### Method Flags
+
 - `IS_CREATE_COURSES_METHOD_ACTIVE`: Enable course scraping (default: true)
 - `IS_UPDATE_COURSES_METHOD_ACTIVE`: Enable course data updates (default: true)
 - `IS_PURCHASE_COURSES_METHOD_ACTIVE`: Enable automatic enrollment (default: true)
 
 #### Environment
+
 - `IS_PRODUCTION_ENVIRONMENT`: Set to `true` for production, `false` for development
 
 #### Limits
+
 - `MAXIMUM_COURSES_PURCHASE_COUNT`: Maximum courses to enroll in (default: 3000)
 - `MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT`: Page load timeout (default: 60000ms)
 - `MAXIMUM_SESSIONS_COUNT`: Retry sessions for failed courses (default: 5)
 
 #### Logging
+
 - `IS_LOG_CREATE_COURSES_METHOD_VALID`: Log successful course creation
 - `IS_LOG_CREATE_COURSES_METHOD_INVALID`: Log failed course creation
 - `IS_LOG_UPDATE_COURSES_METHOD_VALID`: Log successful course updates
@@ -59,37 +111,46 @@ Open `src/settings/settings.js` and configure the following key settings:
 ## Running the Application
 
 ### Standard Mode - Full Automation
+
 Run all three methods (create, update, purchase):
+
 ```bash
 npm start
 ```
 
 **Process Flow:**
+
 1. Scrapes course links from coupon website
 2. Updates course information from Udemy
 3. Automatically enrolls in free courses
 
 ### Session Mode - Retry Failed Courses
+
 ```bash
 npm run session
 ```
 
 **Use Case:**
+
 - Retry courses that failed in previous sessions
 - Process specific URLs manually
 
 ### Backup Mode
+
 Create a backup of the project:
+
 ```bash
 npm run backup
 ```
 
 **What Gets Backed Up:**
+
 - Source code and configuration
 - Log files and course data
 - Excludes: node_modules, dist, .git
 
 ### Test Modes
+
 ```bash
 # Test Udemy session
 npm run session
@@ -98,11 +159,53 @@ npm run session
 npm run sand
 ```
 
+## Available Commands
+
+### Running Scripts
+
+**Main Automation:**
+
+```bash
+# Start the full automation process
+npm start
+```
+
+**Session Recovery:**
+
+```bash
+# Retry failed courses from previous sessions
+npm run session
+```
+
+**Backup:**
+
+```bash
+# Create a timestamped backup of the project
+npm run backup
+```
+
+### Development Commands
+
+**Sandbox Testing:**
+
+```bash
+# Run sandbox tests for development
+npm run sand
+```
+
+**Dependency Verification:**
+
+```bash
+# Check for unused dependencies
+npx knip
+```
+
 ## Quick Start Guide
 
 ### Fast Setup (5 Minutes)
 
 1. **Install and Configure:**
+
    ```bash
    npm install
    ```
@@ -112,6 +215,7 @@ npm run sand
    - Update `ACCOUNT_FILE_PATH` in settings
 
 3. **Configure Basic Settings:**
+
    ```javascript
    // In src/settings/settings.js
    IS_PRODUCTION_ENVIRONMENT: false,  // Use false for testing
@@ -120,6 +224,7 @@ npm run sand
    ```
 
 4. **Run:**
+
    ```bash
    npm start
    ```
@@ -181,32 +286,64 @@ dist/
     └── purchase_courses_method_invalid.txt
 ```
 
+## Documentation
+
+- **README.md**: General project overview and architecture.
+- **CHANGELOG.md**: History of changes and versions.
+- **CONTRIBUTING.md**: Guidelines for contributing to the project.
+- **Source Code**: Well-commented code in `src/` for deep dives.
+
+## Extending the Application
+
+### Adding Coupon Sites
+
+To add new coupon sources, modify the scraping logic in `src/services/files/createCourse.service.js`.
+
+### Custom Filters
+
+Add new filtering criteria in `src/utils/files/course.utils.js` and update `src/settings/settings.js`.
+
+### UI Updates
+
+If Udemy changes its layout, update the selectors in `src/services/files/dom.service.js`.
+
+## External Resources
+
+- [Puppeteer Documentation](https://pptr.dev/)
+- [Udemy Terms of Service](https://www.udemy.com/terms/)
+- [Node.js Official Site](https://nodejs.org/)
+
 ## Troubleshooting
 
 ### Common Issues
 
 #### No Courses Found
+
 - Check `COURSES_BASE_URL` is accessible
 - Verify `PAGES_COUNT` is set correctly
 - Check internet connection
 
 #### Login Failed
+
 - Verify account credentials in JSON file
 - Check `ACCOUNT_FILE_PATH` points to correct file
 - Ensure Udemy account is active
 
 #### Courses Not Enrolling
+
 - Check if courses are truly free with the coupon
 - Verify `IS_PURCHASE_COURSES_METHOD_ACTIVE` is true
 - Look for errors in console output
 - Check if you've already enrolled in the course
 
 #### Rate Limiting / Blocked
+
 - Increase timeout values in settings
 - Reduce `PAGES_COUNT`
 - Add delays between operations
 
 #### Selector Not Found
+
 - Udemy may have updated their UI
 - Check `src/services/files/dom.service.js` for selector updates
 - Open an issue on GitHub
@@ -223,21 +360,27 @@ dist/
 ## Advanced Features
 
 ### Keyword Filtering
+
 Filter courses by specific keywords:
+
 ```javascript
-KEYWORDS_FILTER_LIST: ['javascript', 'python', 'web development']
+KEYWORDS_FILTER_LIST: ['javascript', 'python', 'web development'];
 ```
 
 ### Specific Page Scraping
+
 Target a specific page number:
+
 ```javascript
-SPECIFIC_COURSES_PAGE_NUMBER: 5  // Only scrape page 5
+SPECIFIC_COURSES_PAGE_NUMBER: 5; // Only scrape page 5
 ```
 
 ### Session Management
+
 The application supports multiple sessions to retry failed courses automatically:
+
 ```javascript
-MAXIMUM_SESSIONS_COUNT: 5  // Will retry failed courses up to 5 times
+MAXIMUM_SESSIONS_COUNT: 5; // Will retry failed courses up to 5 times
 ```
 
 ## Notes
@@ -249,8 +392,8 @@ MAXIMUM_SESSIONS_COUNT: 5  // Will retry failed courses up to 5 times
 
 ## Author
 
-* **Or Assayag** - *Initial work* - [orassayag](https://github.com/orassayag)
-* Or Assayag <orassayag@gmail.com>
-* GitHub: https://github.com/orassayag
-* StackOverflow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
-* LinkedIn: https://linkedin.com/in/orassayag
+- **Or Assayag** - _Initial work_ - [orassayag](https://github.com/orassayag)
+- Or Assayag <orassayag@gmail.com>
+- GitHub: https://github.com/orassayag
+- StackOverflow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
+- LinkedIn: https://linkedin.com/in/orassayag
